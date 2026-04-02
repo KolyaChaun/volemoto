@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Бренди — VOLE MOTO Admin</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f5f6f8; color: #222; font-size: 14px; }
+
+    .sidebar { width: 220px; background: #fff; border-right: 1px solid #e8e8e8; height: 100vh; position: fixed; top: 0; left: 0; display: flex; flex-direction: column; }
+    .sidebar-logo { padding: 24px 20px 16px; font-size: 18px; font-weight: 800; color: #111; border-bottom: 1px solid #f0f0f0; }
+    .sidebar-logo span { color: #2d9e00; }
+    .sidebar-logo small { display: block; font-size: 10px; font-weight: 600; color: #bbb; letter-spacing: .08em; text-transform: uppercase; margin-top: 2px; }
+    .sidebar-nav { padding: 16px 12px; flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; color: #666; font-weight: 600; text-decoration: none; margin-bottom: 2px; transition: background .15s, color .15s; }
+    .nav-item:hover { background: #f5f5f5; color: #111; }
+    .nav-item.active { background: #f0fbea; color: #2d9e00; }
+    .sidebar-bottom { padding: 16px 12px; border-top: 1px solid #f0f0f0; }
+    .logout { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 8px; color: #999; font-weight: 600; text-decoration: none; transition: background .15s, color .15s; }
+    .logout:hover { background: #fff0f0; color: #c00; }
+
+    .main { margin-left: 220px; padding: 32px; max-width: 760px; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+    .topbar h1 { font-size: 22px; font-weight: 800; color: #111; }
+    .view-link { font-size: 13px; color: #2d9e00; text-decoration: none; font-weight: 600; }
+    .view-link:hover { text-decoration: underline; }
+
+    .add-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+    .add-card h2 { font-size: 15px; font-weight: 800; margin-bottom: 16px; }
+    .add-fields { display: flex; flex-direction: column; gap: 12px; }
+    .add-row { display: flex; gap: 10px; align-items: center; }
+    .add-row input[type="text"] {
+      flex: 1; padding: 10px 14px; border: 1px solid #e0e0e0;
+      border-radius: 8px; font-size: 14px; outline: none;
+    }
+    .add-row input[type="text"]:focus { border-color: #2d9e00; }
+    .file-label { font-size: 12px; font-weight: 700; color: #555; margin-bottom: 4px; display: block; }
+    .btn-add { background: #2d9e00; color: #fff; border: none; padding: 10px 22px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+    .btn-add:hover { background: #259000; }
+
+    .brands-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; overflow: hidden; }
+    .brands-header { padding: 16px 24px; border-bottom: 1px solid #f0f0f0; font-size: 15px; font-weight: 800; }
+    .brand-item { display: flex; align-items: center; gap: 14px; padding: 12px 24px; border-bottom: 1px solid #fafafa; }
+    .brand-item:last-child { border-bottom: none; }
+    .brand-item:hover { background: #fafff8; }
+    .brand-logo { width: 48px; height: 36px; object-fit: contain; border-radius: 4px; border: 1px solid #f0f0f0; background: #fafafa; padding: 2px; }
+    .brand-logo-placeholder { width: 48px; height: 36px; background: #f5f5f5; border-radius: 4px; border: 1px solid #eee; display: flex; align-items: center; justify-content: center; color: #ccc; font-size: 20px; flex-shrink: 0; }
+    .brand-name { font-weight: 700; font-size: 14px; flex: 1; }
+    .btn-del { padding: 5px 12px; border: 1px solid #fcc; border-radius: 6px; font-size: 12px; font-weight: 600; color: #c00; background: none; cursor: pointer; flex-shrink: 0; }
+    .btn-del:hover { background: #c00; color: #fff; border-color: #c00; }
+    .empty { padding: 40px; text-align: center; color: #bbb; }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">VOLE <span>MOTO</span><small>Admin Panel</small></div>
+  <nav class="sidebar-nav">
+    <a href="/admin" class="nav-item">📊 Дашборд</a>
+    <a href="/admin/add" class="nav-item">➕ Додати мото</a>
+    <a href="/admin/brands" class="nav-item active">🏷 Бренди</a>
+    <a href="/" target="_blank" class="nav-item">🌐 Переглянути сайт</a>
+  </nav>
+  <div class="sidebar-bottom">
+    <a href="/admin/logout" class="logout">🚪 Вийти</a>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <h1>Управління брендами</h1>
+    <a href="/brands" target="_blank" class="view-link">↗ Переглянути на сайті</a>
+  </div>
+
+  <div class="add-card">
+    <h2>Додати бренд</h2>
+    <form method="post" action="/admin/brands/add" enctype="multipart/form-data">
+      <div class="add-fields">
+        <div class="add-row">
+          <input type="text" name="name" placeholder="Honda, Kawasaki, Suzuki..." required autofocus>
+          <button type="submit" class="btn-add">+ Додати</button>
+        </div>
+        <div>
+          <label class="file-label">Логотип бренду (PNG, SVG, WebP)</label>
+          <input type="file" name="logo" accept="image/*">
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="brands-card">
+    <div class="brands-header">Всі бренди ({{ brands|length }})</div>
+    {% if brands %}
+      {% for brand in brands %}
+      <div class="brand-item">
+        {% if brand.logo %}
+        <img src="{{ brand.logo }}" class="brand-logo" alt="{{ brand.name }}">
+        {% else %}
+        <div class="brand-logo-placeholder">🏷</div>
+        {% endif %}
+        <span class="brand-name">{{ brand.name }}</span>
+        <form method="post" action="/admin/brands/delete/{{ brand.id }}"
+              onsubmit="return confirm('Видалити бренд {{ brand.name }}?')">
+          <button type="submit" class="btn-del">Видалити</button>
+        </form>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty">Брендів ще немає. Додайте перший.</div>
+    {% endif %}
+  </div>
+</div>
+
+</body>
+</html>

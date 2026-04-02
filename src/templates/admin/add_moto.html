@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>{{ "Редагувати" if bike else "Додати мото" }} — VOLE MOTO Admin</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f5f6f8; color: #222; font-size: 14px; }
+
+    .sidebar { width: 220px; background: #fff; border-right: 1px solid #e8e8e8; height: 100vh; position: fixed; top: 0; left: 0; display: flex; flex-direction: column; }
+    .sidebar-logo { padding: 24px 20px 16px; font-size: 18px; font-weight: 800; color: #111; border-bottom: 1px solid #f0f0f0; }
+    .sidebar-logo span { color: #2d9e00; }
+    .sidebar-logo small { display: block; font-size: 10px; font-weight: 600; color: #bbb; letter-spacing: .08em; text-transform: uppercase; margin-top: 2px; }
+    .sidebar-nav { padding: 16px 12px; flex: 1; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; color: #666; font-weight: 600; text-decoration: none; margin-bottom: 2px; transition: background .15s, color .15s; }
+    .nav-item:hover { background: #f5f5f5; color: #111; }
+    .nav-item.active { background: #f0fbea; color: #2d9e00; }
+    .sidebar-bottom { padding: 16px 12px; border-top: 1px solid #f0f0f0; }
+    .logout { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 8px; color: #999; font-weight: 600; text-decoration: none; }
+    .logout:hover { background: #fff0f0; color: #c00; }
+
+    .main { margin-left: 220px; padding: 32px; max-width: 900px; }
+    .topbar { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+    .topbar h1 { font-size: 22px; font-weight: 800; color: #111; }
+    .back { color: #999; text-decoration: none; font-size: 13px; }
+    .back:hover { color: #2d9e00; }
+
+    .form-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 32px; }
+    .form-section { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #bbb; margin: 24px 0 16px; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0; }
+    .form-section:first-child { margin-top: 0; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full { grid-column: 1 / -1; }
+    label { font-size: 12px; font-weight: 700; color: #555; }
+    input, select, textarea {
+      padding: 10px 14px; border: 1px solid #e0e0e0; border-radius: 8px;
+      font-size: 14px; font-family: Arial, sans-serif; outline: none;
+      transition: border-color .15s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: #2d9e00; }
+    textarea { resize: vertical; min-height: 90px; }
+    select option { font-size: 14px; }
+
+    .checkbox-row { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+    .checkbox-row input { width: 18px; height: 18px; accent-color: #2d9e00; }
+    .checkbox-row span { font-size: 14px; color: #444; }
+
+    .photos-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+    .photo-thumb { position: relative; width: 120px; height: 90px; border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0; }
+    .photo-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .photo-thumb-del { position: absolute; top: 4px; right: 4px; background: rgba(0,0,0,.55); color: #fff; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 13px; line-height: 22px; text-align: center; cursor: pointer; padding: 0; }
+    .photo-thumb-del:hover { background: #c00; }
+    .photo-main-badge { position: absolute; bottom: 4px; left: 4px; background: #2d9e00; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+
+    .form-actions { display: flex; gap: 12px; margin-top: 28px; }
+    .btn-save { background: #2d9e00; color: #fff; padding: 12px 32px; border: none; border-radius: 50px; font-size: 14px; font-weight: 700; cursor: pointer; }
+    .btn-save:hover { background: #259000; }
+    .btn-cancel { background: #fff; color: #666; padding: 12px 24px; border: 1px solid #ddd; border-radius: 50px; font-size: 14px; font-weight: 600; text-decoration: none; }
+    .btn-cancel:hover { border-color: #bbb; }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">VOLE <span>MOTO</span><small>Admin Panel</small></div>
+  <nav class="sidebar-nav">
+    <a href="/admin" class="nav-item">📊 Дашборд</a>
+    <a href="/admin/add" class="nav-item active">➕ Додати мото</a>
+    <a href="/src/static" target="_blank" class="nav-item">🌐 Переглянути сайт</a>
+  </nav>
+  <div class="sidebar-bottom">
+    <a href="/admin/logout" class="logout">🚪 Вийти</a>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <a href="/admin" class="back">← Назад</a>
+    <h1>{{ "Редагувати: " + bike.name if bike else "Додати новий мотоцикл" }}</h1>
+  </div>
+
+  <div class="form-card">
+    <form method="post" action="{{ action }}" enctype="multipart/form-data">
+
+      <div class="form-section">Основна інформація</div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Назва для відображення *</label>
+          <input type="text" name="name" placeholder="Kawasaki Ninja 650" required value="{{ bike.name if bike else '' }}">
+        </div>
+        <div class="form-group">
+          <label>Бренд *</label>
+          {% if brands %}
+          <select name="brand" required>
+            <option value="">— Оберіть бренд —</option>
+            {% for b in brands %}
+            <option value="{{ b.name }}" {% if bike and bike.brand == b.name %}selected{% endif %}>{{ b.name }}</option>
+            {% endfor %}
+          </select>
+          {% else %}
+          <input type="text" name="brand" placeholder="Honda, Kawasaki..." required value="{{ bike.brand if bike else '' }}">
+          <div style="font-size:12px;color:#f90;margin-top:4px;">⚠ Спочатку додайте бренди в <a href="/admin/brands">розділі Бренди</a></div>
+          {% endif %}
+        </div>
+        <div class="form-group">
+          <label>Модель *</label>
+          <input type="text" name="model" placeholder="CBR500R, Ninja 650..." required value="{{ bike.model if bike else '' }}">
+        </div>
+      </div>
+
+      <div class="form-section">Характеристики</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Категорія *</label>
+          <select name="category" required>
+            <option value="moto"  {% if bike and bike.category == 'moto'  %}selected{% endif %}>🏍 Мотоцикл</option>
+            <option value="moped" {% if bike and bike.category == 'moped' %}selected{% endif %}>🛵 Мопед / Скутер</option>
+            <option value="quad"  {% if bike and bike.category == 'quad'  %}selected{% endif %}>🚜 Квадроцикл</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Стан *</label>
+          <select name="condition" required>
+            {% for cond in ["Відмінний", "Дуже добрий", "Добрий", "Задовільний"] %}
+            <option value="{{ cond }}" {% if bike and bike.condition == cond %}selected{% endif %}>{{ cond }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Рік *</label>
+          <input type="number" name="year" min="1990" max="2025" required value="{{ bike.year if bike else 2022 }}">
+        </div>
+        <div class="form-group">
+          <label>Колір *</label>
+          <input type="text" name="color" placeholder="Чорний, Зелений..." required value="{{ bike.color if bike else '' }}">
+        </div>
+        <div class="form-group">
+          <label>Пробіг, км *</label>
+          <input type="number" name="mileage" min="0" required value="{{ bike.mileage if bike else '' }}" placeholder="12000">
+        </div>
+        <div class="form-group">
+          <label>Об'єм двигуна, cc *</label>
+          <input type="number" name="engine" min="0" required value="{{ bike.engine if bike else '' }}" placeholder="650">
+        </div>
+        <div class="form-group">
+          <label>Ціна, ₴ *</label>
+          <input type="number" name="price" min="0" required value="{{ bike.price if bike else '' }}" placeholder="250000">
+        </div>
+        <div class="form-group" style="justify-content:flex-end;">
+          <label>Статус</label>
+          <div class="checkbox-row">
+            <input type="checkbox" name="available" id="available" {% if not bike or bike.available %}checked{% endif %}>
+            <span>В наявності (знімаємо галочку якщо продано)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">Фото та опис</div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Фото мотоцикла (можна вибрати декілька)</label>
+          <input type="file" name="photos" accept="image/*" multiple>
+          {% if bike and bike.photos %}
+          <div class="photos-grid">
+            {% for p in bike.photos %}
+            <div class="photo-thumb">
+              <img src="{{ p.path }}" alt="">
+              {% if loop.first %}<div class="photo-main-badge">Головне</div>{% endif %}
+              <form method="post" action="/admin/photo/delete/{{ p.id }}" style="display:contents"
+                    onsubmit="return confirm('Видалити це фото?')">
+                <button type="submit" class="photo-thumb-del" title="Видалити">×</button>
+              </form>
+            </div>
+            {% endfor %}
+          </div>
+          <div style="font-size:12px;color:#999;margin-top:6px;">Перше фото — головне. Виберіть нові щоб додати до існуючих.</div>
+          {% endif %}
+        </div>
+        <div class="form-group full">
+          <label>Опис</label>
+          <textarea name="description" placeholder="Детальний опис мотоцикла...">{{ bike.description if bike else '' }}</textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-save">
+          {{ "Зберегти зміни" if bike else "Додати мотоцикл" }}
+        </button>
+        <a href="/admin" class="btn-cancel">Скасувати</a>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+</body>
+</html>

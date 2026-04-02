@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VOLE MOTO — Мотоцикли з Японії · Дніпро</title>
+  <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="../static/dropdown.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="nav">
+  <a href="/"><img src="data:image/png;base64,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" alt="VOLE MOTO" style="height:68px;display:block;"></a>
+  <ul class="nav-links">
+    <li><a href="/" class="active">Головна</a></li>
+    <li class="nav-dropdown">
+      <a href="#catalog">Каталог ▾</a>
+      <ul class="dropdown-menu">
+        <li><a href="/catalog/moto">🏍 Мотоцикли</a></li>
+        <li><a href="/catalog/moped">🛵 Мопеди</a></li>
+        <li><a href="/catalog/quad">🚜 Квадроцикли</a></li>
+      </ul>
+    </li>
+    <li><a href="/brands">Бренди</a></li>
+    <li><a href="#">Відгуки</a></li>
+    <li><a href="/contacts">Контакти</a></li>
+  </ul>
+  <div class="nav-search">
+    <input type="text" placeholder="Пошук мотоцикла..." class="search-input">
+    <button class="search-btn">Знайти</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+
+  <!-- SLIDER -->
+  <div class="slider">
+    <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=80')"></div>
+    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?w=1400&q=80')"></div>
+    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=1400&q=80')"></div>
+    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1609630875171-b1321377ee65?w=1400&q=80')"></div>
+    <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?w=1400&q=80')"></div>
+    <div class="slider-overlay"></div>
+
+    <!-- Arrows -->
+    <button class="slider-arrow slider-prev" onclick="slideMove(-1)">&#8249;</button>
+    <button class="slider-arrow slider-next" onclick="slideMove(1)">&#8250;</button>
+
+    <!-- Dots -->
+    <div class="slider-dots">
+      <span class="dot active" onclick="slideTo(0)"></span>
+      <span class="dot" onclick="slideTo(1)"></span>
+      <span class="dot" onclick="slideTo(2)"></span>
+      <span class="dot" onclick="slideTo(3)"></span>
+      <span class="dot" onclick="slideTo(4)"></span>
+    </div>
+  </div>
+
+  <!-- HERO CONTENT -->
+  <div class="hero-content">
+    <p class="hero-label">Мотосалон · Дніпро · Японія</p>
+    <h1>Мотоцикли<br><span>з Японії</span></h1>
+    <p class="hero-desc">Продаж Honda, Kawasaki, Suzuki, BMW. Технічна перевірка, юридичний супровід та оформлення документів.</p>
+    <div class="hero-btns">
+      <button class="btn-main">Переглянути каталог</button>
+      <button class="btn-sec">Зателефонувати</button>
+    </div>
+    <div class="hero-info">
+      <div class="hero-info-item">
+        <span>620+</span>
+        <small>Продано мотоциклів</small>
+      </div>
+      <div class="hero-info-item">
+        <span>13 400</span>
+        <small>Підписників Instagram</small>
+      </div>
+      <div class="hero-info-item">
+        <span>Дніпро</span>
+        <small>Аеропортовська, 51</small>
+      </div>
+      <div class="hero-info-item">
+        <span>Пн–Сб</span>
+        <small>9:00 – 18:00</small>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let current = 0;
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.dot');
+
+  function slideTo(n) {
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active');
+    current = (n + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active');
+  }
+
+  function slideMove(dir) { slideTo(current + dir); }
+
+  setInterval(() => slideMove(1), 5000);
+</script>
+
+<!-- CATALOG TABS -->
+<div id="catalog" class="section">
+  <div class="section-title">Каталог техніки</div>
+  <div class="section-sub">Актуальні пропозиції — оновлюється щодня</div>
+
+  <!-- МОТОЦИКЛИ -->
+  <div id="cat-motos" class="cat-section">
+    {% if motos %}
+    <div class="bikes-grid">
+      {% for bike in motos %}
+      <div class="card" onclick="window.location='/bike/{{ bike.id }}'" style="cursor:pointer">
+        <div class="card-img">
+          {% if bike.photo %}
+          <img src="{{ bike.photo }}" alt="{{ bike.name }}">
+          {% else %}
+          <svg width="64" height="64" fill="none" stroke="#bbb" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/><path d="M5 17H3v-4l3-5h8l4 5v4H19"/><path d="M12 4l3 5"/></svg>
+          {% endif %}
+          <div class="card-tag {% if not bike.available %}card-tag-sold{% endif %}">
+            {{ 'В наявності' if bike.available else 'Продано' }}
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-name">{{ bike.name }}</div>
+          <div class="card-year">{{ bike.year }} рік · {{ bike.color }}</div>
+          <div class="card-specs">
+            <span>{{ "{:,}".format(bike.mileage).replace(",", " ") }} км</span>
+            <span>{{ bike.engine }} cc</span>
+            <span>{{ bike.condition }}</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-price">{{ "{:,}".format(bike.price).replace(",", " ") }} <em>₴</em></div>
+            <a href="/bike/{{ bike.id }}" class="btn-detail">Детальніше</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="cat-empty">Наразі мотоциклів немає в наявності. Слідкуйте за оновленнями!</p>
+    {% endif %}
+  </div>
+
+  <!-- МОПЕДИ -->
+  <div id="cat-mopeds" class="cat-section" style="display:none">
+    {% if mopeds %}
+    <div class="bikes-grid">
+      {% for bike in mopeds %}
+      <div class="card" onclick="window.location='/bike/{{ bike.id }}'" style="cursor:pointer">
+        <div class="card-img">
+          {% if bike.photo %}
+          <img src="{{ bike.photo }}" alt="{{ bike.name }}">
+          {% else %}
+          <svg width="64" height="64" fill="none" stroke="#bbb" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/><path d="M5 17H3v-4l3-5h8l4 5v4H19"/><path d="M12 4l3 5"/></svg>
+          {% endif %}
+          <div class="card-tag {% if not bike.available %}card-tag-sold{% endif %}">
+            {{ 'В наявності' if bike.available else 'Продано' }}
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-name">{{ bike.name }}</div>
+          <div class="card-year">{{ bike.year }} рік · {{ bike.color }}</div>
+          <div class="card-specs">
+            <span>{{ "{:,}".format(bike.mileage).replace(",", " ") }} км</span>
+            <span>{{ bike.engine }} cc</span>
+            <span>{{ bike.condition }}</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-price">{{ "{:,}".format(bike.price).replace(",", " ") }} <em>₴</em></div>
+            <a href="/bike/{{ bike.id }}" class="btn-detail">Детальніше</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="cat-empty">Наразі мопедів немає в наявності. Слідкуйте за оновленнями!</p>
+    {% endif %}
+  </div>
+
+  <!-- КВАДРОЦИКЛИ -->
+  <div id="cat-quads" class="cat-section" style="display:none">
+    {% if quads %}
+    <div class="bikes-grid">
+      {% for bike in quads %}
+      <div class="card" onclick="window.location='/bike/{{ bike.id }}'" style="cursor:pointer">
+        <div class="card-img">
+          {% if bike.photo %}
+          <img src="{{ bike.photo }}" alt="{{ bike.name }}">
+          {% else %}
+          <svg width="64" height="64" fill="none" stroke="#bbb" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/><path d="M5 17H3v-4l3-5h8l4 5v4H19"/><path d="M12 4l3 5"/></svg>
+          {% endif %}
+          <div class="card-tag {% if not bike.available %}card-tag-sold{% endif %}">
+            {{ 'В наявності' if bike.available else 'Продано' }}
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="card-name">{{ bike.name }}</div>
+          <div class="card-year">{{ bike.year }} рік · {{ bike.color }}</div>
+          <div class="card-specs">
+            <span>{{ "{:,}".format(bike.mileage).replace(",", " ") }} км</span>
+            <span>{{ bike.engine }} cc</span>
+            <span>{{ bike.condition }}</span>
+          </div>
+          <div class="card-footer">
+            <div class="card-price">{{ "{:,}".format(bike.price).replace(",", " ") }} <em>₴</em></div>
+            <a href="/bike/{{ bike.id }}" class="btn-detail">Детальніше</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="cat-empty">Наразі квадроциклів немає в наявності. Слідкуйте за оновленнями!</p>
+    {% endif %}
+  </div>
+
+</div>
+
+<script>
+  function showCat(cat) {
+    document.querySelectorAll('.cat-section').forEach(s => s.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('cat-' + cat).style.display = 'block';
+    event.target.classList.add('active');
+  }
+</script>
+
+<!-- WHY US -->
+<div class="why section">
+  <div class="section-title">Чому обирають VOLE MOTO</div>
+  <div class="section-sub">Ми супроводжуємо вас на кожному кроці</div>
+  <div class="why-grid">
+    <div class="why-card">
+      <h4>✓ Перевірена техніка</h4>
+      <p>Технічний огляд кожного мотоцикла перед продажем. Жодних прихованих дефектів.</p>
+    </div>
+    <div class="why-card">
+      <h4>✓ Юридичний супровід</h4>
+      <p>Повне оформлення документів, розмитнення та постановка на облік під ключ.</p>
+    </div>
+    <div class="why-card">
+      <h4>✓ Доставка по Україні</h4>
+      <p>Відправляємо мотоцикли по всій Україні. Строки від 1 до 3 робочих днів.</p>
+    </div>
+    <div class="why-card">
+      <h4>✓ Гнучка оплата</h4>
+      <p>Готівка, безготівковий розрахунок, розстрочка та банківський кредит.</p>
+    </div>
+  </div>
+</div>
+
+<!-- CTA BANNER -->
+<div class="cta-banner">
+  <div>
+    <h2>Не знайшли потрібний мотоцикл?</h2>
+    <p>Залиште заявку — підберемо варіант під ваш бюджет та побажання</p>
+  </div>
+  <button class="btn-white">Зателефонувати</button>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <img src=../media/logo.png alt="VOLE MOTO" style="height:48px;margin-bottom:12px;display:block;filter:brightness(0) invert(1);">
+      <p class="footer-desc">Мотосалон у Дніпрі. Продаж мотоциклів з Японії. Технічна перевірка та юридичний супровід.</p>
+    </div>
+    <div>
+      <h4>Каталог</h4>
+      <ul>
+        <li><a href="#">Kawasaki</a></li>
+        <li><a href="#">Honda</a></li>
+        <li><a href="#">Suzuki</a></li>
+        <li><a href="#">BMW</a></li>
+        <li><a href="#">Yamaha</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Контакти</h4>
+      <div class="footer-contact">
+        <a href="tel:+380680505073">+38 068 050 5073</a>
+        <a href="/cdn-cgi/l/email-protection#8ce5e2eae3ccfae3e0e9e1e3f8e3a2f9ed"><span class="__cf_email__" data-cfemail="bed7d0d8d1fec8d1d2dbd3d1cad190cbdf">[email&#160;protected]</span></a>
+        <a href="#">Аеропортовська, 51, Дніпро 49000</a>
+        <a href="#">Пн–Сб: 9:00 – 18:00</a>
+        <a href="https://instagram.com/volemoto" target="_blank">Instagram: @volemoto</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 VOLE MOTO. Всі права захищені.</span>
+    <span>Мотоцикли з Японії · Дніпро</span>
+  </div>
+</footer>

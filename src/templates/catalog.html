@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ cat_label }} — VOLE MOTO</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/dropdown.css">
+  <style>
+    body { background: #f5f6f8; }
+
+    .page-wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px 60px;
+    }
+
+    /* BREADCRUMBS */
+    .breadcrumbs {
+      padding: 14px 0;
+      font-size: 13px; color: #999;
+    }
+    .breadcrumbs a { color: #999; text-decoration: none; }
+    .breadcrumbs a:hover { color: #2d9e00; }
+    .breadcrumbs span { margin: 0 6px; }
+
+    /* PAGE HEADER */
+    .cat-header {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px; gap: 16px;
+      flex-wrap: wrap;
+    }
+    .cat-header h1 {
+      font-size: 26px; font-weight: 800; color: #111;
+    }
+    .cat-header-count {
+      font-size: 14px; color: #999; font-weight: 400;
+      margin-left: 10px;
+    }
+
+    /* SORT */
+    .sort-row {
+      display: flex; align-items: center; gap: 10px;
+    }
+    .sort-label { font-size: 13px; color: #999; white-space: nowrap; }
+    .sort-select {
+      padding: 8px 14px; border: 1px solid #e0e0e0;
+      border-radius: 8px; font-size: 13px; font-weight: 600;
+      color: #333; background: #fff; cursor: pointer; outline: none;
+    }
+    .sort-select:focus { border-color: #2d9e00; }
+
+    /* LAYOUT */
+    .catalog-layout {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    @media (max-width: 900px) {
+      .catalog-layout { grid-template-columns: 1fr; }
+      .filters-sidebar { display: none; }
+      .filters-sidebar.open { display: block; }
+    }
+
+    /* FILTERS SIDEBAR */
+    .filters-sidebar {
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 12px;
+      padding: 20px;
+      position: sticky;
+      top: 80px;
+    }
+    .filters-title {
+      font-size: 14px; font-weight: 800; color: #111;
+      margin-bottom: 16px; padding-bottom: 12px;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .filters-reset {
+      font-size: 12px; color: #2d9e00; text-decoration: none; font-weight: 600;
+    }
+    .filters-reset:hover { text-decoration: underline; }
+
+    .filter-group { margin-bottom: 20px; }
+    .filter-group-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: .06em; color: #bbb; margin-bottom: 10px;
+    }
+
+    .filter-range {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+    }
+    .filter-range input {
+      width: 100%; padding: 8px 10px;
+      border: 1px solid #e0e0e0; border-radius: 8px;
+      font-size: 13px; outline: none;
+    }
+    .filter-range input:focus { border-color: #2d9e00; }
+    .filter-range input::placeholder { color: #ccc; }
+
+    .filter-select {
+      width: 100%; padding: 8px 12px;
+      border: 1px solid #e0e0e0; border-radius: 8px;
+      font-size: 13px; outline: none;
+      background: #fff; cursor: pointer;
+    }
+    .filter-select:focus { border-color: #2d9e00; }
+
+    .filter-checkbox {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: #444; cursor: pointer;
+    }
+    .filter-checkbox input {
+      width: 16px; height: 16px; accent-color: #2d9e00; cursor: pointer;
+    }
+
+    .btn-apply {
+      width: 100%; background: #2d9e00; color: #fff;
+      border: none; padding: 11px;
+      border-radius: 8px; font-size: 14px; font-weight: 700;
+      cursor: pointer; margin-top: 4px;
+    }
+    .btn-apply:hover { background: #259000; }
+
+    /* BIKES GRID */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 1100px) { .catalog-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px)  { .catalog-grid { grid-template-columns: 1fr; } }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center; padding: 60px 0; color: #bbb;
+    }
+    .empty-state p { font-size: 16px; margin-top: 12px; }
+
+    /* MOBILE FILTER TOGGLE */
+    .filter-toggle {
+      display: none;
+      padding: 9px 18px; border: 1px solid #e0e0e0;
+      border-radius: 8px; font-size: 13px; font-weight: 700;
+      background: #fff; cursor: pointer; color: #333;
+    }
+    @media (max-width: 900px) { .filter-toggle { display: block; } }
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="nav">
+  <a href="/"><img src="data:image/png;base64,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" alt="VOLE MOTO" style="height:68px;display:block;"></a>
+  <ul class="nav-links">
+    <li><a href="/">Головна</a></li>
+    <li class="nav-dropdown">
+      <a href="#" class="active">Каталог ▾</a>
+      <ul class="dropdown-menu">
+        <li><a href="/catalog/moto">🏍 Мотоцикли</a></li>
+        <li><a href="/catalog/moped">🛵 Мопеди</a></li>
+        <li><a href="/catalog/quad">🚜 Квадроцикли</a></li>
+      </ul>
+    </li>
+    <li><a href="/brands">Бренди</a></li>
+    <li><a href="#">Відгуки</a></li>
+    <li><a href="/contacts">Контакти</a></li>
+  </ul>
+  <div class="nav-search">
+    <input type="text" placeholder="Пошук мотоцикла..." class="search-input">
+    <button class="search-btn">Знайти</button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- BREADCRUMBS -->
+  <div class="breadcrumbs">
+    <a href="/">Головна</a>
+    <span>›</span>
+    <a href="/catalog/{{ category }}">{{ cat_label }}</a>
+  </div>
+
+  <!-- PAGE HEADER -->
+  <div class="cat-header">
+    <h1>
+      {{ {"moto":"🏍","moped":"🛵","quad":"🚜"}.get(category,"") }}
+      {{ cat_label }}
+      <span class="cat-header-count">{{ total }} оголошень</span>
+    </h1>
+    <div class="sort-row">
+      <button class="filter-toggle" onclick="toggleFilters()">⚙ Фільтри</button>
+      <span class="sort-label">Сортування:</span>
+      <select class="sort-select" onchange="applySort(this.value)">
+        <option value="newest"     {% if sort=='newest'     %}selected{% endif %}>Новіші спочатку</option>
+        <option value="price_asc"  {% if sort=='price_asc'  %}selected{% endif %}>Ціна: від дешевих</option>
+        <option value="price_desc" {% if sort=='price_desc' %}selected{% endif %}>Ціна: від дорогих</option>
+        <option value="year_desc"  {% if sort=='year_desc'  %}selected{% endif %}>Рік: новіші</option>
+        <option value="year_asc"   {% if sort=='year_asc'   %}selected{% endif %}>Рік: старіші</option>
+        <option value="mileage"    {% if sort=='mileage'    %}selected{% endif %}>Пробіг: менший</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="catalog-layout">
+
+    <!-- FILTERS -->
+    <form id="filters-form" class="filters-sidebar" method="get" action="/catalog/{{ category }}">
+      <input type="hidden" name="sort" value="{{ sort }}">
+
+      <div class="filters-title">
+        Фільтри
+        <a href="/catalog/{{ category }}" class="filters-reset">Скинути</a>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-label">Ціна, ₴</div>
+        <div class="filter-range">
+          <input type="number" name="min_price" placeholder="від"
+                 value="{{ min_price if min_price else '' }}">
+          <input type="number" name="max_price" placeholder="до"
+                 value="{{ max_price if max_price else '' }}">
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-label">Рік випуску</div>
+        <div class="filter-range">
+          <input type="number" name="min_year" placeholder="від"
+                 value="{{ min_year if min_year else '' }}">
+          <input type="number" name="max_year" placeholder="до"
+                 value="{{ max_year if max_year else '' }}">
+        </div>
+      </div>
+
+      {% if brands %}
+      <div class="filter-group">
+        <div class="filter-group-label">Бренд</div>
+        <select name="brand" class="filter-select">
+          <option value="">Всі бренди</option>
+          {% for b in brands %}
+          <option value="{{ b }}" {% if brand == b %}selected{% endif %}>{{ b }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      {% endif %}
+
+      <div class="filter-group">
+        <div class="filter-group-label">Стан</div>
+        <select name="condition" class="filter-select">
+          <option value="">Будь-який стан</option>
+          {% for c in conditions %}
+          <option value="{{ c }}" {% if condition == c %}selected{% endif %}>{{ c }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="filter-checkbox">
+          <input type="checkbox" name="available_only" value="true"
+                 {% if available_only %}checked{% endif %}
+                 onchange="this.form.submit()">
+          Тільки в наявності
+        </label>
+      </div>
+
+      <button type="submit" class="btn-apply">Застосувати</button>
+    </form>
+
+    <!-- GRID -->
+    <div class="catalog-grid">
+      {% if bikes %}
+        {% for bike in bikes %}
+        <div class="card" onclick="window.location='/bike/{{ bike.id }}'" style="cursor:pointer">
+          <div class="card-img">
+            {% if bike.photo %}
+            <img src="{{ bike.photo }}" alt="{{ bike.name }}">
+            {% else %}
+            <svg width="64" height="64" fill="none" stroke="#bbb" stroke-width="1.5" viewBox="0 0 24 24">
+              <circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/>
+              <path d="M5 17H3v-4l3-5h8l4 5v4H19"/><path d="M12 4l3 5"/>
+            </svg>
+            {% endif %}
+            <div class="card-tag {% if not bike.available %}card-tag-sold{% endif %}">
+              {{ 'В наявності' if bike.available else 'Продано' }}
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-name">{{ bike.name }}</div>
+            <div class="card-year">{{ bike.year }} рік · {{ bike.color }}</div>
+            <div class="card-specs">
+              <span>{{ "{:,}".format(bike.mileage).replace(",", " ") }} км</span>
+              <span>{{ bike.engine }} cc</span>
+              <span>{{ bike.condition }}</span>
+            </div>
+            <div class="card-footer">
+              <div class="card-price">{{ "{:,}".format(bike.price).replace(",", " ") }} <em>₴</em></div>
+              <a href="/bike/{{ bike.id }}" class="btn-detail">Детальніше</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <div style="font-size:56px;">🔍</div>
+          <p>Нічого не знайдено. Спробуйте змінити фільтри.</p>
+          <a href="/catalog/{{ category }}" style="color:#2d9e00;font-weight:700;">Скинути фільтри</a>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function applySort(val) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('sort', val);
+    window.location.href = url.toString();
+  }
+
+  function toggleFilters() {
+    document.querySelector('.filters-sidebar').classList.toggle('open');
+  }
+
+  // синхронізуємо sort у формі фільтрів при зміні сортування
+  document.querySelector('select.sort-select')?.addEventListener('change', function() {
+    document.querySelector('input[name="sort"]').value = this.value;
+  });
+</script>
+
+</body>
+</html>
