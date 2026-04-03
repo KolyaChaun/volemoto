@@ -22,6 +22,10 @@ def _add_column_if_missing(table, column, definition):
             conn.commit()
 
 _add_column_if_missing("brands", "logo", "VARCHAR(300) DEFAULT ''")
+_add_column_if_missing("reviews", "reply", "TEXT DEFAULT NULL")
+
+# створюємо таблицю reviews якщо ще не існує
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="VOLE MOTO")
 
@@ -361,6 +365,57 @@ def brands_page(request: Request, db: Session = Depends(get_db)):
 @app.get("/contacts", response_class=HTMLResponse)
 def contacts_page(request: Request):
     return templates.TemplateResponse(request, "contacts.html", {})
+
+@app.post("/admin/reviews/{review_id}/reply")
+def admin_review_reply(request: Request, review_id: int, reply: str = Form(...), db: Session = Depends(get_db)):
+    if not check_admin(request):
+        return RedirectResponse("/admin/login", status_code=302)
+    review = db.query(models.Review).filter_by(id=review_id).first()
+    if review:
+        review.reply = reply.strip() or None
+        db.commit()
+    return RedirectResponse("/reviews", status_code=302)
+
+@app.post("/admin/reviews/{review_id}/delete")
+def admin_review_delete(request: Request, review_id: int, db: Session = Depends(get_db)):
+    if not check_admin(request):
+        return RedirectResponse("/admin/login", status_code=302)
+    review = db.query(models.Review).filter_by(id=review_id).first()
+    if review:
+        db.delete(review)
+        db.commit()
+    return RedirectResponse("/reviews", status_code=302)
+
+@app.get("/reviews", response_class=HTMLResponse)
+def reviews_page(request: Request, sort: str = "new", db: Session = Depends(get_db)):
+    q = db.query(models.Review)
+    if sort == "rating":
+        q = q.order_by(models.Review.rating.desc())
+    elif sort == "old":
+        q = q.order_by(models.Review.id.asc())
+    else:
+        q = q.order_by(models.Review.id.desc())
+    reviews = q.all()
+    total = len(reviews)
+    avg = round(sum(r.rating for r in reviews) / total, 1) if total else 0
+    counts = {i: sum(1 for r in reviews if r.rating == i) for i in range(1, 6)}
+    return templates.TemplateResponse(request, "reviews.html", {
+        "reviews": reviews, "total": total, "avg": avg, "counts": counts,
+        "sort": sort, "is_admin": check_admin(request),
+    })
+
+@app.post("/reviews")
+def reviews_add(
+    request: Request,
+    name: str = Form(...),
+    rating: int = Form(...),
+    text: str = Form(...),
+    db: Session = Depends(get_db),
+):
+    if 1 <= rating <= 5 and name.strip() and text.strip():
+        db.add(models.Review(name=name.strip(), rating=rating, text=text.strip()))
+        db.commit()
+    return RedirectResponse("/reviews", status_code=302)
 
 if __name__ == "__main__":
     import uvicorn

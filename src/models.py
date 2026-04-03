@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, Boolean, Text, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, Text, ForeignKey, DateTime
+import datetime
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -40,3 +41,14 @@ class BikePhoto(Base):
     path    = Column(String(300), nullable=False)
 
     bike    = relationship("Bike", back_populates="photos")
+
+
+class Review(Base):
+    __tablename__ = "reviews"
+
+    id         = Column(Integer, primary_key=True, index=True)
+    name       = Column(String(100), nullable=False)
+    rating     = Column(Integer, nullable=False)  # 1–5
+    text       = Column(Text, nullable=False)
+    reply      = Column(Text, default=None, nullable=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
