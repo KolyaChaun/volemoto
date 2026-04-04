@@ -186,8 +186,10 @@
     <li><a href="/contacts" class="active">Контакти</a></li>
   </ul>
   <div class="nav-search">
-    <input type="text" placeholder="Пошук мотоцикла..." class="search-input">
-    <button class="search-btn">Знайти</button>
+    <form action="/search" method="get" style="display:flex;gap:0;">
+      <input type="text" name="q" placeholder="Пошук мотоцикла..." class="search-input" autocomplete="off">
+      <button type="submit" class="search-btn">Знайти</button>
+    </form>
   </div>
 </nav>
 
@@ -299,5 +301,6 @@
     <span>Дніпро, Україна</span>
   </div>
 </footer>
+<script src="/static/autocomplete.js"></script>
 </body>
 </html>

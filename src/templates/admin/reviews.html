@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Відгуки — Адмін VOLE MOTO</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f5f6f8; color: #222; font-size: 14px; }
+
+    .sidebar { width: 230px; background: #1a1a2e; height: 100vh; position: fixed; top: 0; left: 0; display: flex; flex-direction: column; }
+    .sidebar-logo { padding: 28px 20px 20px; border-bottom: 1px solid rgba(255,255,255,.07); }
+    .sidebar-logo-text { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: .04em; }
+    .sidebar-logo-text span { color: #2d9e00; }
+    .sidebar-logo small { display: block; font-size: 10px; font-weight: 600; color: rgba(255,255,255,.3); letter-spacing: .1em; text-transform: uppercase; margin-top: 4px; }
+    .sidebar-nav { padding: 16px 12px; flex: 1; }
+    .nav-section { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.25); padding: 14px 10px 6px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; color: rgba(255,255,255,.55); font-weight: 600; text-decoration: none; margin-bottom: 2px; transition: background .15s, color .15s; font-size: 13px; }
+    .nav-item:hover { background: rgba(255,255,255,.07); color: #fff; }
+    .nav-item.active { background: rgba(45,158,0,.2); color: #4ecb00; }
+    .nav-badge { margin-left: auto; background: #e53935; color: #fff; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 10px; padding: 0 6px; display: inline-flex; align-items: center; justify-content: center; }
+    .sidebar-bottom { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,.07); }
+    .logout { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 8px; color: rgba(255,255,255,.35); font-weight: 600; text-decoration: none; font-size: 13px; transition: background .15s, color .15s; }
+    .logout:hover { background: rgba(200,0,0,.15); color: #f77; }
+
+    .main { margin-left: 230px; padding: 32px; }
+    .topbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; }
+    .topbar h1 { font-size: 22px; font-weight: 800; color: #111; }
+
+    /* Review card */
+    .review-card {
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 14px;
+      padding: 22px 26px;
+      margin-bottom: 16px;
+    }
+    .review-head {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 12px;
+    }
+    .avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: #2d9e00; color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; font-weight: 800; flex-shrink: 0;
+    }
+    .review-name { font-size: 15px; font-weight: 700; color: #111; }
+    .review-date { font-size: 12px; color: #bbb; }
+    .stars { display: flex; gap: 2px; margin-top: 2px; }
+    .star { font-size: 13px; color: #e0e0e0; }
+    .star.on { color: #f5a623; }
+    .review-text {
+      font-size: 14px; color: #444; line-height: 1.7;
+      margin-bottom: 16px; padding-left: 54px;
+    }
+
+    /* Replies */
+    .replies { padding-left: 54px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }
+    .reply-item {
+      border-radius: 10px; padding: 12px 16px;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+    }
+    .reply-item.admin-reply { background: #f0fbea; border-left: 3px solid #2d9e00; }
+    .reply-item.user-reply  { background: #f8f8f8; border-left: 3px solid #ddd; }
+    .reply-meta { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+    .reply-item.admin-reply .reply-meta { color: #2d9e00; }
+    .reply-item.user-reply  .reply-meta { color: #888; }
+    .reply-text { font-size: 13px; color: #333; line-height: 1.6; }
+    .reply-date { font-size: 11px; color: #bbb; font-weight: 400; margin-left: 8px; }
+    .btn-del-reply {
+      background: none; border: none; color: #ddd;
+      font-size: 16px; cursor: pointer; flex-shrink: 0;
+      transition: color .15s; padding: 0 4px;
+    }
+    .btn-del-reply:hover { color: #e53935; }
+
+    /* Reply form */
+    .reply-form-wrap { padding-left: 54px; }
+    .reply-form-wrap textarea {
+      width: 100%; border: 1px solid #e0e0e0; border-radius: 8px;
+      padding: 10px 14px; font-size: 13px; font-family: inherit;
+      resize: vertical; min-height: 70px; outline: none;
+      transition: border-color .15s;
+    }
+    .reply-form-wrap textarea:focus { border-color: #2d9e00; }
+    .reply-form-actions { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+    .btn-reply {
+      background: #2d9e00; color: #fff; border: none;
+      border-radius: 6px; padding: 8px 22px;
+      font-size: 13px; font-weight: 700; cursor: pointer;
+    }
+    .btn-reply:hover { background: #26880a; }
+    .btn-del-review {
+      margin-left: auto;
+      background: none; border: 1px solid #fbc4c4;
+      color: #e53935; border-radius: 6px; padding: 7px 16px;
+      font-size: 12px; font-weight: 700; cursor: pointer;
+    }
+    .btn-del-review:hover { background: #fff5f5; }
+
+    .empty { text-align: center; padding: 60px; color: #bbb; font-size: 15px; }
+  </style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-text">VOLE <span>MOTO</span></div>
+    <small>Admin Panel</small>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Головне</div>
+    <a href="/admin" class="nav-item">📊 Дашборд</a>
+    <a href="/admin/catalog" class="nav-item">📋 Каталог</a>
+    <div class="nav-section">Додати</div>
+    <a href="/admin/add" class="nav-item">➕ Додати мото</a>
+    <a href="/admin/brands" class="nav-item">🏷 Бренди</a>
+    <div class="nav-section">Клієнти</div>
+    <a href="/admin/reviews" class="nav-item active">💬 Відгуки {% if unread %}<span class="nav-badge">{{ unread }}</span>{% endif %}</a>
+    <div class="nav-section">Сайт</div>
+    <a href="/" target="_blank" class="nav-item">🌐 Переглянути сайт</a>
+  </nav>
+  <div class="sidebar-bottom">
+    <a href="/admin/logout" class="logout">🚪 Вийти</a>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <h1>💬 Відгуки ({{ reviews|length }})</h1>
+    <a href="/reviews" target="_blank" style="font-size:13px;color:#2d9e00;text-decoration:none;">↗ Переглянути на сайті</a>
+  </div>
+
+  {% if reviews %}
+    {% for r in reviews %}
+    <div class="review-card">
+      <div class="review-head">
+        <div class="avatar">{{ r.name[0]|upper }}</div>
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="review-name">{{ r.name }}</span>
+            <span class="review-date">{{ r.created_at.strftime('%d.%m.%Y %H:%M') }}</span>
+          </div>
+          <div class="stars">
+            {% for i in range(1,6) %}<span class="star {% if i <= r.rating %}on{% endif %}">★</span>{% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="review-text">{{ r.text }}</div>
+
+      {% if r.replies %}
+      <div class="replies">
+        {% for rep in r.replies %}
+        <div class="reply-item {% if rep.is_admin %}admin-reply{% else %}user-reply{% endif %}">
+          <div style="flex:1">
+            <div class="reply-meta">
+              {{ rep.name }}{% if rep.is_admin %} (адмін){% endif %}
+              <span class="reply-date">{{ rep.created_at.strftime('%d.%m.%Y %H:%M') }}</span>
+            </div>
+            <div class="reply-text">{{ rep.text }}</div>
+          </div>
+          <form method="post" action="/admin/reviews/reply/{{ rep.id }}/delete" onsubmit="return confirm('Видалити відповідь?')">
+            <button type="submit" class="btn-del-reply" title="Видалити">✕</button>
+          </form>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <div class="reply-form-wrap">
+        <form method="post" action="/admin/reviews/{{ r.id }}/reply" id="reply-form-{{ r.id }}">
+          <textarea name="text" placeholder="Відповідь від VOLE MOTO..." required></textarea>
+        </form>
+        <div class="reply-form-actions">
+          <button type="submit" form="reply-form-{{ r.id }}" class="btn-reply">💬 Відповісти</button>
+          <form method="post" action="/admin/reviews/{{ r.id }}/delete" style="margin:0" onsubmit="return confirm('Видалити відгук разом з відповідями?')">
+            <button type="submit" class="btn-del-review">✕ Видалити відгук</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+  <div class="empty">Відгуків ще немає</div>
+  {% endif %}
+</div>
+
+</body>
+</html>

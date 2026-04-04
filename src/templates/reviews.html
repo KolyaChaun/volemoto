@@ -10,13 +10,9 @@
     body { background: #f5f6f8; }
 
     .page-layout {
-      max-width: 1100px;
+      max-width: 1000px;
       margin: 0 auto;
       padding: 0 24px 60px;
-      display: grid;
-      grid-template-columns: 210px 1fr;
-      gap: 32px;
-      align-items: start;
     }
 
     /* ── SIDEBAR ── */
@@ -86,15 +82,26 @@
     .rbar-count { width: 20px; text-align: right; }
 
     .write-btn {
-      background: #2d9e00; color: #fff;
-      padding: 12px 28px; border-radius: 8px;
-      font-size: 14px; font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #2d9e00, #4cbe1a);
+      color: #fff;
+      padding: 13px 30px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
       text-decoration: none;
-      transition: background .15s;
       white-space: nowrap;
       margin-left: auto;
+      box-shadow: 0 4px 14px rgba(45,158,0,.35);
+      transition: transform .15s, box-shadow .15s;
+      letter-spacing: .02em;
     }
-    .write-btn:hover { background: #26880a; }
+    .write-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(45,158,0,.45);
+    }
 
     /* ── SORT ROW ── */
     .sort-row {
@@ -122,20 +129,23 @@
 
     /* ── REVIEWS LIST ── */
     .reviews-wrap {
-      background: #fff;
-      border: 1px solid #e8e8e8;
-      border-radius: 14px;
-      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
       margin-bottom: 28px;
     }
 
     .review-card {
-      padding: 22px 28px;
-      border-bottom: 1px solid #f5f5f5;
-      transition: background .15s;
+      background: #fff;
+      border: 1px solid #ebebeb;
+      border-radius: 16px;
+      padding: 16px 22px;
+      transition: box-shadow .15s, border-color .15s;
     }
-    .review-card:last-child { border-bottom: none; }
-    .review-card:hover { background: #fafcf9; }
+    .review-card:hover {
+      box-shadow: 0 3px 14px rgba(0,0,0,.07);
+      border-color: #d8d8d8;
+    }
 
     .review-top {
       display: flex;
@@ -168,69 +178,60 @@
       margin-left: 58px;
     }
 
-    /* ── ADMIN REPLY BLOCK ── */
-    .reply-block {
-      margin: 14px 0 0 58px;
-      background: #f0fbea;
-      border-left: 3px solid #2d9e00;
+    /* ── REPLIES ── */
+    .replies-block { margin: 14px 0 0 58px; display: flex; flex-direction: column; gap: 8px; }
+    .reply-item {
       border-radius: 0 10px 10px 0;
-      padding: 12px 16px;
+      padding: 11px 16px;
     }
-    .reply-header {
-      display: flex; align-items: center; gap: 8px;
-      margin-bottom: 6px;
-    }
-    .reply-logo {
-      font-size: 12px; font-weight: 800; color: #2d9e00;
+    .reply-item.admin-reply { background: #f0fbea; border-left: 3px solid #2d9e00; }
+    .reply-item.user-reply  { background: #f8f8f8; border-left: 3px solid #ddd; }
+    .reply-header { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+    .reply-badge-admin {
+      font-size: 11px; font-weight: 800; color: #2d9e00;
       background: #d9f5c7; padding: 2px 8px; border-radius: 4px;
     }
-    .reply-date { font-size: 11px; color: #aaa; }
+    .reply-badge-user {
+      font-size: 11px; font-weight: 700; color: #666;
+    }
+    .reply-date { font-size: 11px; color: #bbb; }
     .reply-text { font-size: 13px; color: #333; line-height: 1.65; }
 
-    /* ── ADMIN CONTROLS ── */
-    .admin-bar {
-      display: flex; align-items: center; gap: 10px;
-      margin: 10px 0 0 58px;
-    }
+    /* ── USER REPLY TOGGLE ── */
+    .reply-toggle-bar { margin: 12px 0 0 58px; }
     .btn-reply-toggle {
-      font-size: 12px; font-weight: 600; color: #2d9e00;
-      background: none; border: 1px solid #c8edb5;
-      border-radius: 6px; padding: 4px 12px;
+      font-size: 12px; font-weight: 600; color: #888;
+      background: none; border: 1px solid #e0e0e0;
+      border-radius: 20px; padding: 5px 14px;
       cursor: pointer; transition: all .15s;
     }
-    .btn-reply-toggle:hover { background: #f0fbea; }
-    .btn-delete-review {
-      font-size: 12px; font-weight: 600; color: #e53935;
-      background: none; border: 1px solid #fbc4c4;
-      border-radius: 6px; padding: 4px 12px;
-      cursor: pointer; transition: all .15s;
-    }
-    .btn-delete-review:hover { background: #fff5f5; }
-
-    .reply-form {
+    .btn-reply-toggle:hover { border-color: #2d9e00; color: #2d9e00; background: #f9fdf6; }
+    .user-reply-form {
       margin: 10px 0 0 58px;
       display: none;
     }
-    .reply-form.open { display: block; }
-    .reply-form textarea {
-      width: 100%; border: 1px solid #ddd; border-radius: 8px;
-      padding: 10px 14px; font-size: 13px; font-family: inherit;
-      resize: vertical; min-height: 80px; outline: none;
-      transition: border-color .15s; box-sizing: border-box;
+    .user-reply-form.open { display: block; }
+    .user-reply-form .reply-inputs { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin-bottom: 8px; }
+    .user-reply-form input,
+    .user-reply-form textarea {
+      border: 1px solid #e0e0e0; border-radius: 8px;
+      padding: 9px 13px; font-size: 13px; font-family: inherit;
+      outline: none; transition: border-color .15s; width: 100%; box-sizing: border-box;
     }
-    .reply-form textarea:focus { border-color: #2d9e00; }
-    .reply-form-actions { display: flex; gap: 8px; margin-top: 8px; }
+    .user-reply-form input:focus,
+    .user-reply-form textarea:focus { border-color: #2d9e00; }
+    .user-reply-form textarea { resize: vertical; min-height: 70px; }
+    .reply-form-actions { display: flex; gap: 8px; margin-top: 6px; }
     .btn-send-reply {
       background: #2d9e00; color: #fff; border: none;
       border-radius: 6px; padding: 7px 20px;
       font-size: 13px; font-weight: 700; cursor: pointer;
-      transition: background .15s;
     }
     .btn-send-reply:hover { background: #26880a; }
     .btn-cancel-reply {
       background: none; color: #aaa; border: 1px solid #e0e0e0;
-      border-radius: 6px; padding: 7px 16px;
-      font-size: 13px; font-weight: 600; cursor: pointer;
+      border-radius: 6px; padding: 7px 14px;
+      font-size: 13px; cursor: pointer;
     }
 
     .no-reviews { text-align: center; padding: 60px 0; color: #bbb; font-size: 15px; }
@@ -266,8 +267,7 @@
     .star-picker input[type=radio] { display: none; }
     .star-picker label { font-size: 30px; cursor: pointer; color: #e0e0e0; transition: color .1s; }
     .star-picker label:hover, .star-picker label:hover ~ label { color: #f5a623 !important; }
-    .star-picker input[type=radio]:checked ~ label { color: #e0e0e0; }
-    .star-picker input[type=radio]:checked + label { color: #f5a623; }
+    .star-picker input[type=radio]:checked ~ label { color: #f5a623; }
 
     .form-submit {
       background: #2d9e00; color: #fff; border: none;
@@ -278,8 +278,7 @@
     .form-submit:hover { background: #26880a; }
 
     @media (max-width: 900px) {
-      .page-layout { grid-template-columns: 1fr; }
-      .sidebar { position: static; }
+      .page-layout { padding: 0 16px 40px; }
     }
     @media (max-width: 600px) {
       .rating-card { flex-direction: column; align-items: flex-start; }
@@ -310,23 +309,14 @@
     <li><a href="/contacts">Контакти</a></li>
   </ul>
   <div class="nav-search">
-    <input type="text" placeholder="Пошук мотоцикла..." class="search-input">
-    <button class="search-btn">Знайти</button>
+    <form action="/search" method="get" style="display:flex;gap:0;">
+      <input type="text" name="q" placeholder="Пошук мотоцикла..." class="search-input" autocomplete="off">
+      <button type="submit" class="search-btn">Знайти</button>
+    </form>
   </div>
 </nav>
 
 <div class="page-layout">
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <nav class="sidebar-nav">
-      <a href="/">Головна</a>
-      <a href="/catalog">Каталог</a>
-      <a href="/brands">Бренди</a>
-      <a href="/reviews" class="active">Відгуки</a>
-      <a href="/contacts">Контакти</a>
-    </nav>
-  </aside>
 
   <!-- MAIN -->
   <div class="page-main">
@@ -334,7 +324,7 @@
       <a href="/">Головна</a><span>›</span>Відгуки
     </div>
 
-    <div class="page-title">Відгуки про VOLE MOTO</div>
+    <div class="page-title">Відгуки про VOLE <span style="color:#2d9e00;">MOTO</span></div>
     <div class="page-desc">Якщо ви придбали мотоцикл у нашому салоні — поділіться враженнями. Дякуємо!</div>
 
     <!-- RATING CARD -->
@@ -394,38 +384,55 @@
 
         <div class="review-text">{{ r.text }}</div>
 
-        {% if r.reply %}
-        <div class="reply-block">
-          <div class="reply-header">
-            <span class="reply-logo">VOLE MOTO</span>
-            <span class="reply-date">Відповідь від салону</span>
+        {% if r.replies %}
+        <div class="replies-block">
+          {% for rep in r.replies %}
+          <div class="reply-item {% if rep.is_admin %}admin-reply{% else %}user-reply{% endif %}">
+            <div class="reply-header">
+              {% if rep.is_admin %}
+                <span class="reply-badge-admin">VOLE MOTO</span>
+              {% else %}
+                <span class="reply-badge-user">{{ rep.name }}</span>
+              {% endif %}
+              <span class="reply-date">{{ rep.created_at.strftime('%d.%m.%Y') }}</span>
+            </div>
+            <div class="reply-text">{{ rep.text }}</div>
           </div>
-          <div class="reply-text">{{ r.reply }}</div>
+          {% endfor %}
         </div>
         {% endif %}
 
-        {% if is_admin %}
-        <div class="admin-bar">
-          <button class="btn-reply-toggle" onclick="toggleReply({{ r.id }})">
-            {% if r.reply %}✏ Редагувати відповідь{% else %}💬 Відповісти{% endif %}
-          </button>
-          <form method="post" action="/admin/reviews/{{ r.id }}/delete" style="margin:0" onsubmit="return confirm('Видалити відгук?')">
-            <button type="submit" class="btn-delete-review">✕ Видалити</button>
-          </form>
+        <div class="reply-toggle-bar">
+          <button class="btn-reply-toggle" onclick="toggleReply({{ r.id }})">💬 Відповісти</button>
         </div>
-        <div class="reply-form" id="reply-form-{{ r.id }}">
-          <form method="post" action="/admin/reviews/{{ r.id }}/reply">
-            <textarea name="reply" placeholder="Напишіть відповідь від салону..." required>{{ r.reply or '' }}</textarea>
+        <div class="user-reply-form" id="reply-form-{{ r.id }}">
+          <form method="post" action="/reviews/{{ r.id }}/reply">
+            <div class="reply-inputs">
+              <input type="text" name="name" placeholder="Ваше ім'я" required maxlength="100">
+              <textarea name="text" placeholder="Ваша відповідь..." required maxlength="1000"></textarea>
+            </div>
             <div class="reply-form-actions">
               <button type="submit" class="btn-send-reply">Надіслати</button>
               <button type="button" class="btn-cancel-reply" onclick="toggleReply({{ r.id }})">Скасувати</button>
             </div>
           </form>
         </div>
-        {% endif %}
       </div>
       {% endfor %}
     </div>
+    {% if has_more %}
+    <div style="text-align:center; margin: 24px 0 8px;">
+      <a href="?sort={{ sort }}&limit={{ limit + 20 }}"
+         style="display:inline-block; padding:12px 36px; background:#fff; border:1px solid #ddd;
+                border-radius:50px; font-size:14px; font-weight:700; color:#444;
+                text-decoration:none; transition:all .15s;"
+         onmouseover="this.style.borderColor='#2d9e00';this.style.color='#2d9e00'"
+         onmouseout="this.style.borderColor='#ddd';this.style.color='#444'">
+        Показати ще 20 відгуків &darr;
+      </a>
+    </div>
+    {% endif %}
+
     {% else %}
     <div class="no-reviews">Відгуків ще немає. Будьте першим! 👇</div>
     {% endif %}
@@ -507,5 +514,6 @@ function toggleReply(id) {
   }
 }
 </script>
+<script src="/static/autocomplete.js"></script>
 </body>
 </html>

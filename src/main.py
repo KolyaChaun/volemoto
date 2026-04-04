@@ -5,7 +5,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from typing import Optional, List
-import shutil, os, uuid
+import shutil, os, uuid, random
 
 from database import get_db, engine
 import models
@@ -22,7 +22,34 @@ def _add_column_if_missing(table, column, definition):
             conn.commit()
 
 _add_column_if_missing("brands", "logo", "VARCHAR(300) DEFAULT ''")
-_add_column_if_missing("reviews", "reply", "TEXT DEFAULT NULL")
+_add_column_if_missing("reviews", "is_read", "BOOLEAN DEFAULT FALSE")
+_add_column_if_missing("bikes", "article", "VARCHAR(10) DEFAULT ''")
+
+def _gen_article(db) -> str:
+    while True:
+        code = f"{random.randint(0, 999999):06d}"
+        if not db.query(models.Bike).filter_by(article=code).first():
+            return code
+
+# заповнюємо артикули для існуючих мотоциклів без артикулу
+def _fill_missing_articles():
+    from database import SessionLocal
+    db = SessionLocal()
+    try:
+        bikes = db.query(models.Bike).filter(
+            (models.Bike.article == None) | (models.Bike.article == "")
+        ).all()
+        for bike in bikes:
+            bike.article = _gen_article(db)
+        if bikes:
+            db.commit()
+    finally:
+        db.close()
+
+_fill_missing_articles()
+
+def _unread_count(db: Session) -> int:
+    return db.query(models.Review).filter_by(is_read=False).count()
 
 # створюємо таблицю reviews якщо ще не існує
 models.Base.metadata.create_all(bind=engine)
@@ -66,29 +93,41 @@ def catalog(
     max_year: Optional[str] = None,
     condition: Optional[str] = None,
     available_only: Optional[str] = None,
+    min_mileage: Optional[str] = None,
+    max_mileage: Optional[str] = None,
+    min_engine: Optional[str] = None,
+    max_engine: Optional[str] = None,
 ):
     if category not in ("moto", "moped", "quad"):
         raise HTTPException(status_code=404)
 
     # конвертуємо порожні рядки в None
     def to_int(v): return int(v) if v and v.strip() else None
-    min_price_v  = to_int(min_price)
-    max_price_v  = to_int(max_price)
-    min_year_v   = to_int(min_year)
-    max_year_v   = to_int(max_year)
+    min_price_v   = to_int(min_price)
+    max_price_v   = to_int(max_price)
+    min_year_v    = to_int(min_year)
+    max_year_v    = to_int(max_year)
+    min_mileage_v = to_int(min_mileage)
+    max_mileage_v = to_int(max_mileage)
+    min_engine_v  = to_int(min_engine)
+    max_engine_v  = to_int(max_engine)
     brand_v      = brand.strip() if brand and brand.strip() else None
     condition_v  = condition.strip() if condition and condition.strip() else None
     avail_v      = available_only in ("true", "on", "1", True)
 
     q = db.query(models.Bike).filter(models.Bike.category == category)
 
-    if brand_v:     q = q.filter(models.Bike.brand == brand_v)
-    if min_price_v: q = q.filter(models.Bike.price >= min_price_v)
-    if max_price_v: q = q.filter(models.Bike.price <= max_price_v)
-    if min_year_v:  q = q.filter(models.Bike.year >= min_year_v)
-    if max_year_v:  q = q.filter(models.Bike.year <= max_year_v)
-    if condition_v: q = q.filter(models.Bike.condition == condition_v)
-    if avail_v:     q = q.filter(models.Bike.available == True)
+    if brand_v:        q = q.filter(models.Bike.brand == brand_v)
+    if min_price_v:    q = q.filter(models.Bike.price >= min_price_v)
+    if max_price_v:    q = q.filter(models.Bike.price <= max_price_v)
+    if min_year_v:     q = q.filter(models.Bike.year >= min_year_v)
+    if max_year_v:     q = q.filter(models.Bike.year <= max_year_v)
+    if condition_v:    q = q.filter(models.Bike.condition == condition_v)
+    if avail_v:        q = q.filter(models.Bike.available == True)
+    if min_mileage_v is not None: q = q.filter(models.Bike.mileage >= min_mileage_v)
+    if max_mileage_v is not None: q = q.filter(models.Bike.mileage <= max_mileage_v)
+    if min_engine_v is not None:  q = q.filter(models.Bike.engine >= min_engine_v)
+    if max_engine_v is not None:  q = q.filter(models.Bike.engine <= max_engine_v)
 
     if sort == "price_asc":    q = q.order_by(models.Bike.price.asc())
     elif sort == "price_desc": q = q.order_by(models.Bike.price.desc())
@@ -119,6 +158,10 @@ def catalog(
         "max_year": max_year_v,
         "condition": condition_v,
         "available_only": avail_v,
+        "min_mileage": min_mileage_v,
+        "max_mileage": max_mileage_v,
+        "min_engine": min_engine_v,
+        "max_engine": max_engine_v,
         "total": len(bikes),
     })
 
@@ -162,14 +205,35 @@ def admin_logout():
 def admin_dashboard(request: Request, db: Session = Depends(get_db)):
     if not check_admin(request):
         return RedirectResponse("/admin/login", status_code=302)
+    bikes   = db.query(models.Bike).order_by(models.Bike.id.desc()).all()
+    total   = len(bikes)
+    motos   = len([b for b in bikes if b.category == "moto"])
+    mopeds  = len([b for b in bikes if b.category == "moped"])
+    quads   = len([b for b in bikes if b.category == "quad"])
+    avail   = len([b for b in bikes if b.available])
+    sold    = total - avail
+    reviews = db.query(models.Review).count()
+    unread  = _unread_count(db)
+    recent  = bikes[:6]
+    return templates.TemplateResponse(request, "admin/dashboard.html", {
+        "total": total, "motos": motos, "mopeds": mopeds, "quads": quads,
+        "avail": avail, "sold": sold, "reviews": reviews,
+        "recent": recent, "unread": unread,
+    })
+
+@app.get("/admin/catalog", response_class=HTMLResponse)
+def admin_catalog(request: Request, db: Session = Depends(get_db)):
+    if not check_admin(request):
+        return RedirectResponse("/admin/login", status_code=302)
     bikes  = db.query(models.Bike).order_by(models.Bike.id.desc()).all()
     total  = len(bikes)
     motos  = len([b for b in bikes if b.category == "moto"])
     mopeds = len([b for b in bikes if b.category == "moped"])
     quads  = len([b for b in bikes if b.category == "quad"])
-    return templates.TemplateResponse(request, "admin/dashboard.html", {
+    return templates.TemplateResponse(request, "admin/catalog.html", {
         "bikes": bikes, "total": total,
         "motos": motos, "mopeds": mopeds, "quads": quads,
+        "unread": _unread_count(db),
     })
 
 @app.get("/admin/add", response_class=HTMLResponse)
@@ -178,19 +242,23 @@ def admin_add_page(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse("/admin/login", status_code=302)
     brands = db.query(models.Brand).order_by(models.Brand.name).all()
     return templates.TemplateResponse(request, "admin/add_moto.html", {
-        "bike": None, "action": "/admin/add", "brands": brands,
+        "bike": None, "action": "/admin/add", "brands": brands, "unread": _unread_count(db),
     })
 
-def save_photos(files: List[UploadFile]) -> List[str]:
+CATEGORY_FOLDER = {"moto": "moto", "moped": "moped", "quad": "quad"}
+
+def save_photos(files: List[UploadFile], category: str = "moto") -> List[str]:
+    folder = CATEGORY_FOLDER.get(category, "moto")
+    dir_path = f"src/media/{folder}"
+    os.makedirs(dir_path, exist_ok=True)
     paths = []
-    os.makedirs("src/media/photo_motorbike", exist_ok=True)
     for f in files:
         if f and f.filename:
             ext = f.filename.rsplit(".", 1)[-1]
             filename = f"{uuid.uuid4().hex}.{ext}"
-            with open(f"src/media/photo_motorbike{filename}", "wb") as out:
+            with open(f"{dir_path}/{filename}", "wb") as out:
                 shutil.copyfileobj(f.file, out)
-            paths.append(f"/media/photo_motorbike{filename}")
+            paths.append(f"/media/{folder}/{filename}")
     return paths
 
 
@@ -207,8 +275,9 @@ async def admin_add(
     if not check_admin(request):
         return RedirectResponse("/admin/login", status_code=302)
 
-    paths = save_photos(photos or [])
+    paths = save_photos(photos or [], category)
     bike = models.Bike(
+        article=_gen_article(db),
         name=name, brand=brand, model=model, year=year,
         price=price, mileage=mileage, engine=engine,
         category=category, color=color, condition=condition,
@@ -232,6 +301,7 @@ def admin_edit_page(request: Request, bike_id: int, db: Session = Depends(get_db
     brands = db.query(models.Brand).order_by(models.Brand.name).all()
     return templates.TemplateResponse(request, "admin/add_moto.html", {
         "bike": bike, "action": f"/admin/edit/{bike_id}", "brands": brands,
+        "unread": _unread_count(db),
     })
 
 @app.post("/admin/edit/{bike_id}")
@@ -241,7 +311,7 @@ async def admin_edit(
     year: int = Form(...), price: int = Form(...), mileage: int = Form(...),
     engine: int = Form(...), category: str = Form(...), color: str = Form(...),
     condition: str = Form(...), description: str = Form(""),
-    available: bool = Form(True), photos: List[UploadFile] = File(None),
+    available: Optional[str] = Form(None), photos: List[UploadFile] = File(None),
     db: Session = Depends(get_db),
 ):
     if not check_admin(request):
@@ -250,7 +320,7 @@ async def admin_edit(
     if not bike:
         raise HTTPException(404)
 
-    new_paths = save_photos(photos or [])
+    new_paths = save_photos(photos or [], category)
     for p in new_paths:
         db.add(models.BikePhoto(bike_id=bike.id, path=p))
 
@@ -258,7 +328,7 @@ async def admin_edit(
     bike.year = year; bike.price = price; bike.mileage = mileage
     bike.engine = engine; bike.category = category; bike.color = color
     bike.condition = condition; bike.description = description
-    bike.available = available
+    bike.available = available is not None
     db.flush()
     # головне фото = перше з таблиці фото
     first = db.query(models.BikePhoto).filter_by(bike_id=bike.id).first()
@@ -315,7 +385,7 @@ def admin_brands(request: Request, db: Session = Depends(get_db)):
     if not check_admin(request):
         return RedirectResponse("/admin/login", status_code=302)
     brands = db.query(models.Brand).order_by(models.Brand.name).all()
-    return templates.TemplateResponse(request, "admin/add_brands.html", {"brands": brands})
+    return templates.TemplateResponse(request, "admin/add_brands.html", {"brands": brands, "unread": _unread_count(db)})
 
 @app.post("/admin/brands/add")
 async def admin_brands_add(
@@ -362,19 +432,63 @@ def brands_page(request: Request, db: Session = Depends(get_db)):
     brands = db.query(models.Brand).order_by(models.Brand.name).all()
     return templates.TemplateResponse(request, "brands.html", {"brands": brands})
 
+@app.get("/api/search")
+def api_search(q: str = "", db: Session = Depends(get_db)):
+    from fastapi.responses import JSONResponse
+    if len(q.strip()) < 2:
+        return JSONResponse([])
+    term = f"%{q.strip().lower()}%"
+    bikes = db.query(models.Bike).filter(
+        models.Bike.name.ilike(term) |
+        models.Bike.brand.ilike(term) |
+        models.Bike.model.ilike(term) |
+        models.Bike.article.ilike(term)
+    ).limit(7).all()
+    return JSONResponse([{
+        "id": b.id, "name": b.name, "brand": b.brand,
+        "year": b.year, "price": b.price,
+        "photo": b.photo, "article": b.article,
+    } for b in bikes])
+
+@app.get("/search", response_class=HTMLResponse)
+def search_page(request: Request, q: str = "", db: Session = Depends(get_db)):
+    q = q.strip()
+    bikes = []
+    if q:
+        term = f"%{q.lower()}%"
+        bikes = db.query(models.Bike).filter(
+            models.Bike.name.ilike(term) |
+            models.Bike.brand.ilike(term) |
+            models.Bike.model.ilike(term) |
+            models.Bike.article.ilike(term) |
+            models.Bike.color.ilike(term)
+        ).order_by(models.Bike.id.desc()).all()
+    return templates.TemplateResponse(request, "search.html", {
+        "bikes": bikes, "q": q, "total": len(bikes),
+    })
+
 @app.get("/contacts", response_class=HTMLResponse)
 def contacts_page(request: Request):
     return templates.TemplateResponse(request, "contacts.html", {})
 
-@app.post("/admin/reviews/{review_id}/reply")
-def admin_review_reply(request: Request, review_id: int, reply: str = Form(...), db: Session = Depends(get_db)):
+@app.get("/admin/reviews", response_class=HTMLResponse)
+def admin_reviews(request: Request, db: Session = Depends(get_db)):
     if not check_admin(request):
         return RedirectResponse("/admin/login", status_code=302)
-    review = db.query(models.Review).filter_by(id=review_id).first()
-    if review:
-        review.reply = reply.strip() or None
+    reviews = db.query(models.Review).order_by(models.Review.id.desc()).all()
+    # позначаємо всі як прочитані
+    db.query(models.Review).filter_by(is_read=False).update({"is_read": True})
+    db.commit()
+    return templates.TemplateResponse(request, "admin/reviews.html", {"reviews": reviews, "unread": 0})
+
+@app.post("/admin/reviews/{review_id}/reply")
+def admin_review_reply(request: Request, review_id: int, text: str = Form(...), db: Session = Depends(get_db)):
+    if not check_admin(request):
+        return RedirectResponse("/admin/login", status_code=302)
+    if text.strip():
+        db.add(models.ReviewReply(review_id=review_id, name="VOLE MOTO", text=text.strip(), is_admin=True))
         db.commit()
-    return RedirectResponse("/reviews", status_code=302)
+    return RedirectResponse(f"/admin/reviews", status_code=302)
 
 @app.post("/admin/reviews/{review_id}/delete")
 def admin_review_delete(request: Request, review_id: int, db: Session = Depends(get_db)):
@@ -384,10 +498,20 @@ def admin_review_delete(request: Request, review_id: int, db: Session = Depends(
     if review:
         db.delete(review)
         db.commit()
-    return RedirectResponse("/reviews", status_code=302)
+    return RedirectResponse("/admin/reviews", status_code=302)
+
+@app.post("/admin/reviews/reply/{reply_id}/delete")
+def admin_reply_delete(request: Request, reply_id: int, db: Session = Depends(get_db)):
+    if not check_admin(request):
+        return RedirectResponse("/admin/login", status_code=302)
+    reply = db.query(models.ReviewReply).filter_by(id=reply_id).first()
+    if reply:
+        db.delete(reply)
+        db.commit()
+    return RedirectResponse("/admin/reviews", status_code=302)
 
 @app.get("/reviews", response_class=HTMLResponse)
-def reviews_page(request: Request, sort: str = "new", db: Session = Depends(get_db)):
+def reviews_page(request: Request, sort: str = "new", limit: int = 20, db: Session = Depends(get_db)):
     q = db.query(models.Review)
     if sort == "rating":
         q = q.order_by(models.Review.rating.desc())
@@ -395,13 +519,16 @@ def reviews_page(request: Request, sort: str = "new", db: Session = Depends(get_
         q = q.order_by(models.Review.id.asc())
     else:
         q = q.order_by(models.Review.id.desc())
-    reviews = q.all()
-    total = len(reviews)
-    avg = round(sum(r.rating for r in reviews) / total, 1) if total else 0
-    counts = {i: sum(1 for r in reviews if r.rating == i) for i in range(1, 6)}
+    all_reviews = q.all()
+    total = len(all_reviews)
+    avg = round(sum(r.rating for r in all_reviews) / total, 1) if total else 0
+    counts = {i: sum(1 for r in all_reviews if r.rating == i) for i in range(1, 6)}
+    reviews = all_reviews[:limit]
+    has_more = total > limit
     return templates.TemplateResponse(request, "reviews.html", {
         "reviews": reviews, "total": total, "avg": avg, "counts": counts,
         "sort": sort, "is_admin": check_admin(request),
+        "limit": limit, "has_more": has_more,
     })
 
 @app.post("/reviews")
@@ -414,6 +541,20 @@ def reviews_add(
 ):
     if 1 <= rating <= 5 and name.strip() and text.strip():
         db.add(models.Review(name=name.strip(), rating=rating, text=text.strip()))
+        db.commit()
+    return RedirectResponse("/reviews", status_code=302)
+
+@app.post("/reviews/{review_id}/reply")
+def review_user_reply(
+    request: Request,
+    review_id: int,
+    name: str = Form(...),
+    text: str = Form(...),
+    db: Session = Depends(get_db),
+):
+    review = db.query(models.Review).filter_by(id=review_id).first()
+    if review and name.strip() and text.strip():
+        db.add(models.ReviewReply(review_id=review_id, name=name.strip(), text=text.strip(), is_admin=False))
         db.commit()
     return RedirectResponse("/reviews", status_code=302)
 

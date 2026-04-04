@@ -7,19 +7,22 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: Arial, sans-serif; background: #f5f6f8; color: #222; font-size: 14px; }
 
-    .sidebar { width: 220px; background: #fff; border-right: 1px solid #e8e8e8; height: 100vh; position: fixed; top: 0; left: 0; display: flex; flex-direction: column; }
-    .sidebar-logo { padding: 24px 20px 16px; font-size: 18px; font-weight: 800; color: #111; border-bottom: 1px solid #f0f0f0; }
-    .sidebar-logo span { color: #2d9e00; }
-    .sidebar-logo small { display: block; font-size: 10px; font-weight: 600; color: #bbb; letter-spacing: .08em; text-transform: uppercase; margin-top: 2px; }
+    .sidebar { width: 230px; background: #1a1a2e; height: 100vh; position: fixed; top: 0; left: 0; display: flex; flex-direction: column; }
+    .sidebar-logo { padding: 28px 20px 20px; border-bottom: 1px solid rgba(255,255,255,.07); }
+    .sidebar-logo-text { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: .04em; }
+    .sidebar-logo-text span { color: #2d9e00; }
+    .sidebar-logo small { display: block; font-size: 10px; font-weight: 600; color: rgba(255,255,255,.3); letter-spacing: .1em; text-transform: uppercase; margin-top: 4px; }
     .sidebar-nav { padding: 16px 12px; flex: 1; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; color: #666; font-weight: 600; text-decoration: none; margin-bottom: 2px; transition: background .15s, color .15s; }
-    .nav-item:hover { background: #f5f5f5; color: #111; }
-    .nav-item.active { background: #f0fbea; color: #2d9e00; }
-    .sidebar-bottom { padding: 16px 12px; border-top: 1px solid #f0f0f0; }
-    .logout { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 8px; color: #999; font-weight: 600; text-decoration: none; }
-    .logout:hover { background: #fff0f0; color: #c00; }
+    .nav-section { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.25); padding: 14px 10px 6px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; color: rgba(255,255,255,.55); font-weight: 600; text-decoration: none; margin-bottom: 2px; transition: background .15s, color .15s; font-size: 13px; }
+    .nav-item:hover { background: rgba(255,255,255,.07); color: #fff; }
+    .nav-item.active { background: rgba(45,158,0,.2); color: #4ecb00; }
+    .nav-badge { margin-left: auto; background: #e53935; color: #fff; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 10px; padding: 0 6px; display: inline-flex; align-items: center; justify-content: center; }
+    .sidebar-bottom { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,.07); }
+    .logout { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 8px; color: rgba(255,255,255,.35); font-weight: 600; text-decoration: none; font-size: 13px; transition: background .15s, color .15s; }
+    .logout:hover { background: rgba(200,0,0,.15); color: #f77; }
 
-    .main { margin-left: 220px; padding: 32px; max-width: 900px; }
+    .main { margin-left: 230px; padding: 32px; max-width: 960px; }
     .topbar { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
     .topbar h1 { font-size: 22px; font-weight: 800; color: #111; }
     .back { color: #999; text-decoration: none; font-size: 13px; }
@@ -62,11 +65,21 @@
 <body>
 
 <div class="sidebar">
-  <div class="sidebar-logo">VOLE <span>MOTO</span><small>Admin Panel</small></div>
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-text">VOLE <span>MOTO</span></div>
+    <small>Admin Panel</small>
+  </div>
   <nav class="sidebar-nav">
+    <div class="nav-section">Головне</div>
     <a href="/admin" class="nav-item">📊 Дашборд</a>
-    <a href="/admin/add" class="nav-item active">➕ Додати мото</a>
-    <a href="/src/static" target="_blank" class="nav-item">🌐 Переглянути сайт</a>
+    <a href="/admin/catalog" class="nav-item">📋 Каталог</a>
+    <div class="nav-section">Додати</div>
+    <a href="/admin/add" class="nav-item {% if not bike %}active{% endif %}">➕ Додати мото</a>
+    <a href="/admin/brands" class="nav-item">🏷 Бренди</a>
+    <div class="nav-section">Клієнти</div>
+    <a href="/admin/reviews" class="nav-item">💬 Відгуки {% if unread %}<span class="nav-badge">{{ unread }}</span>{% endif %}</a>
+    <div class="nav-section">Сайт</div>
+    <a href="/" target="_blank" class="nav-item">🌐 Переглянути сайт</a>
   </nav>
   <div class="sidebar-bottom">
     <a href="/admin/logout" class="logout">🚪 Вийти</a>
@@ -166,10 +179,8 @@
             <div class="photo-thumb">
               <img src="{{ p.path }}" alt="">
               {% if loop.first %}<div class="photo-main-badge">Головне</div>{% endif %}
-              <form method="post" action="/admin/photo/delete/{{ p.id }}" style="display:contents"
-                    onsubmit="return confirm('Видалити це фото?')">
-                <button type="submit" class="photo-thumb-del" title="Видалити">×</button>
-              </form>
+              <button type="submit" form="del-photo-{{ p.id }}" class="photo-thumb-del"
+                      title="Видалити" onclick="return confirm('Видалити це фото?')">×</button>
             </div>
             {% endfor %}
           </div>
@@ -192,6 +203,12 @@
     </form>
   </div>
 </div>
+
+{% if bike and bike.photos %}
+{% for p in bike.photos %}
+<form id="del-photo-{{ p.id }}" method="post" action="/admin/photo/delete/{{ p.id }}"></form>
+{% endfor %}
+{% endif %}
 
 </body>
 </html>

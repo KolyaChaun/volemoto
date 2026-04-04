@@ -170,8 +170,10 @@
     <li><a href="/contacts">Контакти</a></li>
   </ul>
   <div class="nav-search">
-    <input type="text" placeholder="Пошук мотоцикла..." class="search-input">
-    <button class="search-btn">Знайти</button>
+    <form action="/search" method="get" style="display:flex;gap:0;">
+      <input type="text" name="q" placeholder="Пошук мотоцикла..." class="search-input" autocomplete="off">
+      <button type="submit" class="search-btn">Знайти</button>
+    </form>
   </div>
 </nav>
 
@@ -236,6 +238,26 @@
         </div>
       </div>
 
+      <div class="filter-group">
+        <div class="filter-group-label">Пробіг, км</div>
+        <div class="filter-range">
+          <input type="number" name="min_mileage" placeholder="від"
+                 value="{{ min_mileage if min_mileage is not none else '' }}">
+          <input type="number" name="max_mileage" placeholder="до"
+                 value="{{ max_mileage if max_mileage is not none else '' }}">
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-label">Об'єм двигуна, cc</div>
+        <div class="filter-range">
+          <input type="number" name="min_engine" placeholder="від"
+                 value="{{ min_engine if min_engine is not none else '' }}">
+          <input type="number" name="max_engine" placeholder="до"
+                 value="{{ max_engine if max_engine is not none else '' }}">
+        </div>
+      </div>
+
       {% if brands %}
       <div class="filter-group">
         <div class="filter-group-label">Бренд</div>
@@ -274,7 +296,7 @@
     <div class="catalog-grid">
       {% if bikes %}
         {% for bike in bikes %}
-        <div class="card" onclick="window.location='/bike/{{ bike.id }}'" style="cursor:pointer">
+        <div class="card bike-card {% if loop.index > 21 %}hidden-card{% endif %}" onclick="window.location='/bike/{{ bike.id }}'" style="cursor:pointer{% if loop.index > 21 %};display:none{% endif %}">
           <div class="card-img">
             {% if bike.photo %}
             <img src="{{ bike.photo }}" alt="{{ bike.name }}">
@@ -311,6 +333,14 @@
         </div>
       {% endif %}
     </div>
+
+    {% if bikes|length > 21 %}
+    <div id="show-more-wrap" style="text-align:center;margin-top:28px;grid-column:1/-1;">
+      <button id="show-more-btn" onclick="showMore()" style="background:#fff;border:2px solid #2d9e00;color:#2d9e00;padding:13px 36px;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;">
+        Показати ще 20
+      </button>
+    </div>
+    {% endif %}
 
   </div>
 </div>
@@ -361,7 +391,19 @@
   document.querySelector('select.sort-select')?.addEventListener('change', function() {
     document.querySelector('input[name="sort"]').value = this.value;
   });
+
+  var shownCount = 21;
+  function showMore() {
+    var hidden = document.querySelectorAll('.hidden-card[style*="display:none"]');
+    var toShow = Array.from(hidden).slice(0, 20);
+    toShow.forEach(function(el) { el.style.display = ''; });
+    shownCount += toShow.length;
+    if (document.querySelectorAll('.hidden-card[style*="display:none"]').length === 0) {
+      document.getElementById('show-more-wrap').style.display = 'none';
+    }
+  }
 </script>
 
+<script src="/static/autocomplete.js"></script>
 </body>
 </html>

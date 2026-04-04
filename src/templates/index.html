@@ -27,8 +27,10 @@
     <li><a href="/contacts">Контакти</a></li>
   </ul>
   <div class="nav-search">
-    <input type="text" placeholder="Пошук мотоцикла..." class="search-input">
-    <button class="search-btn">Знайти</button>
+    <form action="/search" method="get" style="display:flex;gap:0;">
+      <input type="text" name="q" placeholder="Пошук мотоцикла..." class="search-input" autocomplete="off">
+      <button type="submit" class="search-btn">Знайти</button>
+    </form>
   </div>
 </nav>
 
@@ -43,10 +45,6 @@
     <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1609630875171-b1321377ee65?w=1400&q=80')"></div>
     <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?w=1400&q=80')"></div>
     <div class="slider-overlay"></div>
-
-    <!-- Arrows -->
-    <button class="slider-arrow slider-prev" onclick="slideMove(-1)">&#8249;</button>
-    <button class="slider-arrow slider-next" onclick="slideMove(1)">&#8250;</button>
 
     <!-- Dots -->
     <div class="slider-dots">
@@ -64,8 +62,8 @@
     <h1>Мотоцикли<br><span>з Японії</span></h1>
     <p class="hero-desc">Продаж Honda, Kawasaki, Suzuki, BMW. Технічна перевірка, юридичний супровід та оформлення документів.</p>
     <div class="hero-btns">
-      <button class="btn-main">Переглянути каталог</button>
-      <button class="btn-sec">Зателефонувати</button>
+      <a href="/catalog/moto" class="btn-main">Переглянути каталог</a>
+      <a href="tel:+380997558803" class="btn-sec">Зателефонувати</a>
     </div>
     <div class="hero-info">
       <div class="hero-info-item">
@@ -264,7 +262,7 @@
     <h2>Не знайшли потрібний мотоцикл?</h2>
     <p>Телефонуйте — підберемо варіант під ваш бюджет та побажання</p>
   </div>
-  <button class="btn-white">Зателефонувати</button>
+  <a href="tel:+380997558803" class="btn-white">Зателефонувати</a>
 </div>
 
 <!-- FOOTER -->
@@ -298,3 +296,4 @@
     <span>Дніпро, Україна</span>
   </div>
 </footer>
+<script src="/static/autocomplete.js"></script>

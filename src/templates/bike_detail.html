@@ -240,8 +240,10 @@
     <li><a href="/contacts">Контакти</a></li>
   </ul>
   <div class="nav-search">
-    <input type="text" placeholder="Пошук мотоцикла..." class="search-input">
-    <button class="search-btn">Знайти</button>
+    <form action="/search" method="get" style="display:flex;gap:0;">
+      <input type="text" name="q" placeholder="Пошук мотоцикла..." class="search-input" autocomplete="off">
+      <button type="submit" class="search-btn">Знайти</button>
+    </form>
   </div>
 </nav>
 
@@ -302,8 +304,13 @@
   <div class="right-panel">
 
     <div class="info-card">
-      <div class="avail-badge {{ 'avail-yes' if bike.available else 'avail-no' }}">
-        {{ 'В наявності' if bike.available else 'Продано' }}
+      <div style="display:flex; align-items:center; gap:12px; margin-bottom:4px;">
+        <div class="avail-badge {{ 'avail-yes' if bike.available else 'avail-no' }}">
+          {{ 'В наявності' if bike.available else 'Продано' }}
+        </div>
+        {% if bike.article %}
+        <div style="font-size:12px; color:#aaa; font-weight:600;">Артикул: {{ bike.article }}</div>
+        {% endif %}
       </div>
       <div class="bike-title">
         {{ {"moto":"Мотоцикл","moped":"Мопед","quad":"Квадроцикл"}.get(bike.category,"") }}
@@ -348,6 +355,12 @@
           <span class="specs-key">Модель</span>
           <span class="specs-val">{{ bike.model }}</span>
         </div>
+        {% if bike.article %}
+        <div class="specs-item">
+          <span class="specs-key">Артикул</span>
+          <span class="specs-val">{{ bike.article }}</span>
+        </div>
+        {% endif %}
       </div>
     </div>
 
@@ -500,5 +513,6 @@
   });
 </script>
 
+<script src="/static/autocomplete.js"></script>
 </body>
 </html>
