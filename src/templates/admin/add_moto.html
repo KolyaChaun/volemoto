@@ -3,64 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>{{ "Редагувати" if bike else "Додати мото" }} — VOLE MOTO Admin</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: Arial, sans-serif; background: #f5f6f8; color: #222; font-size: 14px; }
-
-    .sidebar { width: 230px; background: #1a1a2e; height: 100vh; position: fixed; top: 0; left: 0; display: flex; flex-direction: column; }
-    .sidebar-logo { padding: 28px 20px 20px; border-bottom: 1px solid rgba(255,255,255,.07); }
-    .sidebar-logo-text { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: .04em; }
-    .sidebar-logo-text span { color: #2d9e00; }
-    .sidebar-logo small { display: block; font-size: 10px; font-weight: 600; color: rgba(255,255,255,.3); letter-spacing: .1em; text-transform: uppercase; margin-top: 4px; }
-    .sidebar-nav { padding: 16px 12px; flex: 1; }
-    .nav-section { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,.25); padding: 14px 10px 6px; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; color: rgba(255,255,255,.55); font-weight: 600; text-decoration: none; margin-bottom: 2px; transition: background .15s, color .15s; font-size: 13px; }
-    .nav-item:hover { background: rgba(255,255,255,.07); color: #fff; }
-    .nav-item.active { background: rgba(45,158,0,.2); color: #4ecb00; }
-    .nav-badge { margin-left: auto; background: #e53935; color: #fff; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 10px; padding: 0 6px; display: inline-flex; align-items: center; justify-content: center; }
-    .sidebar-bottom { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,.07); }
-    .logout { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 8px; color: rgba(255,255,255,.35); font-weight: 600; text-decoration: none; font-size: 13px; transition: background .15s, color .15s; }
-    .logout:hover { background: rgba(200,0,0,.15); color: #f77; }
-
-    .main { margin-left: 230px; padding: 32px; max-width: 960px; }
-    .topbar { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
-    .topbar h1 { font-size: 22px; font-weight: 800; color: #111; }
-    .back { color: #999; text-decoration: none; font-size: 13px; }
-    .back:hover { color: #2d9e00; }
-
-    .form-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 32px; }
-    .form-section { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #bbb; margin: 24px 0 16px; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0; }
-    .form-section:first-child { margin-top: 0; }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .form-group { display: flex; flex-direction: column; gap: 6px; }
-    .form-group.full { grid-column: 1 / -1; }
-    label { font-size: 12px; font-weight: 700; color: #555; }
-    input, select, textarea {
-      padding: 10px 14px; border: 1px solid #e0e0e0; border-radius: 8px;
-      font-size: 14px; font-family: Arial, sans-serif; outline: none;
-      transition: border-color .15s;
-    }
-    input:focus, select:focus, textarea:focus { border-color: #2d9e00; }
-    textarea { resize: vertical; min-height: 90px; }
-    select option { font-size: 14px; }
-
-    .checkbox-row { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
-    .checkbox-row input { width: 18px; height: 18px; accent-color: #2d9e00; }
-    .checkbox-row span { font-size: 14px; color: #444; }
-
-    .photos-grid { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
-    .photo-thumb { position: relative; width: 120px; height: 90px; border-radius: 8px; overflow: hidden; border: 1px solid #e0e0e0; }
-    .photo-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
-    .photo-thumb-del { position: absolute; top: 4px; right: 4px; background: rgba(0,0,0,.55); color: #fff; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 13px; line-height: 22px; text-align: center; cursor: pointer; padding: 0; }
-    .photo-thumb-del:hover { background: #c00; }
-    .photo-main-badge { position: absolute; bottom: 4px; left: 4px; background: #2d9e00; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
-
-    .form-actions { display: flex; gap: 12px; margin-top: 28px; }
-    .btn-save { background: #2d9e00; color: #fff; padding: 12px 32px; border: none; border-radius: 50px; font-size: 14px; font-weight: 700; cursor: pointer; }
-    .btn-save:hover { background: #259000; }
-    .btn-cancel { background: #fff; color: #666; padding: 12px 24px; border: 1px solid #ddd; border-radius: 50px; font-size: 14px; font-weight: 600; text-decoration: none; }
-    .btn-cancel:hover { border-color: #bbb; }
-  </style>
+  <link rel="stylesheet" href="/static/admin/css/admin.css">
+  <link rel="stylesheet" href="/static/admin/css/add-moto.css">
 </head>
 <body>
 
@@ -152,7 +96,7 @@
           <input type="number" name="mileage" min="0" required value="{{ bike.mileage if bike else '' }}" placeholder="12000">
         </div>
         <div class="form-group">
-          <label>Об'єм двигуна, cc *</label>
+          <label>Об'єм двигуна, см³ *</label>
           <input type="number" name="engine" min="0" required value="{{ bike.engine if bike else '' }}" placeholder="650">
         </div>
         <div class="form-group">

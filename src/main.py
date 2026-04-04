@@ -76,7 +76,7 @@ def index(request: Request, db: Session = Depends(get_db)):
     motos  = db.query(models.Bike).filter_by(category="moto").limit(6).all()
     mopeds = db.query(models.Bike).filter_by(category="moped").limit(6).all()
     quads  = db.query(models.Bike).filter_by(category="quad").limit(6).all()
-    return templates.TemplateResponse(request, "index.html", {
+    return templates.TemplateResponse(request, "pages/index.html", {
         "motos": motos, "mopeds": mopeds, "quads": quads,
     })
 
@@ -144,7 +144,7 @@ def catalog(
 
     cat_labels = {"moto": "Мотоцикли", "moped": "Мопеди", "quad": "Квадроцикли"}
 
-    return templates.TemplateResponse(request, "catalog.html", {
+    return templates.TemplateResponse(request, "pages/catalog.html", {
         "bikes": bikes,
         "category": category,
         "cat_label": cat_labels[category],
@@ -175,7 +175,7 @@ def bike_detail(request: Request, bike_id: int, db: Session = Depends(get_db)):
         models.Bike.category == bike.category,
         models.Bike.id != bike.id
     ).limit(3).all()
-    return templates.TemplateResponse(request, "bike_detail.html", {
+    return templates.TemplateResponse(request, "pages/bike_detail.html", {
         "bike": bike, "similar": similar,
     })
 
@@ -430,7 +430,7 @@ def admin_brands_delete(request: Request, brand_id: int, db: Session = Depends(g
 @app.get("/brands", response_class=HTMLResponse)
 def brands_page(request: Request, db: Session = Depends(get_db)):
     brands = db.query(models.Brand).order_by(models.Brand.name).all()
-    return templates.TemplateResponse(request, "brands.html", {"brands": brands})
+    return templates.TemplateResponse(request, "pages/brands.html", {"brands": brands})
 
 @app.get("/api/search")
 def api_search(q: str = "", db: Session = Depends(get_db)):
@@ -463,13 +463,13 @@ def search_page(request: Request, q: str = "", db: Session = Depends(get_db)):
             models.Bike.article.ilike(term) |
             models.Bike.color.ilike(term)
         ).order_by(models.Bike.id.desc()).all()
-    return templates.TemplateResponse(request, "search.html", {
+    return templates.TemplateResponse(request, "pages/search.html", {
         "bikes": bikes, "q": q, "total": len(bikes),
     })
 
 @app.get("/contacts", response_class=HTMLResponse)
 def contacts_page(request: Request):
-    return templates.TemplateResponse(request, "contacts.html", {})
+    return templates.TemplateResponse(request, "pages/contacts.html", {})
 
 @app.get("/admin/reviews", response_class=HTMLResponse)
 def admin_reviews(request: Request, db: Session = Depends(get_db)):
@@ -525,7 +525,7 @@ def reviews_page(request: Request, sort: str = "new", limit: int = 20, db: Sessi
     counts = {i: sum(1 for r in all_reviews if r.rating == i) for i in range(1, 6)}
     reviews = all_reviews[:limit]
     has_more = total > limit
-    return templates.TemplateResponse(request, "reviews.html", {
+    return templates.TemplateResponse(request, "pages/reviews.html", {
         "reviews": reviews, "total": total, "avg": avg, "counts": counts,
         "sort": sort, "is_admin": check_admin(request),
         "limit": limit, "has_more": has_more,

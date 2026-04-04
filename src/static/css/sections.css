@@ -1,0 +1,28 @@
+.why { background: #f7f7f7; border-top: 1px solid #e0e0e0; border-bottom: 1px solid #e0e0e0; }
+.why-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+.why-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 6px; padding: 20px; }
+.why-card h4 { font-size: 14px; font-weight: 700; color: #111; margin-bottom: 8px; }
+.why-card p { font-size: 13px; color: #888; line-height: 1.7; }
+
+.cta-banner {
+  background: #2d9e00; color: #fff; padding: 40px;
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+}
+.cta-banner h2 { font-size: 22px; font-weight: 700; }
+.cta-banner p { font-size: 14px; color: rgba(255,255,255,.8); margin-top: 5px; }
+.btn-white {
+  background: #fff; color: #2d9e00; padding: 12px 32px;
+  border-radius: 50px; font-size: 14px; font-weight: 700;
+  border: none; cursor: pointer; white-space: nowrap; display: inline-block;
+}
+.btn-white:hover { background: #f0f0f0; }
+
+.catalog-tabs { display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+.tab-btn {
+  background: #f5f5f5; border: 2px solid #e0e0e0;
+  padding: 10px 22px; font-size: 14px; font-weight: 700;
+  border-radius: 24px; cursor: pointer; color: #555; transition: all .2s;
+}
+.tab-btn:hover { border-color: #2d9e00; color: #2d9e00; }
+.tab-btn.active { background: #2d9e00; border-color: #2d9e00; color: #fff; }
+.cat-empty { text-align: center; color: #888; padding: 48px 0; font-size: 15px; }

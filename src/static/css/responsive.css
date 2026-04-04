@@ -1,0 +1,19 @@
+@media (max-width: 1024px) {
+  .bikes-grid { grid-template-columns: repeat(2, 1fr); }
+  .why-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .hero-info { flex-wrap: wrap; gap: 24px; }
+}
+@media (max-width: 768px) {
+  .nav { padding: 0 20px; }
+  .nav-links { display: none; }
+  .hero { height: 85vh; min-height: 480px; }
+  .hero-content { padding: 0 20px; }
+  .hero h1 { font-size: 32px; }
+  .section { padding: 36px 20px; }
+  .bikes-grid { grid-template-columns: 1fr; }
+  .why-grid { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+  .cta-banner { flex-direction: column; padding: 28px 20px; }
+  footer { padding: 36px 20px 20px; }
+}
