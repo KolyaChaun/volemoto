@@ -22,13 +22,59 @@ body { background: #f5f6f8; }
 .map-box iframe { width: 100%; height: 420px; display: block; border: none; }
 .map-address { padding: 12px 18px; font-size: 13px; color: #666; border-top: 1px solid #f0f0f0; display: flex; align-items: center; gap: 6px; background: #fff; }
 
-.phone-bar { background: #2d9e00; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 72px; margin-bottom: 0; }
+.phone-bar { background: #2d9e00; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 72px; }
 .phone-bar-text { font-size: 13px; color: rgba(255,255,255,.75); }
 .phone-bar-num { font-size: 22px; font-weight: 800; color: #fff; text-decoration: none; letter-spacing: .02em; }
 .phone-bar-btn { background: #fff; color: #2d9e00; padding: 10px 24px; border-radius: 6px; font-size: 14px; font-weight: 800; text-decoration: none; white-space: nowrap; }
 .phone-bar-btn:hover { background: #f0f0f0; }
 
+/* ── Mobile sticky CTA ── */
+.mobile-sticky-cta {
+  display: none;
+}
+.btn-buy { display: block; width: 100%; background: #2d9e00; color: #fff; text-align: center; padding: 14px; border-radius: 8px; font-size: 15px; font-weight: 700; text-decoration: none; border: none; cursor: pointer; transition: background .15s; }
+.btn-buy:hover { background: #259000; }
+.btn-call { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; border: 2px solid #2d9e00; color: #2d9e00; background: #fff; padding: 12px; border-radius: 8px; font-size: 15px; font-weight: 700; text-decoration: none; cursor: pointer; transition: all .15s; }
+.btn-call:hover { background: #f0fbea; }
+
+@media (max-width: 960px) {
+  .phone-bar { display: none; }
+  .mobile-sticky-cta {
+    display: flex;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #fff;
+    border-top: 1px solid #e8e8e8;
+    padding: 6px 12px;
+    padding-bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+    gap: 8px;
+    z-index: 50;
+    box-shadow: 0 -4px 20px rgba(0,0,0,.1);
+  }
+  .mobile-sticky-cta .btn-buy {
+    flex: 1; width: auto;
+    padding: 11px 14px; font-size: 13px;
+    border-radius: 8px; line-height: 1.3;
+  }
+  .mobile-sticky-cta .btn-call {
+    flex: 1; width: auto;
+    padding: 11px 14px; font-size: 13px;
+    white-space: nowrap; border-radius: 8px;
+    line-height: 1.3; gap: 6px;
+  }
+  .mobile-sticky-cta .btn-call svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .contacts-wrap { margin-bottom: 72px; }
+}
+
 @media (max-width: 768px) {
-  .contacts-wrap { grid-template-columns: 1fr; gap: 32px; padding: 0 20px; margin: 32px auto; }
-  .phone-bar { flex-direction: column; height: auto; padding: 20px; gap: 12px; text-align: center; }
+  .contacts-wrap { grid-template-columns: 1fr; gap: 32px; padding: 0 20px; margin: 32px auto 16px; }
+  .map-box iframe { height: 320px; }
+}
+@media (max-width: 480px) {
+  .contacts-wrap { padding: 0 16px; margin: 20px auto 16px; gap: 24px; }
+  .contacts-left h1 { font-size: 22px; margin-bottom: 24px; }
+  .info-value { font-size: 17px; }
+  .map-box iframe { height: 260px; }
+  .socials-row { gap: 8px; }
+  .soc-btn { padding: 10px 14px; font-size: 13px; }
 }

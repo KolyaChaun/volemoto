@@ -131,8 +131,9 @@ async def edit_bike(
     bike.condition = condition; bike.description = description
     bike.available = available is not None
     db.flush()
-    first      = db.query(BikePhoto).filter_by(bike_id=bike.id).first()
-    bike.photo = first.path if first else ""
+    all_paths = [p.path for p in db.query(BikePhoto).filter_by(bike_id=bike.id).all()]
+    if not bike.photo or bike.photo not in all_paths:
+        bike.photo = all_paths[0] if all_paths else ""
     db.commit()
     return RedirectResponse("/admin", status_code=302)
 
@@ -154,6 +155,19 @@ def delete_bike(request: Request, bike_id: int, db: Session = Depends(get_db)):
     return RedirectResponse("/admin", status_code=302)
 
 
+@router.post("/photo/main/{photo_id}")
+def set_main_photo(request: Request, photo_id: int, db: Session = Depends(get_db)):
+    if not check_admin(request):
+        return RedirectResponse("/admin/login", status_code=302)
+    photo = db.query(BikePhoto).filter_by(id=photo_id).first()
+    if not photo:
+        raise HTTPException(404)
+    bike = db.query(Bike).filter_by(id=photo.bike_id).first()
+    bike.photo = photo.path
+    db.commit()
+    return RedirectResponse(f"/admin/edit/{photo.bike_id}", status_code=302)
+
+
 @router.post("/photo/delete/{photo_id}")
 def delete_photo(request: Request, photo_id: int, db: Session = Depends(get_db)):
     if not check_admin(request):
@@ -167,9 +181,10 @@ def delete_photo(request: Request, photo_id: int, db: Session = Depends(get_db))
         os.remove(disk_path)
     db.delete(photo)
     db.flush()
-    bike       = db.query(Bike).filter_by(id=bike_id).first()
-    first      = db.query(BikePhoto).filter_by(bike_id=bike_id).first()
-    bike.photo = first.path if first else ""
+    bike      = db.query(Bike).filter_by(id=bike_id).first()
+    all_paths = [p.path for p in db.query(BikePhoto).filter_by(bike_id=bike_id).all()]
+    if not bike.photo or bike.photo not in all_paths:
+        bike.photo = all_paths[0] if all_paths else ""
     db.commit()
     return RedirectResponse(f"/admin/edit/{bike_id}", status_code=302)
 

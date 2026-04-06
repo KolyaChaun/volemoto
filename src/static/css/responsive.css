@@ -1,19 +1,367 @@
+/* ═══════════════════════════════════════
+   RESPONSIVE — VOLE MOTO
+
+   iOS devices:
+   iPhone SE2/7/8         — 375 × 667
+   iPhone 12 mini         — 360 × 780
+   iPhone 12/13/14        — 390 × 844
+   iPhone 12/13/14 Plus   — 428 × 926
+   iPhone 15 Pro Max      — 430 × 932
+   iPad mini 6            — 744 × 1133
+   iPad 9/10              — 768 × 1024
+   iPad Air / Pro 11"     — 820 × 1180
+   iPad Pro 12.9"         — 1024 × 1366
+
+   Android devices:
+   Samsung Galaxy S24 Ultra / Pixel 7 / OnePlus 11  — 412 × 915
+   Samsung Galaxy S24+ / Pixel 7a                   — 384 × 854  (or 412)
+   Samsung Galaxy S24 / A55 / Xiaomi 14             — 360 × 780
+   Samsung Galaxy A35 / Redmi Note 13               — 360 × 800
+   Xiaomi Redmi Note 12 / Poco X5                   — 393 × 873
+
+   Breakpoints used:
+   1200 / 1024 / 900 / 820 / 768 / 600
+   480 / 430 / 412 / 393 / 390 / 375 / 360
+═══════════════════════════════════════ */
+
+/* ── Prevent iOS/Android input zoom (< 16px triggers zoom) ── */
 @media (max-width: 1024px) {
+  input, select, textarea { font-size: 16px !important; }
+}
+
+/* ══════════════════════════════════════════════
+   1200px — large tablets / small laptops
+══════════════════════════════════════════════ */
+@media (max-width: 1200px) {
+  .section { padding: 56px 32px; }
+  .hero-content { padding: 0 32px; }
+  .search-input { width: 180px; }
+}
+
+/* ══════════════════════════════════════════════
+   1024px — iPad Pro portrait / iPad landscape
+══════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .bikes-grid { grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .why-grid   { grid-template-columns: repeat(2, 1fr); }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .hero-info  { flex-wrap: wrap; gap: 20px; }
+  .hero-info-item { min-width: 120px; }
+}
+
+/* ══════════════════════════════════════════════
+   1024px — бургер-меню / усі планшети в portrait
+══════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .hero-content { padding: 0 24px; }
+  .hero h1 { font-size: clamp(28px, 7vw, 44px); }
+  .hero-label { font-size: 12px; }
+  .hero-desc { font-size: 14px; }
+  .hero-btns { gap: 10px; }
+  .btn-main, .btn-sec { padding: 12px 22px; font-size: 14px; }
+  .hero-info { gap: 16px; }
+  .hero-info-item span { font-size: 20px; }
+
+  .section { padding: 44px 24px; }
+  .section-title { font-size: 22px; }
+  .why-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 24px; }
+
+  .cta-banner { flex-direction: column; text-align: center; padding: 32px 24px; gap: 16px; }
+  .cta-banner h2 { font-size: 20px; }
+  .btn-white { width: 100%; text-align: center; }
+}
+
+/* ══════════════════════════════════════════════
+   820px — iPad Air portrait
+══════════════════════════════════════════════ */
+@media (max-width: 820px) {
+  .bikes-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .section { padding: 40px 20px; }
+  .hero { height: 78vh; min-height: 450px; }
+}
+
+/* ══════════════════════════════════════════════
+   768px — iPad portrait
+   Залишаємо 2 колонки — на iPad 1 кол. надто рідко
+══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .hero { height: 75vh; min-height: 430px; }
+  .hero h1 { font-size: clamp(26px, 8vw, 38px); }
+  .hero-info { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .hero-info-item { text-align: center; }
+
+  .section { padding: 36px 20px; }
+  footer { padding: 36px 20px 20px; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; gap: 6px; }
+
+  .brands-grid { grid-template-columns: repeat(3, 1fr); gap: 16px; }
+
+  .bike-detail-wrap { flex-direction: column; }
+  .bike-gallery { width: 100%; }
+  .bike-info { padding: 20px 0 0; }
+}
+
+/* ══════════════════════════════════════════════
+   600px — Android landscape / iPhone landscape
+   Перехід до 1 колонки (не на 768 щоб iPad не постраждав)
+══════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  .bikes-grid { grid-template-columns: 1fr; gap: 14px; }
+  .why-grid   { grid-template-columns: 1fr; }
+
+  /* Футер: лого на всю ширину, каталог і контакти поруч */
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 24px;
+  }
+  .footer-grid > div:first-child {
+    grid-column: 1 / -1;
+  }
+  .footer-bottom { flex-direction: column; gap: 6px; }
+
+  .section { padding: 32px 16px; }
+  footer { padding: 30px 16px 16px; }
+
+  .brands-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+
+  .hero { height: 72vh; min-height: 400px; }
+  .hero-content { padding: 0 18px; width: 100%; max-width: 100%; }
+  .hero h1 { font-size: clamp(24px, 9vw, 34px); line-height: 1.2; }
+  .hero-desc { font-size: 13px; }
+  .hero-btns { flex-direction: column; align-items: stretch; gap: 10px; }
+  .btn-main, .btn-sec { width: 100%; text-align: center; padding: 14px 20px; }
+  .hero-info { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .hero-info-item span { font-size: 18px; }
+  .hero-info-item small { font-size: 11px; }
+
+  .card { border-radius: 10px; }
+  .card-footer { flex-wrap: nowrap; gap: 8px; justify-content: space-between; }
+  .btn-detail {
+    flex-shrink: 0; text-align: center;
+    display: inline-block;
+    font-size: 12px; padding: 6px 22px; border-radius: 50px;
+  }
+
+  .why-card { padding: 18px 16px; }
+  .cta-banner { padding: 24px 16px; }
+  .cta-banner h2 { font-size: 18px; }
+  .cta-banner p { font-size: 13px; }
+  .section-title { font-size: 20px; }
+
+  .catalog-tabs { gap: 8px; flex-wrap: wrap; }
+  .tab-btn { padding: 9px 16px; font-size: 13px; flex: 1; text-align: center; min-width: 0; }
+  .g-thumb { width: 62px; height: 48px; }
+}
+
+/* ══════════════════════════════════════════════
+   480px — стандартні Android/iOS у портреті
+   (iPhone Plus 428, Pixel 7 412 landscape)
+══════════════════════════════════════════════ */
+@media (max-width: 480px) {
+  .section { padding: 28px 14px; }
+  .section-title { font-size: 20px; }
+  footer { padding: 28px 14px 14px; }
+  .footer-grid { gap: 18px; }
+
+  .filter-group { margin-bottom: 12px; }
+  .search-results-wrap { padding: 0 14px 32px; }
+  .contacts-wrap { padding: 0 14px 32px; }
+  .contacts-grid { grid-template-columns: 1fr; }
+
+  .thumb-strip { gap: 6px; }
+  .thumb { width: 58px; height: 46px; }
+  .g-thumb { width: 58px; height: 44px; }
+}
+
+/* ══════════════════════════════════════════════
+   430px — iPhone 15 Pro Max / iPhone 14 Plus
+══════════════════════════════════════════════ */
+@media (max-width: 430px) {
+  .hero { height: 71vh; min-height: 390px; }
+  .hero h1 { font-size: clamp(23px, 8.5vw, 32px); }
+  .card-body { padding: 14px; }
+  .section { padding: 26px 14px; }
+}
+
+/* ══════════════════════════════════════════════
+   412px — Samsung Galaxy S24 Ultra / Pixel 7
+           OnePlus 11 / Galaxy A55 (найпоширеніший Android)
+══════════════════════════════════════════════ */
+@media (max-width: 412px) {
+  .hero { height: 70vh; min-height: 385px; }
+  .hero h1 { font-size: clamp(22px, 8.5vw, 30px); line-height: 1.2; }
+  .hero-content { padding: 0 16px; }
+  .hero-info-item span { font-size: 17px; }
+  .hero-info-item small { font-size: 10px; }
+
+  .card-body { padding: 13px; }
+  .card-name { font-size: 15px; }
+  .card-price { font-size: 17px; }
+
+  .section { padding: 26px 13px; }
+  footer { padding: 26px 13px 14px; }
+  .tab-btn { font-size: 12px; padding: 9px 12px; }
+}
+
+/* ══════════════════════════════════════════════
+   393px — Xiaomi Redmi Note 12/13 / Poco X5/X6
+           Google Pixel 6a
+══════════════════════════════════════════════ */
+@media (max-width: 393px) {
+  .hero h1 { font-size: clamp(21px, 8.2vw, 28px); }
+  .hero-content { padding: 0 14px; }
+  .btn-main, .btn-sec { padding: 13px 16px; font-size: 13px; }
+
+  .card-body { padding: 12px; }
+  .card-name { font-size: 14px; }
+  .card-price { font-size: 16px; }
+
+  .section { padding: 24px 12px; }
+  footer { padding: 24px 12px 14px; }
+  .section-title { font-size: 19px; }
+  .tab-btn { font-size: 12px; padding: 8px 10px; }
+}
+
+/* ══════════════════════════════════════════════
+   390px — iPhone 12 / 13 / 14 portrait
+══════════════════════════════════════════════ */
+@media (max-width: 390px) {
+  .hero h1 { font-size: clamp(21px, 8vw, 28px); }
+  .brands-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .brand-card { padding: 20px 10px 14px; }
+}
+
+/* ══════════════════════════════════════════════
+   375px — iPhone SE2 / 7 / 8
+══════════════════════════════════════════════ */
+@media (max-width: 375px) {
+  .hero { height: 560px; min-height: 560px; }
+  .hero h1 { font-size: clamp(20px, 7.5vw, 26px); line-height: 1.2; }
+  .hero-label { font-size: 11px; letter-spacing: .05em; }
+  .hero-desc { font-size: 12px; line-height: 1.5; margin-bottom: 20px; }
+  .hero-info { gap: 8px; }
+  .hero-info-item span { font-size: 16px; }
+  .hero-info-item small { font-size: 10px; }
+
+  .section { padding: 22px 12px; }
+  .section-title { font-size: 18px; }
+  footer { padding: 22px 12px 12px; }
+
+  .card-body { padding: 11px; }
+  .card-name { font-size: 14px; }
+  .card-price { font-size: 15px; }
+  .card-year { font-size: 11px; }
+
+  .tab-btn { font-size: 11px; padding: 8px 10px; }
+}
+
+/* ══════════════════════════════════════════════
+   360px — Samsung Galaxy S24 / A55 / A35
+           Redmi Note 13 (найпоширеніший бюджетний Android)
+══════════════════════════════════════════════ */
+@media (max-width: 360px) {
+  /* На 360×640 hero має вміщати увесь контент без обрізання */
+  .hero { height: 540px; min-height: 540px; }
+  .hero h1 { font-size: 19px; line-height: 1.2; }
+  .hero-info { font-size: 12px; gap: 8px; }
+  .hero-info-item span { font-size: 15px; }
+  .btn-main, .btn-sec { font-size: 13px; padding: 12px 14px; }
+
+  .section { padding: 20px 10px; }
+  .section-title { font-size: 17px; }
+  footer { padding: 20px 10px 12px; }
+
+  .card-body { padding: 10px; }
+  .card-name { font-size: 13px; }
+  .card-price { font-size: 15px; }
+  .card-specs { gap: 8px; font-size: 11px; }
+
+  .brands-grid { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .brand-card { padding: 16px 8px 12px; }
+  .brand-name { font-size: 13px; }
+
+  .tab-btn { font-size: 11px; padding: 7px 8px; }
+  .why-card { padding: 16px 12px; }
+}
+
+/* ══════════════════════════════════════════════
+   iPad — range fix (portrait + landscape)
+   Гарантує 2 колонки на всіх iPad
+══════════════════════════════════════════════ */
+@media (min-width: 601px) and (max-width: 1024px) {
   .bikes-grid { grid-template-columns: repeat(2, 1fr); }
   .why-grid { grid-template-columns: repeat(2, 1fr); }
   .footer-grid { grid-template-columns: 1fr 1fr; }
-  .hero-info { flex-wrap: wrap; gap: 24px; }
 }
-@media (max-width: 768px) {
-  .nav { padding: 0 20px; }
-  .nav-links { display: none; }
-  .hero { height: 85vh; min-height: 480px; }
-  .hero-content { padding: 0 20px; }
-  .hero h1 { font-size: 32px; }
-  .section { padding: 36px 20px; }
-  .bikes-grid { grid-template-columns: 1fr; }
-  .why-grid { grid-template-columns: 1fr; }
-  .footer-grid { grid-template-columns: 1fr; gap: 24px; }
-  .cta-banner { flex-direction: column; padding: 28px 20px; }
-  footer { padding: 36px 20px 20px; }
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .section { padding: 48px 32px; }
+  footer { padding: 40px 32px 24px; }
+}
+
+/* ══════════════════════════════════════════════
+   iPad hero — portrait
+   vh в портреті дає надто велику висоту
+══════════════════════════════════════════════ */
+
+/* ── Hero layout тільки для планшетів portrait (не телефонів) ── */
+@media (min-width: 601px) and (max-width: 1024px) and (orientation: portrait) {
+  .hero { justify-content: center; }
+  .hero-content { width: 100%; text-align: left; }
+
+  /* Кнопки в рядок */
+  .hero-btns { flex-direction: row; flex-wrap: wrap; align-items: center; }
+  .btn-main, .btn-sec { width: auto; }
+
+  /* Статистика — 4 колонки в рядок */
+  .hero-info { display: flex; flex-direction: row; flex-wrap: nowrap; }
+  .hero-info-item { text-align: left; min-width: 0; }
+}
+
+
+/* Стискаємо внутрішні відступи hero на планшетах */
+@media (min-width: 601px) and (max-width: 1024px) and (orientation: portrait) {
+  .hero-info { margin-top: 24px; padding-top: 16px; }
+  .hero h1 { margin-bottom: 12px; }
+  .hero-desc { margin-bottom: 20px; line-height: 1.6; }
+  .hero-label { margin-bottom: 14px; }
+}
+
+/* iPad Pro 12.9" portrait (1024×1366) */
+@media (min-width: 601px) and (max-width: 1024px) and (orientation: portrait) {
+  .hero { height: 52vh; min-height: 580px; }
+  .hero-content { max-width: 820px; padding: 0 48px; }
+  .hero-info { gap: clamp(20px, 3vw, 36px); }
+}
+
+/* iPad Air 11" portrait (820×1180) */
+@media (min-width: 601px) and (max-width: 820px) and (orientation: portrait) {
+  .hero { height: 54vh; min-height: 540px; }
+  .hero-content { max-width: 700px; padding: 0 36px; }
+  .hero-info { gap: clamp(16px, 2.8vw, 28px); }
+}
+
+/* iPad 9/10th / mini portrait (768×1024) */
+@media (min-width: 601px) and (max-width: 768px) and (orientation: portrait) {
+  .hero { height: 56vh; min-height: 510px; }
+  .hero-content { max-width: 640px; padding: 0 28px; }
+  .hero-info { gap: clamp(14px, 2.5vw, 24px); }
+}
+
+/* iPad — landscape (всі моделі, тільки планшети) */
+@media (min-width: 768px) and (max-width: 1366px) and (orientation: landscape) {
+  .hero { height: 82vh; min-height: 500px; }
+  .hero-content { max-width: 600px; }
+}
+
+/* Пропорційна типографіка — тільки для планшетів portrait */
+@media (min-width: 601px) and (max-width: 1024px) and (orientation: portrait) {
+  .hero h1        { font-size: clamp(28px, 5vw, 54px); line-height: 1.1; }
+  .hero-label     { font-size: clamp(10px, 1.2vw, 13px); }
+  .hero-desc      { font-size: clamp(13px, 1.6vw, 16px); line-height: 1.7; }
+  .btn-main,
+  .btn-sec        { font-size: clamp(13px, 1.5vw, 15px); padding: clamp(11px, 1.4vw, 14px) clamp(20px, 3vw, 32px); }
+  .hero-info-item span  { font-size: clamp(18px, 2.5vw, 28px); }
+  .hero-info-item small { font-size: clamp(10px, 1.1vw, 13px); }
 }

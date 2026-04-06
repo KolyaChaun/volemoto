@@ -2,11 +2,16 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Бренди — VOLE MOTO Admin</title>
   <link rel="stylesheet" href="/static/admin/css/admin.css">
   <link rel="stylesheet" href="/static/admin/css/brands.css">
+  <link rel="stylesheet" href="/static/admin/css/admin_mobile.css">
 </head>
 <body>
+
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
 
 <div class="sidebar">
   <div class="sidebar-logo">
@@ -32,6 +37,7 @@
 
 <div class="main">
   <div class="topbar">
+    <button class="admin-burger" id="admin-burger" aria-label="Меню"><span></span><span></span><span></span></button>
     <h1>Управління брендами</h1>
     <a href="/brands" target="_blank" class="view-link">↗ Переглянути на сайті</a>
   </div>
@@ -75,5 +81,6 @@
   </div>
 </div>
 
+<script src="/static/admin/js/admin_mobile.js"></script>
 </body>
 </html>

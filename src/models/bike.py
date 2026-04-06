@@ -1,7 +1,16 @@
+import re
 from sqlalchemy import Column, Integer, String, Boolean, Text, ForeignKey
 from sqlalchemy.orm import relationship
 
 from src.db.database import Base
+
+
+def _slugify(s: str) -> str:
+    s = s.lower().strip()
+    s = re.sub(r'[\s]+', '_', s)
+    s = re.sub(r'[^a-z0-9_]', '', s)
+    s = re.sub(r'_+', '_', s).strip('_')
+    return s
 
 
 class Bike(Base):
@@ -25,6 +34,12 @@ class Bike(Base):
 
     photos = relationship("BikePhoto", back_populates="bike",
                           cascade="all, delete-orphan", order_by="BikePhoto.id")
+
+    @property
+    def slug(self) -> str:
+        brand = _slugify(self.brand or "")
+        model = _slugify(self.model or "")
+        return f"{brand}_{model}_{self.id}"
 
 
 class BikePhoto(Base):

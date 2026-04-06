@@ -1,3 +1,4 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: Arial, sans-serif; background: #fff; color: #222; font-size: 15px; line-height: 1.6; }
+html { overflow-x: hidden; }
+body { font-family: Arial, sans-serif; background: #fff; color: #222; font-size: 15px; line-height: 1.6; overflow-x: hidden; }
 a { text-decoration: none; color: inherit; }

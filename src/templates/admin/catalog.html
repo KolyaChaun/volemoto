@@ -2,10 +2,15 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Каталог — VOLE MOTO Admin</title>
   <link rel="stylesheet" href="/static/admin/css/admin.css">
+  <link rel="stylesheet" href="/static/admin/css/admin_mobile.css">
 </head>
 <body>
+
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
 
 <div class="sidebar">
   <div class="sidebar-logo">
@@ -34,6 +39,7 @@
 
 <div class="main">
   <div class="topbar">
+    <button class="admin-burger" id="admin-burger" aria-label="Меню"><span></span><span></span><span></span></button>
     <h1>Каталог</h1>
     <a href="/admin/add" class="btn-add">＋ Додати мотоцикл</a>
   </div>
@@ -126,9 +132,42 @@
       </tbody>
     </table>
     <div id="no-results" class="no-results" style="display:none;">Нічого не знайдено</div>
+
+    <!-- MOBILE CARDS (shown instead of table on mobile) -->
+    <div class="mobile-bike-list" id="mobile-bike-list">
+      {% for bike in bikes %}
+      <div class="m-bike-card" data-cat="{{ bike.category }}"
+           data-search="{{ (bike.name ~ ' ' ~ bike.article ~ ' ' ~ bike.model ~ ' ' ~ bike.brand)|lower }}">
+        <div class="m-bike-photo">
+          {% if bike.photo %}<img src="{{ bike.photo }}" alt="">{% else %}📷{% endif %}
+        </div>
+        <div class="m-bike-info">
+          <div class="m-bike-name">{{ bike.name }}</div>
+          <div class="m-bike-meta">
+            {{ bike.year }} · {{ "{:,}".format(bike.mileage).replace(",", " ") }} км ·
+            <span class="badge {{ 'badge-yes' if bike.available else 'badge-no' }}" style="font-size:10px;padding:1px 7px;">
+              {{ "В наявності" if bike.available else "Продано" }}
+            </span>
+          </div>
+        </div>
+        <div class="m-bike-price">{{ "{:,}".format(bike.price).replace(",", " ") }} ₴</div>
+        <div class="m-bike-actions">
+          <a href="/admin/edit/{{ bike.id }}" class="btn-edit">✏️</a>
+          <form method="post" action="/admin/delete/{{ bike.id }}" style="display:inline;"
+                onsubmit="return confirm('Видалити {{ bike.name }}?')">
+            <button type="submit" class="btn-del">🗑</button>
+          </form>
+        </div>
+      </div>
+      {% else %}
+      <div class="no-results">Каталог порожній.</div>
+      {% endfor %}
+    </div>
+    <div id="mobile-no-results" class="no-results" style="display:none;">Нічого не знайдено</div>
   </div>
 </div>
 
 <script src="/static/admin/js/catalog.js"></script>
+<script src="/static/admin/js/admin_mobile.js"></script>
 </body>
 </html>

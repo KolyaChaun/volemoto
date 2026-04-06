@@ -88,17 +88,3 @@
   border-top: 1px solid #f5f5f5;
 }
 
-/* Arrow hint on right */
-.dropdown-menu li a::after {
-  content: '›';
-  margin-left: auto;
-  font-size: 18px;
-  color: #ccc;
-  transition: transform .15s, color .15s;
-  line-height: 1;
-}
-
-.dropdown-menu li a:hover::after {
-  transform: translateX(3px);
-  color: #2d9e00;
-}

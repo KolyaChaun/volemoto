@@ -93,8 +93,13 @@ def catalog(
     })
 
 
-@router.get("/bike/{bike_id}", response_class=HTMLResponse)
-def bike_detail(request: Request, bike_id: int, db: Session = Depends(get_db)):
+@router.get("/bike/{slug}", response_class=HTMLResponse)
+def bike_detail(request: Request, slug: str, db: Session = Depends(get_db)):
+    # Extract ID from end of slug: "honda_cbr600rr_13" -> 13
+    try:
+        bike_id = int(slug.rsplit('_', 1)[-1])
+    except (ValueError, IndexError):
+        raise HTTPException(status_code=404, detail="Не знайдено")
     bike = db.query(Bike).filter_by(id=bike_id).first()
     if not bike:
         raise HTTPException(status_code=404, detail="Не знайдено")
@@ -148,7 +153,7 @@ def api_search(q: str = "", db: Session = Depends(get_db)):
         Bike.article.ilike(term)
     ).limit(7).all()
     return JSONResponse([{
-        "id": b.id, "name": b.name, "brand": b.brand,
+        "id": b.id, "slug": b.slug, "name": b.name, "brand": b.brand,
         "year": b.year, "price": b.price,
         "photo": b.photo, "article": b.article,
     } for b in bikes])

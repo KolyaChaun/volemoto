@@ -29,12 +29,15 @@ body { background: #f5f6f8; }
   display: inline-flex; align-items: center; gap: 8px;
   background: linear-gradient(135deg, #2d9e00, #4cbe1a); color: #fff;
   padding: 13px 30px; border-radius: 50px; font-size: 14px; font-weight: 700;
-  text-decoration: none; white-space: nowrap; margin-left: auto;
+  text-decoration: none; white-space: nowrap;
   box-shadow: 0 4px 14px rgba(45,158,0,.35); transition: transform .15s, box-shadow .15s; letter-spacing: .02em;
 }
 .write-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(45,158,0,.45); }
 
-.sort-row { display: flex; align-items: center; justify-content: flex-end; gap: 6px; margin-bottom: 16px; }
+.sort-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+.sort-avg { display: none; }
+.sort-select-mobile { display: none; }
+.sort-controls { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
 .sort-label { font-size: 12px; font-weight: 600; color: #aaa; margin-right: 2px; }
 .sort-btn { padding: 5px 13px; border: 1px solid #e0e0e0; border-radius: 20px; font-size: 12px; font-weight: 600; color: #666; background: #fff; cursor: pointer; text-decoration: none; transition: all .15s; }
 .sort-btn:hover { border-color: #2d9e00; color: #2d9e00; }
@@ -105,11 +108,19 @@ body { background: #f5f6f8; }
 .form-submit { background: #2d9e00; color: #fff; border: none; border-radius: 8px; padding: 13px 36px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background .15s; margin-top: 8px; }
 .form-submit:hover { background: #26880a; }
 
-@media (max-width: 900px) { .page-layout { padding: 0 16px 40px; } }
+@media (max-width: 1024px) { .page-layout { padding: 0 20px 40px; } }
 @media (max-width: 600px) {
-  .rating-card { flex-direction: column; align-items: flex-start; }
-  .write-btn { margin-left: 0; }
-  .review-text, .reply-block, .admin-bar, .reply-form { margin-left: 0; }
+  .rating-card { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .sort-row { flex-direction: column; align-items: stretch; gap: 10px; }
+  .sort-controls { justify-content: flex-end; }
+  .write-btn { width: 100%; justify-content: center; text-align: center; }
+  .review-text { margin-left: 0; }
+  .replies-block { margin-left: 0; }
+  .reply-toggle-bar { margin-left: 0; }
+  .user-reply-form { margin-left: 0; }
+  .user-reply-form .reply-inputs { grid-template-columns: 1fr; }
   .form-row { grid-template-columns: 1fr; }
-  .review-card { padding: 16px 18px; }
+  .review-card { padding: 14px 16px; }
+  .review-form-wrap { padding: 20px 16px; }
+  .star-picker label { font-size: 26px; }
 }

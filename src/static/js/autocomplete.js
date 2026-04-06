@@ -25,7 +25,7 @@
       bikes.forEach(function (b) {
         var a = document.createElement('a');
         a.className = 'search-dropdown-item';
-        a.href = '/bike/' + b.id;
+        a.href = '/bike/' + b.slug;
 
         var thumb;
         if (b.photo) {

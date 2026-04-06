@@ -5,3 +5,5 @@
 .photo-thumb-del { position: absolute; top: 4px; right: 4px; background: rgba(0,0,0,.55); color: #fff; border: none; border-radius: 50%; width: 22px; height: 22px; font-size: 13px; line-height: 22px; text-align: center; cursor: pointer; padding: 0; }
 .photo-thumb-del:hover { background: #c00; }
 .photo-main-badge { position: absolute; bottom: 4px; left: 4px; background: #2d9e00; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+.photo-thumb-main { position: absolute; bottom: 4px; left: 4px; background: rgba(0,0,0,.45); color: #fff; border: none; border-radius: 4px; padding: 2px 6px; font-size: 13px; cursor: pointer; transition: background .15s; line-height: 1.4; }
+.photo-thumb-main:hover { background: #2d9e00; }

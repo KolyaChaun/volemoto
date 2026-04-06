@@ -11,7 +11,7 @@ body { background: #f5f6f8; }
 .page-sub { font-size: 15px; color: #999; margin-bottom: 32px; }
 
 .brands-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-@media (max-width: 900px)  { .brands-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 1024px) { .brands-grid { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 500px)  { .brands-grid { grid-template-columns: repeat(2, 1fr); } }
 
 .brand-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 14px; padding: 28px 16px 20px; display: flex; flex-direction: column; align-items: center; gap: 14px; text-decoration: none; color: inherit; transition: box-shadow .2s, transform .2s, border-color .2s; cursor: pointer; }

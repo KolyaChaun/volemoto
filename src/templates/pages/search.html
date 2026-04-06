@@ -4,12 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Пошук — VOLE MOTO</title>
+  <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
   <link rel="stylesheet" href="/static/css/base.css">
   <link rel="stylesheet" href="/static/css/navbar.css">
   <link rel="stylesheet" href="/static/css/cards.css">
   <link rel="stylesheet" href="/static/css/footer.css">
   <link rel="stylesheet" href="/static/css/autocomplete.css">
   <link rel="stylesheet" href="/static/css/pages/search.css">
+  <link rel="stylesheet" href="/static/css/responsive.css">
   <link rel="stylesheet" href="/static/css/dropdown.css">
 </head>
 <body>
@@ -20,9 +22,9 @@
     <li class="nav-dropdown">
       <a href="/catalog/moto">Каталог ▾</a>
       <ul class="dropdown-menu">
-        <li><a href="/catalog/moto">🏍 Мотоцикли</a></li>
-        <li><a href="/catalog/moped">🛵 Мопеди</a></li>
-        <li><a href="/catalog/quad">🚜 Квадроцикли</a></li>
+        <li><a href="/catalog/moto">Мотоцикли</a></li>
+        <li><a href="/catalog/moped">Мопеди</a></li>
+        <li><a href="/catalog/quad">Квадроцикли</a></li>
       </ul>
     </li>
     <li><a href="/brands">Бренди</a></li>
@@ -35,7 +37,34 @@
       <button type="submit" class="search-btn">Знайти</button>
     </form>
   </div>
+  <button class="burger" id="burger" aria-label="Меню"><span></span><span></span><span></span></button>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-overlay" id="mobile-overlay">
+  <div class="mobile-menu">
+    <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Закрити">✕</button>
+    <ul class="mobile-nav-links">
+      <li><a href="/">Головна</a></li>
+      <li class="mobile-dropdown">
+        <button class="mobile-catalog-toggle">Каталог ▾</button>
+        <ul class="mobile-submenu">
+          <li><a href="/catalog/moto">Мотоцикли</a></li>
+          <li><a href="/catalog/moped">Мопеди</a></li>
+          <li><a href="/catalog/quad">Квадроцикли</a></li>
+        </ul>
+      </li>
+      <li><a href="/brands">Бренди</a></li>
+      <li><a href="/reviews">Відгуки</a></li>
+      <li><a href="/contacts">Контакти</a></li>
+    </ul>
+    <form action="/search" method="get" class="mobile-search">
+      <input type="text" name="q" placeholder="Пошук мотоцикла..." autocomplete="off">
+      <button type="submit">Знайти</button>
+    </form>
+    <a href="tel:+380997558803" class="mobile-phone-link">📞 +38 099 755 88 03</a>
+  </div>
+</div>
 
 <div class="page-wrap">
   <div class="breadcrumbs">
@@ -51,7 +80,7 @@
     </div>
     <div class="results-grid">
       {% for bike in bikes %}
-      <div class="card" onclick="window.location='/bike/{{ bike.id }}'">
+      <div class="card" onclick="window.location='/bike/{{ bike.slug }}'">
         <div class="card-img">
           {% if bike.photo %}
             <img src="{{ bike.photo }}" alt="{{ bike.name }}">
@@ -71,7 +100,7 @@
           </div>
           <div class="card-footer">
             <div class="card-price">{{ "{:,}".format(bike.price).replace(",", " ") }} <em>₴</em></div>
-            <a href="/bike/{{ bike.id }}" class="btn-detail">Детальніше</a>
+            <a href="/bike/{{ bike.slug }}" class="btn-detail">Детальніше</a>
           </div>
         </div>
       </div>
@@ -117,5 +146,6 @@
   </div>
 </footer>
 <script src="/static/js/autocomplete.js"></script>
+<script src="/static/js/navbar.js"></script>
 </body>
 </html>

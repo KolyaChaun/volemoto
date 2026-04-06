@@ -1,5 +1,3 @@
-import src.models  # registers all models with Base before create_all
-
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 

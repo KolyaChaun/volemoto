@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VOLE MOTO — Мотоцикли з Японії · Дніпро</title>
+  <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
   <link rel="stylesheet" href="/static/css/base.css">
   <link rel="stylesheet" href="/static/css/navbar.css">
   <link rel="stylesheet" href="/static/css/hero.css">
@@ -24,9 +25,9 @@
     <li class="nav-dropdown">
       <a href="">Каталог ▾</a>
       <ul class="dropdown-menu">
-        <li><a href="/catalog/moto">🏍 Мотоцикли</a></li>
-        <li><a href="/catalog/moped">🛵 Мопеди</a></li>
-        <li><a href="/catalog/quad">🚜 Квадроцикли</a></li>
+        <li><a href="/catalog/moto">Мотоцикли</a></li>
+        <li><a href="/catalog/moped">Мопеди</a></li>
+        <li><a href="/catalog/quad">Квадроцикли</a></li>
       </ul>
     </li>
     <li><a href="/brands">Бренди</a></li>
@@ -39,7 +40,34 @@
       <button type="submit" class="search-btn">Знайти</button>
     </form>
   </div>
+  <button class="burger" id="burger" aria-label="Меню"><span></span><span></span><span></span></button>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-overlay" id="mobile-overlay">
+  <div class="mobile-menu">
+    <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Закрити">✕</button>
+    <ul class="mobile-nav-links">
+      <li><a href="/" class="active">Головна</a></li>
+      <li class="mobile-dropdown">
+        <button class="mobile-catalog-toggle">Каталог ▾</button>
+        <ul class="mobile-submenu">
+          <li><a href="/catalog/moto">Мотоцикли</a></li>
+          <li><a href="/catalog/moped">Мопеди</a></li>
+          <li><a href="/catalog/quad">Квадроцикли</a></li>
+        </ul>
+      </li>
+      <li><a href="/brands">Бренди</a></li>
+      <li><a href="/reviews">Відгуки</a></li>
+      <li><a href="/contacts">Контакти</a></li>
+    </ul>
+    <form action="/search" method="get" class="mobile-search">
+      <input type="text" name="q" placeholder="Пошук мотоцикла..." autocomplete="off">
+      <button type="submit">Знайти</button>
+    </form>
+    <a href="tel:+380997558803" class="mobile-phone-link">📞 +38 099 755 88 03</a>
+  </div>
+</div>
 
 <!-- HERO -->
 <div class="hero">
@@ -53,14 +81,6 @@
     <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?w=1400&q=80')"></div>
     <div class="slider-overlay"></div>
 
-    <!-- Dots -->
-    <div class="slider-dots">
-      <span class="dot active" onclick="slideTo(0)"></span>
-      <span class="dot" onclick="slideTo(1)"></span>
-      <span class="dot" onclick="slideTo(2)"></span>
-      <span class="dot" onclick="slideTo(3)"></span>
-      <span class="dot" onclick="slideTo(4)"></span>
-    </div>
   </div>
 
   <!-- HERO CONTENT -->
@@ -106,7 +126,7 @@
     {% if motos %}
     <div class="bikes-grid">
       {% for bike in motos %}
-      <div class="card" onclick="window.location='/bike/{{ bike.id }}'" style="cursor:pointer">
+      <div class="card" onclick="window.location='/bike/{{ bike.slug }}'" style="cursor:pointer">
         <div class="card-img">
           {% if bike.photo %}
           <img src="{{ bike.photo }}" alt="{{ bike.name }}">
@@ -127,7 +147,7 @@
           </div>
           <div class="card-footer">
             <div class="card-price">{{ "{:,}".format(bike.price).replace(",", " ") }} <em>₴</em></div>
-            <a href="/bike/{{ bike.id }}" class="btn-detail">Детальніше</a>
+            <a href="/bike/{{ bike.slug }}" class="btn-detail">Детальніше</a>
           </div>
         </div>
       </div>
@@ -143,7 +163,7 @@
     {% if mopeds %}
     <div class="bikes-grid">
       {% for bike in mopeds %}
-      <div class="card" onclick="window.location='/bike/{{ bike.id }}'" style="cursor:pointer">
+      <div class="card" onclick="window.location='/bike/{{ bike.slug }}'" style="cursor:pointer">
         <div class="card-img">
           {% if bike.photo %}
           <img src="{{ bike.photo }}" alt="{{ bike.name }}">
@@ -164,7 +184,7 @@
           </div>
           <div class="card-footer">
             <div class="card-price">{{ "{:,}".format(bike.price).replace(",", " ") }} <em>₴</em></div>
-            <a href="/bike/{{ bike.id }}" class="btn-detail">Детальніше</a>
+            <a href="/bike/{{ bike.slug }}" class="btn-detail">Детальніше</a>
           </div>
         </div>
       </div>
@@ -180,7 +200,7 @@
     {% if quads %}
     <div class="bikes-grid">
       {% for bike in quads %}
-      <div class="card" onclick="window.location='/bike/{{ bike.id }}'" style="cursor:pointer">
+      <div class="card" onclick="window.location='/bike/{{ bike.slug }}'" style="cursor:pointer">
         <div class="card-img">
           {% if bike.photo %}
           <img src="{{ bike.photo }}" alt="{{ bike.name }}">
@@ -201,7 +221,7 @@
           </div>
           <div class="card-footer">
             <div class="card-price">{{ "{:,}".format(bike.price).replace(",", " ") }} <em>₴</em></div>
-            <a href="/bike/{{ bike.id }}" class="btn-detail">Детальніше</a>
+            <a href="/bike/{{ bike.slug }}" class="btn-detail">Детальніше</a>
           </div>
         </div>
       </div>
@@ -225,7 +245,7 @@
 
 <!-- WHY US -->
 <div class="why section">
-  <div class="section-title">Чому обирають VOLE MOTO</div>
+  <div class="section-title">Чому обирають VOLE <span style="color:#2d9e00">MOTO</span></div>
   <div class="section-sub">Ми супроводжуємо вас на кожному кроці</div>
   <div class="why-grid">
     <div class="why-card">
@@ -288,3 +308,4 @@
   </div>
 </footer>
 <script src="/static/js/autocomplete.js"></script>
+<script src="/static/js/navbar.js"></script>

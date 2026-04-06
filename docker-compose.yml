@@ -1,0 +1,34 @@
+services:
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: volemoto
+      POSTGRES_USER: volemoto
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U volemoto"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT}:8000"
+    environment:
+      DATABASE_URL: postgresql://volemoto:${DB_PASSWORD}@db:5432/volemoto
+      ADMIN_LOGIN: ${ADMIN_LOGIN}
+      ADMIN_PASS: ${ADMIN_PASS}
+    volumes:
+      - ./src/media:/app/src/media
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

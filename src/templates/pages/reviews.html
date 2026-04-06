@@ -4,11 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Відгуки — VOLE MOTO</title>
+  <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
   <link rel="stylesheet" href="/static/css/base.css">
   <link rel="stylesheet" href="/static/css/navbar.css">
   <link rel="stylesheet" href="/static/css/footer.css">
   <link rel="stylesheet" href="/static/css/autocomplete.css">
   <link rel="stylesheet" href="/static/css/pages/reviews.css">
+  <link rel="stylesheet" href="/static/css/pages/reviews_mobile.css">
+  <link rel="stylesheet" href="/static/css/responsive.css">
   <link rel="stylesheet" href="/static/css/dropdown.css">
 </head>
 <body>
@@ -21,9 +24,9 @@
     <li class="nav-dropdown">
       <a href="/catalog/moto">Каталог ▾</a>
       <ul class="dropdown-menu">
-        <li><a href="/catalog/moto">🏍 Мотоцикли</a></li>
-        <li><a href="/catalog/moped">🛵 Мопеди</a></li>
-        <li><a href="/catalog/quad">🚜 Квадроцикли</a></li>
+        <li><a href="/catalog/moto">Мотоцикли</a></li>
+        <li><a href="/catalog/moped">Мопеди</a></li>
+        <li><a href="/catalog/quad">Квадроцикли</a></li>
       </ul>
     </li>
     <li><a href="/brands">Бренди</a></li>
@@ -36,7 +39,34 @@
       <button type="submit" class="search-btn">Знайти</button>
     </form>
   </div>
+  <button class="burger" id="burger" aria-label="Меню"><span></span><span></span><span></span></button>
 </nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-overlay" id="mobile-overlay">
+  <div class="mobile-menu">
+    <button class="mobile-menu-close" id="mobile-menu-close" aria-label="Закрити">✕</button>
+    <ul class="mobile-nav-links">
+      <li><a href="/">Головна</a></li>
+      <li class="mobile-dropdown">
+        <button class="mobile-catalog-toggle">Каталог ▾</button>
+        <ul class="mobile-submenu">
+          <li><a href="/catalog/moto">Мотоцикли</a></li>
+          <li><a href="/catalog/moped">Мопеди</a></li>
+          <li><a href="/catalog/quad">Квадроцикли</a></li>
+        </ul>
+      </li>
+      <li><a href="/brands">Бренди</a></li>
+      <li><a href="/reviews" class="active">Відгуки</a></li>
+      <li><a href="/contacts">Контакти</a></li>
+    </ul>
+    <form action="/search" method="get" class="mobile-search">
+      <input type="text" name="q" placeholder="Пошук мотоцикла..." autocomplete="off">
+      <button type="submit">Знайти</button>
+    </form>
+    <a href="tel:+380997558803" class="mobile-phone-link">📞 +38 099 755 88 03</a>
+  </div>
+</div>
 
 <div class="page-layout">
 
@@ -74,15 +104,31 @@
         {% endfor %}
       </div>
       {% endif %}
-      <a href="#new-review" class="write-btn">✍ Написати відгук</a>
     </div>
 
     <!-- SORT -->
     <div class="sort-row">
-      <span class="sort-label">Сортування:</span>
-      <a href="?sort=new" class="sort-btn {% if sort == 'new' or not sort %}active{% endif %}">спочатку нові</a>
-      <a href="?sort=rating" class="sort-btn {% if sort == 'rating' %}active{% endif %}">по рейтингу</a>
-      <a href="?sort=old" class="sort-btn {% if sort == 'old' %}active{% endif %}">спочатку старі</a>
+      <a href="#new-review" class="write-btn">✍ Написати відгук</a>
+      <div class="sort-avg">
+        <span class="sort-avg-num">{{ avg if avg else "—" }}</span>
+        <div class="sort-avg-right">
+          <div class="sort-avg-stars">
+            {% for i in range(1, 6) %}<span class="star {% if avg and i <= avg|round %}on{% endif %}">★</span>{% endfor %}
+          </div>
+          <span class="sort-avg-count">{{ total }} відгук{% if total != 1 %}ів{% endif %}</span>
+        </div>
+      </div>
+      <div class="sort-controls">
+        <span class="sort-label">Сортування:</span>
+        <a href="?sort=new" class="sort-btn {% if sort == 'new' or not sort %}active{% endif %}">спочатку нові</a>
+        <a href="?sort=rating" class="sort-btn {% if sort == 'rating' %}active{% endif %}">по рейтингу</a>
+        <a href="?sort=old" class="sort-btn {% if sort == 'old' %}active{% endif %}">спочатку старі</a>
+        <select class="sort-select-mobile" onchange="location.href='?sort='+this.value">
+          <option value="new" {% if sort == 'new' or not sort %}selected{% endif %}>спочатку нові</option>
+          <option value="rating" {% if sort == 'rating' %}selected{% endif %}>по рейтингу</option>
+          <option value="old" {% if sort == 'old' %}selected{% endif %}>спочатку старі</option>
+        </select>
+      </div>
     </div>
 
     <!-- REVIEWS -->
@@ -195,6 +241,11 @@
   </div>
 </div>
 
+<!-- MOBILE FIXED BUTTON -->
+<div class="mobile-write-cta">
+  <a href="#new-review">✍ Написати відгук</a>
+</div>
+
 <!-- FOOTER -->
 <footer>
   <div class="footer-grid">
@@ -229,5 +280,6 @@
 
 <script src="/static/js/reviews.js"></script>
 <script src="/static/js/autocomplete.js"></script>
+<script src="/static/js/navbar.js"></script>
 </body>
 </html>
