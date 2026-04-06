@@ -80,12 +80,11 @@
   <!-- PAGE HEADER -->
   <div class="cat-header">
     <h1>
-      {{ {"moto":"🏍","moped":"🛵","quad":"🚜"}.get(category,"") }}
       {{ cat_label }}
       <span class="cat-header-count">{{ total }} оголошень</span>
     </h1>
     <div class="sort-row">
-      <button class="filter-toggle" onclick="toggleFilters()">⚙ Фільтри</button>
+      <button class="filter-toggle" onclick="toggleFilters()">Фільтри</button>
       <span class="sort-label">Сортування:</span>
       <select class="sort-select" onchange="applySort(this.value)">
         <option value="newest"     {% if sort=='newest'     %}selected{% endif %}>Новіші спочатку</option>

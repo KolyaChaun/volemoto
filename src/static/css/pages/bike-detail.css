@@ -5,8 +5,21 @@ body { background: #f5f6f8; }
 .breadcrumbs a:hover { color: #2d9e00; }
 .breadcrumbs span { margin: 0 6px; }
 
-.detail-page { max-width: 1200px; margin: 0 auto 60px; padding: 0 24px; display: grid; grid-template-columns: 1fr 380px; gap: 24px; align-items: start; }
-@media (max-width: 960px) { .detail-page { grid-template-columns: 1fr; } }
+.detail-page { max-width: 1200px; margin: 0 auto 60px; padding: 0 24px; display: grid; grid-template-columns: 1fr 380px; gap: 12px; align-items: start; }
+.detail-page > .detail-gallery { grid-column: 1; grid-row: 1; min-width: 0; }
+.detail-page > .right-panel    { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.detail-page > .desc-block     { grid-column: 1; grid-row: 2; min-width: 0; }
+
+@media (max-width: 960px) {
+  .detail-page { grid-template-columns: 1fr; gap: 10px; }
+  .detail-page > .right-panel { display: contents; }
+  .detail-page > .detail-gallery,
+  .detail-page > .desc-block  { grid-column: auto; grid-row: auto; }
+  .detail-gallery { order: 1; }
+  .info-card      { order: 2; }
+  .desc-block     { order: 3; }
+  .contact-card   { order: 4; }
+}
 
 .gallery { background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #e8e8e8; }
 .gallery-main { position: relative; background: #f0f0f0; aspect-ratio: 4/3; overflow: hidden; }
@@ -24,11 +37,12 @@ body { background: #f5f6f8; }
 .g-thumb.active { border-color: #2d9e00; }
 .g-thumb:hover { border-color: #aaa; }
 
-.desc-block { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 24px; margin-top: 16px; }
+.desc-block { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 24px; }
+@media (min-width: 961px) { .desc-block { margin-top: -163px; } }
 .desc-block h3 { font-size: 15px; font-weight: 800; color: #111; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
-.desc-text { font-size: 14px; color: #555; line-height: 1.75; white-space: pre-wrap; }
+.desc-text { font-size: 14px; color: #555; line-height: 1.75; white-space: pre-wrap; overflow-wrap: break-word; word-break: break-word; }
 
-.right-panel { display: flex; flex-direction: column; gap: 16px; }
+.right-panel { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 .info-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 24px; }
 
 .avail-badge { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-bottom: 10px; }
