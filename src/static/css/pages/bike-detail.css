@@ -40,6 +40,11 @@ body { background: #f5f6f8; }
 .desc-block { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 24px; }
 @media (min-width: 961px) { .desc-block { margin-top: -163px; } }
 .desc-block h3 { font-size: 15px; font-weight: 800; color: #111; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
+.g-yt-slide { display: none; width: 100%; height: 100%; background: #000; }
+.g-yt-slide.active { display: block; }
+.g-yt-slide iframe { width: 100%; height: 100%; display: block; }
+.g-thumb-yt { position: relative; }
+.g-thumb-play { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,.35); color: #fff; font-size: 20px; border-radius: 4px; }
 .desc-text { font-size: 14px; color: #555; line-height: 1.75; white-space: pre-wrap; overflow-wrap: break-word; word-break: break-word; }
 
 .right-panel { display: flex; flex-direction: column; gap: 16px; min-width: 0; }

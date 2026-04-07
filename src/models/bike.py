@@ -1,5 +1,6 @@
 import re
 from sqlalchemy import Column, Integer, String, Boolean, Text, ForeignKey
+from urllib.parse import urlparse, parse_qs
 from sqlalchemy.orm import relationship
 
 from src.db.database import Base
@@ -28,12 +29,28 @@ class Bike(Base):
     category    = Column(String(20))
     color       = Column(String(100))
     condition   = Column(String(100))
-    description = Column(Text, default="")
-    photo       = Column(String(300), default="")
-    available   = Column(Boolean, default=True)
+    description  = Column(Text, default="")
+    photo        = Column(String(300), default="")
+    available    = Column(Boolean, default=True)
+    youtube_url  = Column(String(500), default="")
 
     photos = relationship("BikePhoto", back_populates="bike",
                           cascade="all, delete-orphan", order_by="BikePhoto.id")
+
+    @property
+    def youtube_video_id(self) -> str:
+        url = (self.youtube_url or "").strip()
+        if not url:
+            return ""
+        parsed = urlparse(url)
+        if parsed.hostname in ("youtu.be",):
+            return parsed.path.lstrip("/")
+        return parse_qs(parsed.query).get("v", [""])[0]
+
+    @property
+    def youtube_embed_url(self) -> str:
+        vid = self.youtube_video_id
+        return f"https://www.youtube.com/embed/{vid}" if vid else ""
 
     @property
     def slug(self) -> str:

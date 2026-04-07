@@ -1,19 +1,43 @@
 // ── GALLERY ──────────────────────────────
 let cur = 0;
 const gImgs   = [...document.querySelectorAll('#gMain img')];
+const gYt     = document.querySelector('#gMain .g-yt-slide');
 const gThumbs = [...document.querySelectorAll('.g-thumb')];
 const gCount  = document.getElementById('gCounter');
+const totalSlides = gImgs.length + (gYt ? 1 : 0);
 
 function gTo(n) {
-  if (!gImgs.length) return;
-  gImgs[cur].classList.remove('active');
+  if (!totalSlides) return;
+  // deactivate current
+  if (cur < gImgs.length) gImgs[cur].classList.remove('active');
+  else if (gYt) { gYt.classList.remove('active'); stopYt(); }
   if (gThumbs[cur]) gThumbs[cur].classList.remove('active');
-  cur = (n + gImgs.length) % gImgs.length;
-  gImgs[cur].classList.add('active');
+
+  cur = (n + totalSlides) % totalSlides;
+
+  // activate new
+  if (cur < gImgs.length) {
+    gImgs[cur].classList.add('active');
+  } else if (gYt) {
+    gYt.classList.add('active');
+    playYt();
+  }
   if (gThumbs[cur]) { gThumbs[cur].classList.add('active'); gThumbs[cur].scrollIntoView({block:'nearest',inline:'center'}); }
-  if (gCount) gCount.textContent = (cur + 1) + ' / ' + gImgs.length;
+  if (gCount) gCount.textContent = (cur + 1) + ' / ' + totalSlides;
 }
 function gMove(d) { gTo(cur + d); }
+
+function playYt() {
+  if (!gYt) return;
+  const iframe = gYt.querySelector('iframe');
+  const id = gYt.dataset.ytId;
+  if (iframe && id) iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1';
+}
+function stopYt() {
+  if (!gYt) return;
+  const iframe = gYt.querySelector('iframe');
+  if (iframe) iframe.src = '';
+}
 
 document.addEventListener('keydown', e => {
   if (document.getElementById('lightbox').classList.contains('open')) return;

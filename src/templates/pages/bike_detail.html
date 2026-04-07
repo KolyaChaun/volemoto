@@ -90,10 +90,18 @@
                class="{{ 'active' if loop.first else '' }}"
                onclick="lbOpen({{ loop.index0 }})">
           {% endfor %}
-          {% if bike.photos|length > 1 %}
+          {% if bike.youtube_video_id %}
+          <div class="g-yt-slide" data-yt-id="{{ bike.youtube_video_id }}">
+            <iframe id="ytFrame" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
+          </div>
+          {% endif %}
+          {% set total_slides = bike.photos|length + (1 if bike.youtube_video_id else 0) %}
+          {% if total_slides > 1 %}
           <button class="g-arrow g-prev" onclick="gMove(-1)">&#8249;</button>
           <button class="g-arrow g-next" onclick="gMove(1)">&#8250;</button>
-          <div class="g-counter" id="gCounter">1 / {{ bike.photos|length }}</div>
+          <div class="g-counter" id="gCounter">1 / {{ total_slides }}</div>
           {% endif %}
         {% elif bike.photo %}
           <img src="{{ bike.photo }}" alt="{{ bike.name }}" class="active" onclick="lbOpen(0)">
@@ -102,13 +110,20 @@
         {% endif %}
       </div>
 
-      {% if bike.photos|length > 1 %}
+      {% set has_thumbs = bike.photos|length > 1 or (bike.photos and bike.youtube_video_id) %}
+      {% if has_thumbs %}
       <div class="gallery-thumbs">
         {% for p in bike.photos %}
         <div class="g-thumb {{ 'active' if loop.first else '' }}" onclick="gTo({{ loop.index0 }})">
           <img src="{{ p.path }}" alt="">
         </div>
         {% endfor %}
+        {% if bike.youtube_video_id %}
+        <div class="g-thumb g-thumb-yt" onclick="gTo({{ bike.photos|length }})">
+          <img src="https://img.youtube.com/vi/{{ bike.youtube_video_id }}/mqdefault.jpg" alt="Відео">
+          <div class="g-thumb-play">▶</div>
+        </div>
+        {% endif %}
       </div>
       {% endif %}
     </div>
@@ -198,6 +213,7 @@
     <div class="desc-text">{{ bike.description }}</div>
   </div>
   {% endif %}
+
 
 </div>
 

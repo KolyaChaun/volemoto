@@ -71,6 +71,7 @@ async def add_bike(
     year: int = Form(...), price: int = Form(...), mileage: int = Form(...),
     engine: int = Form(...), category: str = Form(...), color: str = Form(...),
     condition: str = Form(...), description: str = Form(""),
+    youtube_url: str = Form(""),
     available: bool = Form(True), photos: List[UploadFile] = File(None),
     db: Session = Depends(get_db),
 ):
@@ -83,6 +84,7 @@ async def add_bike(
         price=price, mileage=mileage, engine=engine,
         category=category, color=color, condition=condition,
         description=description, available=available,
+        youtube_url=youtube_url,
         photo=paths[0] if paths else "",
     )
     db.add(bike)
@@ -114,6 +116,7 @@ async def edit_bike(
     year: int = Form(...), price: int = Form(...), mileage: int = Form(...),
     engine: int = Form(...), category: str = Form(...), color: str = Form(...),
     condition: str = Form(...), description: str = Form(""),
+    youtube_url: str = Form(""),
     available: Optional[str] = Form(None), photos: List[UploadFile] = File(None),
     db: Session = Depends(get_db),
 ):
@@ -129,6 +132,7 @@ async def edit_bike(
     bike.year = year;     bike.price = price;     bike.mileage = mileage
     bike.engine = engine; bike.category = category; bike.color = color
     bike.condition = condition; bike.description = description
+    bike.youtube_url = youtube_url
     bike.available = available is not None
     db.flush()
     all_paths = [p.path for p in db.query(BikePhoto).filter_by(bike_id=bike.id).all()]
