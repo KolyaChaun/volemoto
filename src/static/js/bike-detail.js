@@ -31,12 +31,12 @@ function playYt() {
   if (!gYt) return;
   const iframe = gYt.querySelector('iframe');
   const id = gYt.dataset.ytId;
-  if (iframe && id) iframe.src = 'https://www.youtube.com/embed/' + id + '?autoplay=1';
+  if (iframe && id) iframe.src = 'https://www.youtube.com/embed/' + id + '?rel=0';
 }
 function stopYt() {
   if (!gYt) return;
   const iframe = gYt.querySelector('iframe');
-  if (iframe) iframe.src = '';
+  if (iframe) iframe.removeAttribute('src');
 }
 
 document.addEventListener('keydown', e => {
@@ -44,6 +44,22 @@ document.addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft')  gMove(-1);
   if (e.key === 'ArrowRight') gMove(1);
 });
+
+// ── SWIPE ─────────────────────────────────
+const gMain = document.getElementById('gMain');
+let touchStartX = 0;
+let touchStartY = 0;
+gMain.addEventListener('touchstart', e => {
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+gMain.addEventListener('touchend', e => {
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 40) {
+    dx < 0 ? gMove(1) : gMove(-1);
+  }
+}, { passive: true });
 
 // ── LIGHTBOX ─────────────────────────────
 const lbEl  = document.getElementById('lightbox');
