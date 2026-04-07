@@ -229,6 +229,7 @@
 @media (max-width: 390px) {
   .hero h1 { font-size: clamp(21px, 8vw, 28px); }
   .hero-content { padding-top: 40px; }
+  .hero-info { margin-top: 20px; padding-top: 16px; }
   .brands-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .brand-card { padding: 20px 10px 14px; }
 }
