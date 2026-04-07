@@ -76,7 +76,7 @@ tr:hover td { background: #fafff8; }
 label { font-size: 12px; font-weight: 700; color: #555; }
 input, select, textarea { padding: 10px 14px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 14px; font-family: Arial, sans-serif; outline: none; transition: border-color .15s; }
 input:focus, select:focus, textarea:focus { border-color: #2d9e00; }
-textarea { resize: vertical; min-height: 90px; }
+textarea { resize: vertical; min-height: 220px; }
 .checkbox-row { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
 .checkbox-row input { width: 18px; height: 18px; accent-color: #2d9e00; }
 .checkbox-row span { font-size: 14px; color: #444; }

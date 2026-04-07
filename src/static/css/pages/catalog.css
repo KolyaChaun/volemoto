@@ -157,7 +157,8 @@ body { background: #f5f6f8; }
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 10px 16px;
+    height: 36px;
+    padding: 0 16px;
     border: 1.5px solid #e0e0e0;
     border-radius: 8px;
     font-size: 13px;
@@ -167,13 +168,29 @@ body { background: #f5f6f8; }
     color: #333;
     white-space: nowrap;
     flex-shrink: 0;
+    box-sizing: border-box;
     transition: border-color .15s, color .15s, background .15s;
   }
   .filter-toggle:hover { border-color: #2d9e00; color: #2d9e00; }
   .filter-toggle.active { background: #2d9e00; border-color: #2d9e00; color: #fff; }
 
-  /* Sort select fills remaining space */
-  .sort-select { flex: 1; min-width: 0; }
+  /* Sort select — same style as filter toggle */
+  .sort-select {
+    margin-left: auto;
+    height: 36px;
+    padding: 0 16px;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    background: #fff;
+    color: #333;
+    cursor: pointer;
+    box-sizing: border-box;
+    appearance: auto;
+    font-family: inherit;
+  }
+  .sort-select:focus { border-color: #2d9e00; outline: none; }
 }
 
 @media (max-width: 600px) { .catalog-grid { grid-template-columns: 1fr; } }

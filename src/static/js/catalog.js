@@ -65,7 +65,7 @@ function initCustomSelect(nativeSel) {
   document.addEventListener('click', closeList);
 }
 
-document.querySelectorAll('.filter-select, .sort-select').forEach(initCustomSelect);
+document.querySelectorAll('.filter-select').forEach(initCustomSelect);
 
 function applySort(val) {
   const url = new URL(window.location.href);
@@ -82,7 +82,7 @@ function toggleFilters() {
   document.body.style.overflow = isOpen ? 'hidden' : '';
   if (btn) {
     btn.classList.toggle('active', isOpen);
-    btn.textContent = isOpen ? '✕ Закрити' : '⚙ Фільтри';
+    btn.textContent = isOpen ? '✕ Закрити' : 'Фільтри';
   }
 }
 
