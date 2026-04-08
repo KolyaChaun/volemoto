@@ -28,13 +28,23 @@ logger = logging.getLogger(__name__)
 
 
 def create_backup() -> str:
-    """Запускает backup.sh и возвращает путь к созданному файлу."""
-    script = os.path.join(os.path.dirname(__file__), "backup.sh")
-    result = subprocess.run(["bash", script], capture_output=True, text=True)
-    if result.returncode != 0:
-        raise RuntimeError(f"backup.sh failed:\n{result.stderr}")
-    # Последняя строка stdout — путь к файлу
-    return result.stdout.strip().splitlines()[-1]
+    """Создаёт pg_dump прямо из контейнера через DATABASE_URL."""
+    database_url = os.getenv("DATABASE_URL")
+    if not database_url:
+        raise RuntimeError("DATABASE_URL is not set")
+
+    date     = datetime.now().strftime("%Y-%m-%d_%H-%M")
+    out_path = f"/tmp/volemoto_backup_{date}.sql.gz"
+
+    logger.info("Running pg_dump → %s", out_path)
+    with open(out_path, "wb") as f:
+        dump = subprocess.run(["pg_dump", database_url], capture_output=True)
+        if dump.returncode != 0:
+            raise RuntimeError(f"pg_dump failed: {dump.stderr.decode()}")
+        import gzip
+        f.write(gzip.compress(dump.stdout))
+
+    return out_path
 
 
 def upload_backup(file_path: str) -> str:
