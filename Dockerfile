@@ -21,6 +21,7 @@ RUN poetry config virtualenvs.create false \
 COPY src/ ./src/
 COPY alembic/ ./alembic/
 COPY alembic.ini ./
+COPY scripts/ ./scripts/
 
 # Media volume placeholder
 RUN mkdir -p /app/src/media
