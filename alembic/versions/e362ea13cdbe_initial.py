@@ -41,7 +41,7 @@ def upgrade() -> None:
                existing_type=sa.BOOLEAN(),
                server_default=None,
                existing_nullable=True)
-    op.drop_column('reviews', 'reply')
+    op.execute('ALTER TABLE reviews DROP COLUMN IF EXISTS reply')
     # ### end Alembic commands ###
 
 
