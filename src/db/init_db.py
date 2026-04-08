@@ -1,24 +1,7 @@
 import random
-from sqlalchemy import text, inspect as sa_inspect
 from sqlalchemy.orm import Session
 
-from src.db.database import engine, SessionLocal
-
-
-def _add_column_if_missing(table: str, column: str, definition: str) -> None:
-    with engine.connect() as conn:
-        cols = [c["name"] for c in sa_inspect(engine).get_columns(table)]
-        if column not in cols:
-            conn.execute(text(f"ALTER TABLE {table} ADD COLUMN {column} {definition}"))
-            conn.commit()
-
-
-def run_migrations() -> None:
-    _add_column_if_missing("brands",  "logo",        "VARCHAR(300) DEFAULT ''")
-    _add_column_if_missing("reviews", "is_read",     "BOOLEAN DEFAULT FALSE")
-    _add_column_if_missing("bikes",   "article",     "VARCHAR(10) DEFAULT ''")
-    _add_column_if_missing("bikes",   "youtube_url", "VARCHAR(500) DEFAULT ''")
-    _add_column_if_missing("bikes",   "status",      "VARCHAR(30) DEFAULT 'available'")
+from src.db.database import SessionLocal
 
 
 def _gen_article(db: Session) -> str:

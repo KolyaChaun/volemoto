@@ -1,15 +1,9 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
-from src.db.database import Base, engine
-from src.models import hero_slide  # noqa: F401 — registers HeroSlide with Base
-from src.db.init_db import run_migrations, fill_missing_articles
+from src.db.init_db import fill_missing_articles
 from src.routers import auth, public, admin, reviews
-
-# ── DB SETUP ─────────────────────────────────────────
-Base.metadata.create_all(bind=engine)
-run_migrations()
-fill_missing_articles()
 
 # ── APP ──────────────────────────────────────────────
 app = FastAPI(title="VOLE MOTO")
@@ -21,6 +15,17 @@ app.include_router(auth.router)
 app.include_router(public.router)
 app.include_router(admin.router)
 app.include_router(reviews.router)
+
+
+@app.exception_handler(401)
+async def unauthorized_handler(request: Request, exc):
+    """Любой 401 из require_admin → редирект на страницу входа."""
+    return RedirectResponse("/admin/login", status_code=302)
+
+
+# ── DB SETUP ─────────────────────────────────────────
+# Миграции управляются через Alembic: `alembic upgrade head`
+fill_missing_articles()
 
 if __name__ == "__main__":
     import uvicorn

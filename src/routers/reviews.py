@@ -4,11 +4,11 @@ from sqlalchemy.orm import Session
 from typing import List
 
 from src.core.config import templates
-from src.core.security import check_admin
+from src.core.security import require_admin, get_optional_admin
 from src.db.database import get_db
+from src.models.admin import Admin
 from src.models.review import Review, ReviewReply, ReviewPhoto
 from src.services.file_service import save_photos
-
 
 router = APIRouter()
 
@@ -21,6 +21,7 @@ def reviews_page(
     sort: str = "new",
     limit: int = 20,
     db: Session = Depends(get_db),
+    is_admin: bool = Depends(get_optional_admin),
 ):
     q = db.query(Review)
     if sort == "rating":
@@ -39,7 +40,7 @@ def reviews_page(
         "avg":      avg,
         "counts":   counts,
         "sort":     sort,
-        "is_admin": check_admin(request),
+        "is_admin": is_admin,
         "limit":    limit,
         "has_more": total > limit,
     })
@@ -84,9 +85,11 @@ def review_user_reply(
 # ── ADMIN ─────────────────────────────────────────────
 
 @router.get("/admin/reviews", response_class=HTMLResponse)
-def admin_reviews(request: Request, db: Session = Depends(get_db)):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
+def admin_reviews(
+    request: Request,
+    db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
+):
     reviews = db.query(Review).order_by(Review.id.desc()).all()
     db.query(Review).filter_by(is_read=False).update({"is_read": True})
     db.commit()
@@ -101,9 +104,8 @@ def admin_review_reply(
     review_id: int,
     text: str = Form(...),
     db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
 ):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
     if text.strip():
         db.add(ReviewReply(review_id=review_id, name="VOLE MOTO", text=text.strip(), is_admin=True))
         db.commit()
@@ -111,9 +113,11 @@ def admin_review_reply(
 
 
 @router.post("/admin/reviews/{review_id}/delete")
-def admin_review_delete(request: Request, review_id: int, db: Session = Depends(get_db)):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
+def admin_review_delete(
+    request: Request, review_id: int,
+    db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
+):
     review = db.query(Review).filter_by(id=review_id).first()
     if review:
         db.delete(review)
@@ -122,9 +126,11 @@ def admin_review_delete(request: Request, review_id: int, db: Session = Depends(
 
 
 @router.post("/admin/reviews/reply/{reply_id}/delete")
-def admin_reply_delete(request: Request, reply_id: int, db: Session = Depends(get_db)):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
+def admin_reply_delete(
+    request: Request, reply_id: int,
+    db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
+):
     reply = db.query(ReviewReply).filter_by(id=reply_id).first()
     if reply:
         db.delete(reply)

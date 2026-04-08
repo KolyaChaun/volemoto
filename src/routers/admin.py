@@ -1,27 +1,29 @@
-import os
 from fastapi import APIRouter, Request, Form, File, UploadFile, Depends, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 from typing import Optional, List
 
 from src.core.config import templates
-from src.core.security import check_admin
+from src.core.security import require_admin
 from src.db.database import get_db
+from src.models.admin import Admin
 from src.models.bike import Bike, BikePhoto
 from src.models.brand import Brand
 from src.models.review import Review
 from src.models.hero_slide import HeroSlide
 from src.services.bike_service import gen_article
-from src.services.file_service import save_photos, save_single_file
+from src.services.file_service import save_photos, save_single_file, delete_file_by_path
 from src.services.utils import unread_count
 
 router = APIRouter(prefix="/admin")
 
 
 @router.get("", response_class=HTMLResponse)
-def dashboard(request: Request, db: Session = Depends(get_db)):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
+def dashboard(
+    request: Request,
+    db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
+):
     bikes  = db.query(Bike).order_by(Bike.id.desc()).all()
     total  = len(bikes)
     avail  = len([b for b in bikes if b.available])
@@ -39,9 +41,11 @@ def dashboard(request: Request, db: Session = Depends(get_db)):
 
 
 @router.get("/catalog", response_class=HTMLResponse)
-def catalog(request: Request, db: Session = Depends(get_db)):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
+def catalog(
+    request: Request,
+    db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
+):
     bikes = db.query(Bike).order_by(Bike.id.desc()).all()
     total = len(bikes)
     return templates.TemplateResponse(request, "admin/catalog.html", {
@@ -55,9 +59,11 @@ def catalog(request: Request, db: Session = Depends(get_db)):
 
 
 @router.get("/add", response_class=HTMLResponse)
-def add_page(request: Request, db: Session = Depends(get_db)):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
+def add_page(
+    request: Request,
+    db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
+):
     brands = db.query(Brand).order_by(Brand.name).all()
     return templates.TemplateResponse(request, "admin/add_moto.html", {
         "bike": None, "action": "/admin/add",
@@ -75,9 +81,8 @@ async def add_bike(
     youtube_url: str = Form(""),
     status: str = Form("available"), photos: List[UploadFile] = File(None),
     db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
 ):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
     paths = save_photos(photos or [], category)
     bike  = Bike(
         article=gen_article(db),
@@ -97,9 +102,11 @@ async def add_bike(
 
 
 @router.get("/edit/{bike_id}", response_class=HTMLResponse)
-def edit_page(request: Request, bike_id: int, db: Session = Depends(get_db)):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
+def edit_page(
+    request: Request, bike_id: int,
+    db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
+):
     bike = db.query(Bike).filter_by(id=bike_id).first()
     if not bike:
         raise HTTPException(404)
@@ -120,9 +127,8 @@ async def edit_bike(
     youtube_url: str = Form(""),
     status: str = Form("available"), photos: List[UploadFile] = File(None),
     db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
 ):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
     bike = db.query(Bike).filter_by(id=bike_id).first()
     if not bike:
         raise HTTPException(404)
@@ -145,16 +151,16 @@ async def edit_bike(
 
 
 @router.post("/delete/{bike_id}")
-def delete_bike(request: Request, bike_id: int, db: Session = Depends(get_db)):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
+def delete_bike(
+    request: Request, bike_id: int,
+    db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
+):
     bike = db.query(Bike).filter_by(id=bike_id).first()
     if not bike:
         raise HTTPException(404)
     for photo in db.query(BikePhoto).filter_by(bike_id=bike_id).all():
-        disk_path = "src" + photo.path
-        if os.path.exists(disk_path):
-            os.remove(disk_path)
+        delete_file_by_path(photo.path)
         db.delete(photo)
     db.delete(bike)
     db.commit()
@@ -162,9 +168,11 @@ def delete_bike(request: Request, bike_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/photo/main/{photo_id}")
-def set_main_photo(request: Request, photo_id: int, db: Session = Depends(get_db)):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
+def set_main_photo(
+    request: Request, photo_id: int,
+    db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
+):
     photo = db.query(BikePhoto).filter_by(id=photo_id).first()
     if not photo:
         raise HTTPException(404)
@@ -175,16 +183,16 @@ def set_main_photo(request: Request, photo_id: int, db: Session = Depends(get_db
 
 
 @router.post("/photo/delete/{photo_id}")
-def delete_photo(request: Request, photo_id: int, db: Session = Depends(get_db)):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
+def delete_photo(
+    request: Request, photo_id: int,
+    db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
+):
     photo = db.query(BikePhoto).filter_by(id=photo_id).first()
     if not photo:
         raise HTTPException(404)
-    bike_id   = photo.bike_id
-    disk_path = "src" + photo.path
-    if os.path.exists(disk_path):
-        os.remove(disk_path)
+    bike_id = photo.bike_id
+    delete_file_by_path(photo.path)
     db.delete(photo)
     db.flush()
     bike      = db.query(Bike).filter_by(id=bike_id).first()
@@ -195,10 +203,14 @@ def delete_photo(request: Request, photo_id: int, db: Session = Depends(get_db))
     return RedirectResponse(f"/admin/edit/{bike_id}", status_code=302)
 
 
+# ── Brands ────────────────────────────────────────────
+
 @router.get("/brands", response_class=HTMLResponse)
-def brands_page(request: Request, db: Session = Depends(get_db)):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
+def brands_page(
+    request: Request,
+    db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
+):
     brands = db.query(Brand).order_by(Brand.name).all()
     return templates.TemplateResponse(request, "admin/add_brands.html", {
         "brands": brands, "unread": unread_count(db),
@@ -211,9 +223,8 @@ async def add_brand(
     name: str = Form(...),
     logo: UploadFile = File(None),
     db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
 ):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
     name = name.strip()
     if not name or db.query(Brand).filter_by(name=name).first():
         return RedirectResponse("/admin/brands", status_code=302)
@@ -224,26 +235,27 @@ async def add_brand(
 
 
 @router.post("/brands/delete/{brand_id}")
-def delete_brand(request: Request, brand_id: int, db: Session = Depends(get_db)):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
+def delete_brand(
+    request: Request, brand_id: int,
+    db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
+):
     brand = db.query(Brand).filter_by(id=brand_id).first()
     if brand:
-        if brand.logo:
-            disk = "src" + brand.logo
-            if os.path.exists(disk):
-                os.remove(disk)
+        delete_file_by_path(brand.logo)
         db.delete(brand)
         db.commit()
     return RedirectResponse("/admin/brands", status_code=302)
 
 
-# ── Hero slides ──────────────────────────────────────
+# ── Hero slides ───────────────────────────────────────
 
 @router.get("/hero", response_class=HTMLResponse)
-def hero_page(request: Request, db: Session = Depends(get_db)):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
+def hero_page(
+    request: Request,
+    db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
+):
     slides = db.query(HeroSlide).order_by(HeroSlide.sort_order, HeroSlide.id).all()
     return templates.TemplateResponse(request, "admin/hero.html", {
         "slides": slides,
@@ -256,9 +268,8 @@ async def hero_upload(
     request: Request,
     files: List[UploadFile] = File(...),
     db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
 ):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
     max_order = db.query(HeroSlide).count()
     for i, f in enumerate(files):
         if not f or not f.filename:
@@ -270,14 +281,14 @@ async def hero_upload(
 
 
 @router.post("/hero/delete/{slide_id}")
-def hero_delete(request: Request, slide_id: int, db: Session = Depends(get_db)):
-    if not check_admin(request):
-        return RedirectResponse("/admin/login", status_code=302)
+def hero_delete(
+    request: Request, slide_id: int,
+    db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
+):
     slide = db.query(HeroSlide).filter_by(id=slide_id).first()
     if slide:
-        disk = "src" + slide.path
-        if os.path.exists(disk):
-            os.remove(disk)
+        delete_file_by_path(slide.path)
         db.delete(slide)
         db.commit()
     return RedirectResponse("/admin/hero", status_code=302)

@@ -22,8 +22,13 @@ services:
       - "${APP_PORT}:8000"
     environment:
       DATABASE_URL: postgresql://volemoto:${DB_PASSWORD}@db:5432/volemoto
-      ADMIN_LOGIN: ${ADMIN_LOGIN}
-      ADMIN_PASS: ${ADMIN_PASS}
+      SECRET_KEY: ${SECRET_KEY}
+      COOKIE_SECURE: "true"
+      R2_ENDPOINT: ${R2_ENDPOINT}
+      R2_ACCESS_KEY: ${R2_ACCESS_KEY}
+      R2_SECRET_KEY: ${R2_SECRET_KEY}
+      R2_BUCKET_NAME: ${R2_BUCKET_NAME}
+      R2_PUBLIC_URL: ${R2_PUBLIC_URL}
     volumes:
       - ./src/media:/app/src/media
     depends_on:

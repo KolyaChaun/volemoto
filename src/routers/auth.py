@@ -1,29 +1,56 @@
-from fastapi import APIRouter, Request, Form
+from fastapi import APIRouter, Request, Form, Depends
 from fastapi.responses import RedirectResponse
+from sqlalchemy.orm import Session
 
-from src.core.config import templates, ADMIN_LOGIN, ADMIN_PASS
+from src.core.config import templates
+from src.core.security import (
+    verify_password, create_session_token,
+    SESSION_COOKIE, SESSION_MAX_AGE, COOKIE_SECURE,
+)
+from src.db.database import get_db
+from src.models.admin import Admin
 
 router = APIRouter()
 
 
 @router.get("/admin/login")
 def admin_login_page(request: Request):
+    if request.cookies.get(SESSION_COOKIE):
+        return RedirectResponse("/admin", status_code=302)
     return templates.TemplateResponse(request, "admin/login.html", {"error": None})
 
 
 @router.post("/admin/login")
-def admin_login(request: Request, username: str = Form(...), password: str = Form(...)):
-    if username == ADMIN_LOGIN and password == ADMIN_PASS:
-        resp = RedirectResponse("/admin", status_code=302)
-        resp.set_cookie("admin", "ok", httponly=True)
-        return resp
-    return templates.TemplateResponse(request, "admin/login.html", {
-        "error": "Невірний логін або пароль"
-    })
+def admin_login(
+    request: Request,
+    username: str = Form(...),
+    password: str = Form(...),
+    db: Session = Depends(get_db),
+):
+    admin = db.query(Admin).filter_by(username=username.strip()).first()
+
+    if not admin or not verify_password(password, admin.password_hash):
+        return templates.TemplateResponse(
+            request, "admin/login.html",
+            {"error": "Невірний логін або пароль"},
+            status_code=401,
+        )
+
+    token = create_session_token(admin.id)
+    resp  = RedirectResponse("/admin", status_code=302)
+    resp.set_cookie(
+        SESSION_COOKIE,
+        token,
+        httponly=True,
+        secure=COOKIE_SECURE,
+        samesite="lax",
+        max_age=SESSION_MAX_AGE,
+    )
+    return resp
 
 
 @router.get("/admin/logout")
 def admin_logout():
     resp = RedirectResponse("/admin/login", status_code=302)
-    resp.delete_cookie("admin")
+    resp.delete_cookie(SESSION_COOKIE)
     return resp
