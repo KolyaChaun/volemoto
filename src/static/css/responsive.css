@@ -351,6 +351,11 @@
   .hero-info { gap: clamp(14px, 2.5vw, 24px); }
 }
 
+/* ── Slider image mobile adaptation ── */
+@media (max-width: 767px) {
+  .slide { background-position: center 30%; }
+}
+
 /* iPad — landscape (всі моделі, тільки планшети) */
 @media (min-width: 768px) and (max-width: 1366px) and (orientation: landscape) {
   .hero { height: 82vh; min-height: 500px; }

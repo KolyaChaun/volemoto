@@ -17,6 +17,18 @@ class Review(Base):
 
     replies = relationship("ReviewReply", back_populates="review",
                            cascade="all, delete-orphan", order_by="ReviewReply.id")
+    photos  = relationship("ReviewPhoto", back_populates="review",
+                           cascade="all, delete-orphan", order_by="ReviewPhoto.id")
+
+
+class ReviewPhoto(Base):
+    __tablename__ = "review_photos"
+
+    id        = Column(Integer, primary_key=True, index=True)
+    review_id = Column(Integer, ForeignKey("reviews.id"), nullable=False)
+    path      = Column(String(300), nullable=False)
+
+    review = relationship("Review", back_populates="photos")
 
 
 class ReviewReply(Base):

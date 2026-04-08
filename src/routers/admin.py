@@ -10,6 +10,7 @@ from src.db.database import get_db
 from src.models.bike import Bike, BikePhoto
 from src.models.brand import Brand
 from src.models.review import Review
+from src.models.hero_slide import HeroSlide
 from src.services.bike_service import gen_article
 from src.services.file_service import save_photos, save_single_file
 from src.services.utils import unread_count
@@ -72,7 +73,7 @@ async def add_bike(
     engine: int = Form(...), category: str = Form(...), color: str = Form(...),
     condition: str = Form(...), description: str = Form(""),
     youtube_url: str = Form(""),
-    available: bool = Form(True), photos: List[UploadFile] = File(None),
+    status: str = Form("available"), photos: List[UploadFile] = File(None),
     db: Session = Depends(get_db),
 ):
     if not check_admin(request):
@@ -83,8 +84,8 @@ async def add_bike(
         name=name, brand=brand, model=model, year=year,
         price=price, mileage=mileage, engine=engine,
         category=category, color=color, condition=condition,
-        description=description, available=available,
-        youtube_url=youtube_url,
+        description=description, available=(status == "available"),
+        status=status, youtube_url=youtube_url,
         photo=paths[0] if paths else "",
     )
     db.add(bike)
@@ -117,7 +118,7 @@ async def edit_bike(
     engine: int = Form(...), category: str = Form(...), color: str = Form(...),
     condition: str = Form(...), description: str = Form(""),
     youtube_url: str = Form(""),
-    available: Optional[str] = Form(None), photos: List[UploadFile] = File(None),
+    status: str = Form("available"), photos: List[UploadFile] = File(None),
     db: Session = Depends(get_db),
 ):
     if not check_admin(request):
@@ -133,7 +134,8 @@ async def edit_bike(
     bike.engine = engine; bike.category = category; bike.color = color
     bike.condition = condition; bike.description = description
     bike.youtube_url = youtube_url
-    bike.available = available is not None
+    bike.status = status
+    bike.available = (status == "available")
     db.flush()
     all_paths = [p.path for p in db.query(BikePhoto).filter_by(bike_id=bike.id).all()]
     if not bike.photo or bike.photo not in all_paths:
@@ -234,3 +236,48 @@ def delete_brand(request: Request, brand_id: int, db: Session = Depends(get_db))
         db.delete(brand)
         db.commit()
     return RedirectResponse("/admin/brands", status_code=302)
+
+
+# ── Hero slides ──────────────────────────────────────
+
+@router.get("/hero", response_class=HTMLResponse)
+def hero_page(request: Request, db: Session = Depends(get_db)):
+    if not check_admin(request):
+        return RedirectResponse("/admin/login", status_code=302)
+    slides = db.query(HeroSlide).order_by(HeroSlide.sort_order, HeroSlide.id).all()
+    return templates.TemplateResponse(request, "admin/hero.html", {
+        "slides": slides,
+        "unread": unread_count(db),
+    })
+
+
+@router.post("/hero/upload")
+async def hero_upload(
+    request: Request,
+    files: List[UploadFile] = File(...),
+    db: Session = Depends(get_db),
+):
+    if not check_admin(request):
+        return RedirectResponse("/admin/login", status_code=302)
+    max_order = db.query(HeroSlide).count()
+    for i, f in enumerate(files):
+        if not f or not f.filename:
+            continue
+        path = save_single_file(f, "hero")
+        db.add(HeroSlide(path=path, sort_order=max_order + i))
+    db.commit()
+    return RedirectResponse("/admin/hero", status_code=302)
+
+
+@router.post("/hero/delete/{slide_id}")
+def hero_delete(request: Request, slide_id: int, db: Session = Depends(get_db)):
+    if not check_admin(request):
+        return RedirectResponse("/admin/login", status_code=302)
+    slide = db.query(HeroSlide).filter_by(id=slide_id).first()
+    if slide:
+        disk = "src" + slide.path
+        if os.path.exists(disk):
+            os.remove(disk)
+        db.delete(slide)
+        db.commit()
+    return RedirectResponse("/admin/hero", status_code=302)

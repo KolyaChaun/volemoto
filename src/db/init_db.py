@@ -18,6 +18,7 @@ def run_migrations() -> None:
     _add_column_if_missing("reviews", "is_read",     "BOOLEAN DEFAULT FALSE")
     _add_column_if_missing("bikes",   "article",     "VARCHAR(10) DEFAULT ''")
     _add_column_if_missing("bikes",   "youtube_url", "VARCHAR(500) DEFAULT ''")
+    _add_column_if_missing("bikes",   "status",      "VARCHAR(30) DEFAULT 'available'")
 
 
 def _gen_article(db: Session) -> str:

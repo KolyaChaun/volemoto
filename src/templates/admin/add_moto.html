@@ -24,7 +24,8 @@
     <a href="/admin/catalog" class="nav-item">📋 Каталог</a>
     <div class="nav-section">Додати</div>
     <a href="/admin/add" class="nav-item {% if not bike %}active{% endif %}">➕ Додати мото</a>
-    <a href="/admin/brands" class="nav-item">🏷 Бренди</a>
+    <a href="/admin/brands" class="nav-item">➕ Додати бренди</a>
+    <a href="/admin/hero" class="nav-item">➕ Додати фонові зображення</a>
     <div class="nav-section">Клієнти</div>
     <a href="/admin/reviews" class="nav-item">💬 Відгуки {% if unread %}<span class="nav-badge">{{ unread }}</span>{% endif %}</a>
     <div class="nav-section">Сайт</div>
@@ -109,12 +110,14 @@
           <label>Ціна, ₴ *</label>
           <input type="number" name="price" min="0" required value="{{ bike.price if bike else '' }}" placeholder="250000">
         </div>
-        <div class="form-group" style="justify-content:flex-end;">
+        <div class="form-group">
           <label>Статус</label>
-          <div class="checkbox-row">
-            <input type="checkbox" name="available" id="available" {% if not bike or bike.available %}checked{% endif %}>
-            <span>В наявності (знімаємо галочку якщо продано)</span>
-          </div>
+          <select name="status">
+            <option value="available"  {% if not bike or bike.status == 'available'  %}selected{% endif %}>В наявності</option>
+            <option value="in_transit" {% if bike and bike.status == 'in_transit' %}selected{% endif %}>В дорозі</option>
+            <option value="reserved"   {% if bike and bike.status == 'reserved'   %}selected{% endif %}>Під завдатком</option>
+            <option value="sold"       {% if bike and bike.status == 'sold'       %}selected{% endif %}>Продано</option>
+          </select>
         </div>
       </div>
 

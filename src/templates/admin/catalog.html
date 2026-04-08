@@ -24,7 +24,8 @@
 
     <div class="nav-section">Додати</div>
     <a href="/admin/add" class="nav-item">➕ Додати мото</a>
-    <a href="/admin/brands" class="nav-item">🏷 Бренди</a>
+    <a href="/admin/brands" class="nav-item">➕ Додати бренди</a>
+    <a href="/admin/hero" class="nav-item">➕ Додати фонові зображення</a>
 
     <div class="nav-section">Клієнти</div>
     <a href="/admin/reviews" class="nav-item">💬 Відгуки {% if unread %}<span class="nav-badge">{{ unread }}</span>{% endif %}</a>
@@ -115,8 +116,9 @@
           <td>{{ "{:,}".format(bike.mileage).replace(",", " ") }} км</td>
           <td style="font-weight:700;">{{ "{:,}".format(bike.price).replace(",", " ") }} ₴</td>
           <td>
-            <span class="badge {{ 'badge-yes' if bike.available else 'badge-no' }}">
-              {{ "В наявності" if bike.available else "Продано" }}
+            {% set _s = bike.status or ('available' if bike.available else 'sold') %}
+            <span class="badge {% if _s == 'available' %}badge-yes{% elif _s == 'sold' %}badge-no{% else %}badge-status{% endif %}">
+              {% if _s == 'available' %}В наявності{% elif _s == 'in_transit' %}В дорозі{% elif _s == 'reserved' %}Під завдатком{% else %}Продано{% endif %}
             </span>
           </td>
           <td>
@@ -145,8 +147,9 @@
           <div class="m-bike-name">{{ bike.name }}</div>
           <div class="m-bike-meta">
             {{ bike.year }} · {{ "{:,}".format(bike.mileage).replace(",", " ") }} км ·
-            <span class="badge {{ 'badge-yes' if bike.available else 'badge-no' }}" style="font-size:10px;padding:1px 7px;">
-              {{ "В наявності" if bike.available else "Продано" }}
+            {% set _s = bike.status or ('available' if bike.available else 'sold') %}
+            <span class="badge {% if _s == 'available' %}badge-yes{% elif _s == 'sold' %}badge-no{% else %}badge-status{% endif %}" style="font-size:10px;padding:1px 7px;">
+              {% if _s == 'available' %}В наявності{% elif _s == 'in_transit' %}В дорозі{% elif _s == 'reserved' %}Під завдатком{% else %}Продано{% endif %}
             </span>
           </div>
         </div>

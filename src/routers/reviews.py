@@ -1,11 +1,13 @@
-from fastapi import APIRouter, Request, Form, Depends
+from fastapi import APIRouter, Request, Form, File, UploadFile, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
+from typing import List
 
 from src.core.config import templates
 from src.core.security import check_admin
 from src.db.database import get_db
-from src.models.review import Review, ReviewReply
+from src.models.review import Review, ReviewReply, ReviewPhoto
+from src.services.file_service import save_photos
 
 
 router = APIRouter()
@@ -44,15 +46,22 @@ def reviews_page(
 
 
 @router.post("/reviews")
-def reviews_add(
+async def reviews_add(
     request: Request,
     name:   str = Form(...),
     rating: int = Form(...),
     text:   str = Form(...),
+    photos: List[UploadFile] = File(None),
     db: Session = Depends(get_db),
 ):
     if 1 <= rating <= 5 and name.strip() and text.strip():
-        db.add(Review(name=name.strip(), rating=rating, text=text.strip()))
+        review = Review(name=name.strip(), rating=rating, text=text.strip())
+        db.add(review)
+        db.flush()
+        if photos:
+            paths = save_photos([f for f in photos if f and f.filename], "reviews")
+            for path in paths:
+                db.add(ReviewPhoto(review_id=review.id, path=path))
         db.commit()
     return RedirectResponse("/reviews", status_code=302)
 

@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
 from src.db.database import Base, engine
+from src.models import hero_slide  # noqa: F401 — registers HeroSlide with Base
 from src.db.init_db import run_migrations, fill_missing_articles
 from src.routers import auth, public, admin, reviews
 

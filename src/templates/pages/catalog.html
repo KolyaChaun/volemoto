@@ -34,11 +34,18 @@
     <li><a href="/contacts">Контакти</a></li>
   </ul>
   <div class="nav-search">
-    <form action="/search" method="get" style="display:flex;gap:0;">
+    <form action="/search" method="get">
+      <span class="search-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
       <input type="text" name="q" placeholder="Пошук мотоцикла..." class="search-input" autocomplete="off">
-      <button type="submit" class="search-btn">Знайти</button>
+      <button type="submit" class="search-btn" aria-label="Знайти"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
     </form>
   </div>
+  <div class="nav-social">
+    <a href="https://t.me/YOUR_TG" target="_blank" class="nav-social-btn" aria-label="Telegram"><svg width="18" height="18" viewBox="0 0 240 240" fill="currentColor"><path d="M120 0C53.73 0 0 53.73 0 120s53.73 120 120 120 120-53.73 120-120S186.27 0 120 0zm57.49 84.08l-18.39 87.03c-1.39 6.56-5.05 8.21-10.24 5.12l-28.29-20.86-13.65 13.16c-1.51 1.51-2.77 2.77-5.06 2.77l1.81-25.72 46.78-42.26c2.03-1.81-.44-2.83-3.15-1.02l-57.68 36.27-24.79-7.74c-5.37-1.68-5.48-5.37 1.12-7.96l96.43-37.17c4.47-1.69 8.37 1.02 6.87 7.37z"/></svg></a>
+    <a href="https://instagram.com/volemoto" target="_blank" class="nav-social-btn" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+    <a href="https://www.youtube.com/@volemoto1" target="_blank" class="nav-social-btn" aria-label="YouTube"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.4 2.8 12 2.8 12 2.8s-4.4 0-6.8.2c-.6.1-1.9.1-3 1.3C1.3 5 1 7 1 7S.7 9.1.7 11.3v2c0 2.1.3 4.3.3 4.3s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.5 21.8 12 21.8 12 21.8s4.4 0 6.8-.3c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.1.3-4.3v-2C23.3 9.1 23 7 23 7zM9.7 15.5V8.3l8.1 3.6-8.1 3.6z"/></svg></a>
+  </div>
+  <a href="https://maps.app.goo.gl/zPufkhFui82xJDoR6?g_st=it" target="_blank" class="nav-map-btn" aria-label="Схема проїзду"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></a>
   <button class="burger" id="burger" aria-label="Меню"><span></span><span></span><span></span></button>
 </nav>
 
@@ -61,10 +68,17 @@
       <li><a href="/contacts">Контакти</a></li>
     </ul>
     <form action="/search" method="get" class="mobile-search">
+      <span class="search-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
       <input type="text" name="q" placeholder="Пошук мотоцикла..." autocomplete="off">
-      <button type="submit">Знайти</button>
+      <button type="submit" aria-label="Знайти"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
     </form>
-    <a href="tel:+380997558803" class="mobile-phone-link">📞 +38 099 755 88 03</a>
+    <a href="tel:+380997558803" class="mobile-phone-link">+38 099 755 88 03</a>
+    <div class="mobile-social">
+      <a href="https://t.me/YOUR_TG" target="_blank" class="mobile-social-btn" aria-label="Telegram"><svg width="22" height="22" viewBox="0 0 240 240" fill="currentColor"><path d="M120 0C53.73 0 0 53.73 0 120s53.73 120 120 120 120-53.73 120-120S186.27 0 120 0zm57.49 84.08l-18.39 87.03c-1.39 6.56-5.05 8.21-10.24 5.12l-28.29-20.86-13.65 13.16c-1.51 1.51-2.77 2.77-5.06 2.77l1.81-25.72 46.78-42.26c2.03-1.81-.44-2.83-3.15-1.02l-57.68 36.27-24.79-7.74c-5.37-1.68-5.48-5.37 1.12-7.96l96.43-37.17c4.47-1.69 8.37 1.02 6.87 7.37z"/></svg></a>
+      <a href="https://instagram.com/volemoto" target="_blank" class="mobile-social-btn" aria-label="Instagram"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+      <a href="https://www.youtube.com/@volemoto1" target="_blank" class="mobile-social-btn" aria-label="YouTube"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.4 2.8 12 2.8 12 2.8s-4.4 0-6.8.2c-.6.1-1.9.1-3 1.3C1.3 5 1 7 1 7S.7 9.1.7 11.3v2c0 2.1.3 4.3.3 4.3s.3 2 1.2 2.8c1.1 1.2 2.6 1.1 3.3 1.2C7.5 21.8 12 21.8 12 21.8s4.4 0 6.8-.3c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.8 1.2-2.8s.3-2.1.3-4.3v-2C23.3 9.1 23 7 23 7zM9.7 15.5V8.3l8.1 3.6-8.1 3.6z"/></svg></a>
+      <a href="https://maps.app.goo.gl/zPufkhFui82xJDoR6?g_st=it" target="_blank" class="mobile-social-btn" aria-label="Карта"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></a>
+    </div>
   </div>
 </div>
 
@@ -200,8 +214,9 @@
               <path d="M5 17H3v-4l3-5h8l4 5v4H19"/><path d="M12 4l3 5"/>
             </svg>
             {% endif %}
-            <div class="card-tag {% if not bike.available %}card-tag-sold{% endif %}">
-              {{ 'В наявності' if bike.available else 'Продано' }}
+            {% set _s = bike.status or ('available' if bike.available else 'sold') %}
+            <div class="card-tag {% if _s == 'sold' %}card-tag-sold{% elif _s != 'available' %}card-tag-status{% endif %}">
+              {% if _s == 'available' %}В наявності{% elif _s == 'in_transit' %}В дорозі{% elif _s == 'reserved' %}Під завдатком{% else %}Продано{% endif %}
             </div>
           </div>
           <div class="card-body">

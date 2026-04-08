@@ -2,11 +2,11 @@ import os, uuid, shutil
 from typing import List
 from fastapi import UploadFile
 
-CATEGORY_FOLDER = {"moto": "moto", "moped": "moped", "quad": "quad"}
+CATEGORY_FOLDER = {"moto": "moto", "moped": "moped", "quad": "quad", "reviews": "reviews", "hero": "hero"}
 
 
 def save_photos(files: List[UploadFile], category: str = "moto") -> List[str]:
-    folder   = CATEGORY_FOLDER.get(category, "moto")
+    folder   = CATEGORY_FOLDER.get(category, category)
     dir_path = f"src/media/{folder}"
     os.makedirs(dir_path, exist_ok=True)
     paths = []

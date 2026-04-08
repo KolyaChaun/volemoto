@@ -24,7 +24,8 @@
     <a href="/admin/catalog" class="nav-item">📋 Каталог</a>
     <div class="nav-section">Додати</div>
     <a href="/admin/add" class="nav-item">➕ Додати мото</a>
-    <a href="/admin/brands" class="nav-item">🏷 Бренди</a>
+    <a href="/admin/brands" class="nav-item">➕ Додати бренди</a>
+    <a href="/admin/hero" class="nav-item">➕ Додати фонові зображення</a>
     <div class="nav-section">Клієнти</div>
     <a href="/admin/reviews" class="nav-item active">💬 Відгуки {% if unread %}<span class="nav-badge">{{ unread }}</span>{% endif %}</a>
     <div class="nav-section">Сайт</div>
@@ -59,6 +60,15 @@
       </div>
 
       <div class="review-text">{{ r.text }}</div>
+
+      {% if r.photos %}
+      <div class="review-photos-admin" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;">
+        {% for p in r.photos %}
+        <img src="{{ p.path }}" class="adm-review-thumb"
+             onclick="rlbOpen(this)" style="width:72px;height:72px;object-fit:cover;border-radius:6px;border:1px solid #e0e0e0;cursor:zoom-in;">
+        {% endfor %}
+      </div>
+      {% endif %}
 
       {% if r.replies %}
       <div class="replies">
@@ -96,6 +106,45 @@
   <div class="empty">Відгуків ще немає</div>
   {% endif %}
 </div>
+
+<!-- LIGHTBOX -->
+<div id="rlb" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;align-items:center;justify-content:center;" onclick="rlbClose(event)">
+  <button onclick="rlbClose()" style="position:absolute;top:18px;right:22px;color:#fff;font-size:36px;cursor:pointer;background:none;border:none;line-height:1;">×</button>
+  <button onclick="rlbMove(-1)" style="position:absolute;left:0;top:50%;transform:translateY(-50%);color:#fff;font-size:48px;cursor:pointer;background:none;border:none;padding:0 20px;opacity:.7;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.7">‹</button>
+  <img id="rlb-img" src="" style="max-width:92vw;max-height:90vh;object-fit:contain;border-radius:4px;pointer-events:none;">
+  <button onclick="rlbMove(1)" style="position:absolute;right:0;top:50%;transform:translateY(-50%);color:#fff;font-size:48px;cursor:pointer;background:none;border:none;padding:0 20px;opacity:.7;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.7">›</button>
+</div>
+<script>
+(function(){
+  const lb  = document.getElementById('rlb');
+  const img = document.getElementById('rlb-img');
+  let srcs = [], cur = 0;
+
+  window.rlbOpen = function(el) {
+    const group = el.closest('.review-photos-admin');
+    srcs = [...group.querySelectorAll('.adm-review-thumb')].map(i => i.src);
+    cur  = srcs.indexOf(el.src);
+    img.src = srcs[cur];
+    lb.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  };
+  window.rlbClose = function(e) {
+    if (e && e.target !== lb && e.target !== e.currentTarget) return;
+    lb.style.display = 'none';
+    document.body.style.overflow = '';
+  };
+  window.rlbMove = function(d) {
+    cur = (cur + d + srcs.length) % srcs.length;
+    img.src = srcs[cur];
+  };
+  document.addEventListener('keydown', function(e) {
+    if (lb.style.display === 'none') return;
+    if (e.key === 'Escape')     rlbClose({target: lb});
+    if (e.key === 'ArrowLeft')  rlbMove(-1);
+    if (e.key === 'ArrowRight') rlbMove(1);
+  });
+})();
+</script>
 
 <script src="/static/admin/js/admin_mobile.js"></script>
 </body>

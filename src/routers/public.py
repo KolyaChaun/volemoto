@@ -7,8 +7,19 @@ from src.core.config import templates
 from src.db.database import get_db
 from src.models.bike import Bike
 from src.models.brand import Brand
+from src.models.hero_slide import HeroSlide
+from src.models.review import Review
 
 router = APIRouter()
+
+
+FALLBACK_SLIDES = [
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&q=80",
+    "https://images.unsplash.com/photo-1449426468159-d96dbf08f19f?w=1400&q=80",
+    "https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=1400&q=80",
+    "https://images.unsplash.com/photo-1609630875171-b1321377ee65?w=1400&q=80",
+    "https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?w=1400&q=80",
+]
 
 
 @router.get("/", response_class=HTMLResponse)
@@ -16,8 +27,13 @@ def index(request: Request, db: Session = Depends(get_db)):
     motos  = db.query(Bike).filter_by(category="moto").limit(6).all()
     mopeds = db.query(Bike).filter_by(category="moped").limit(6).all()
     quads  = db.query(Bike).filter_by(category="quad").limit(6).all()
+    slides = db.query(HeroSlide).order_by(HeroSlide.sort_order, HeroSlide.id).all()
+    slide_urls = [s.path for s in slides] if slides else FALLBACK_SLIDES
+    recent_reviews = db.query(Review).order_by(Review.id.desc()).limit(4).all()
     return templates.TemplateResponse(request, "pages/index.html", {
         "motos": motos, "mopeds": mopeds, "quads": quads,
+        "slide_urls": slide_urls,
+        "recent_reviews": recent_reviews,
     })
 
 

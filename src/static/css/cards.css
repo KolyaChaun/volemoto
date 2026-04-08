@@ -22,7 +22,8 @@
   font-size: 10px; font-weight: 700; padding: 3px 9px; border-radius: 3px;
 }
 .card-tag.sold { background: #ccc; color: #888; }
-.card-tag-sold { background: #999 !important; }
+.card-tag-sold   { background: #999 !important; }
+.card-tag-status { background: #e67e00 !important; }
 .sold-overlay { position: absolute; inset: 0; background: rgba(255,255,255,.65); display: flex; align-items: center; justify-content: center; }
 .sold-text { font-size: 16px; font-weight: 700; color: #aaa; border: 2px solid #ccc; padding: 6px 18px; border-radius: 3px; transform: rotate(-8deg); }
 .card-body { padding: 16px; }

@@ -55,8 +55,9 @@ body { background: #f5f6f8; }
 .info-card { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 24px; }
 
 .avail-badge { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; margin-bottom: 10px; }
-.avail-yes { background: #e8f8e0; color: #2d9e00; }
-.avail-no  { background: #f0f0f0; color: #999; }
+.avail-yes    { background: #e8f8e0; color: #2d9e00; }
+.avail-no     { background: #f0f0f0; color: #999; }
+.avail-status { background: #fff3e0; color: #e67e00; }
 
 .bike-title { font-size: 22px; font-weight: 800; color: #111; line-height: 1.3; margin-bottom: 16px; }
 

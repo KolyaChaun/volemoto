@@ -32,6 +32,7 @@ class Bike(Base):
     description  = Column(Text, default="")
     photo        = Column(String(300), default="")
     available    = Column(Boolean, default=True)
+    status       = Column(String(30), default="available")
     youtube_url  = Column(String(500), default="")
 
     photos = relationship("BikePhoto", back_populates="bike",

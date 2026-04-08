@@ -23,8 +23,9 @@
 .star.on { color: #f5a623; }
 .review-text {
   font-size: 14px; color: #444; line-height: 1.7;
-  margin-bottom: 16px; padding-left: 54px;
+  margin-bottom: 12px; padding-left: 54px;
 }
+.review-photos-admin { padding-left: 54px; margin-bottom: 16px; }
 
 /* ── REPLIES ── */
 .replies { padding-left: 54px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px; }

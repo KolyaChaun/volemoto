@@ -189,6 +189,7 @@
   /* ── Reviews ── */
   .review-card { padding: 16px !important; border-radius: 12px !important; }
   .review-text { padding-left: 0 !important; margin-top: 10px; }
+  .review-photos-admin { padding-left: 0 !important; }
   .replies { padding-left: 0 !important; }
   .reply-form-wrap { padding-left: 0 !important; }
   .reply-form-actions { flex-wrap: wrap; gap: 8px; }
