@@ -1,5 +1,10 @@
 body { background: #f5f6f8; }
 
+.custom-file-wrap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.custom-file-btn { background: #f0f0f0; border: 1px solid #d0d0d0; border-radius: 6px; padding: 7px 16px; font-size: 13px; cursor: pointer; white-space: nowrap; transition: background .15s; }
+.custom-file-btn:hover { background: #e0e0e0; }
+.custom-file-label { font-size: 13px; color: #888; }
+
 .page-layout { max-width: 1000px; margin: 0 auto; padding: 0 24px 60px; }
 
 .breadcrumbs { padding: 14px 0 6px; font-size: 13px; color: #aaa; }
