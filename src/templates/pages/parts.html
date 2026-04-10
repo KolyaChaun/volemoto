@@ -317,16 +317,18 @@
 <script src="/static/js/autocomplete.js"></script>
 <script>
   function toggleBrands() {
-    const hidden = document.querySelectorAll('.brand-hidden');
-    const btn = document.getElementById('brand-more-btn');
-    const isExpanded = btn.dataset.expanded === '1';
-    hidden.forEach(function(el) { el.style.display = isExpanded ? '' : 'flex'; });
+    var btn = document.getElementById('brand-more-btn');
+    if (!btn) return;
+    var isExpanded = btn.dataset.expanded === '1';
+    document.querySelectorAll('#brand-list .brand-item').forEach(function(el, i) {
+      if (i >= 8) el.classList.toggle('brand-hidden', isExpanded);
+    });
     btn.dataset.expanded = isExpanded ? '' : '1';
-    btn.textContent = isExpanded ? btn.dataset.more : 'Сховати ▴';
+    btn.textContent = isExpanded ? btn.dataset.more.trim() : 'Сховати ▴';
   }
   (function() {
     var btn = document.getElementById('brand-more-btn');
-    if (btn) btn.dataset.more = btn.textContent;
+    if (btn) btn.dataset.more = btn.textContent.trim();
   })();
   function applySort(v) {
     const url = new URL(window.location.href);
