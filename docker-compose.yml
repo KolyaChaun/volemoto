@@ -15,15 +15,29 @@ services:
       timeout: 5s
       retries: 10
 
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   app:
     build: .
     restart: unless-stopped
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000
     ports:
       - "${APP_PORT}:8000"
     environment:
       DATABASE_URL: postgresql://volemoto:${DB_PASSWORD}@db:5432/volemoto
       SECRET_KEY: ${SECRET_KEY}
       COOKIE_SECURE: ${COOKIE_SECURE}
+      REDIS_URL: redis://redis:6379/0
       R2_ENDPOINT: ${R2_ENDPOINT}
       R2_ACCESS_KEY: ${R2_ACCESS_KEY}
       R2_SECRET_KEY: ${R2_SECRET_KEY}
@@ -34,6 +48,47 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  celery_worker:
+    build: .
+    restart: unless-stopped
+    command: >
+      celery -A src.worker.celery_app:celery_app worker
+      --loglevel=info
+      --concurrency=2
+    environment:
+      DATABASE_URL: postgresql://volemoto:${DB_PASSWORD}@db:5432/volemoto
+      SECRET_KEY: ${SECRET_KEY}
+      REDIS_URL: redis://redis:6379/0
+      R2_ENDPOINT: ${R2_ENDPOINT}
+      R2_ACCESS_KEY: ${R2_ACCESS_KEY}
+      R2_SECRET_KEY: ${R2_SECRET_KEY}
+      R2_BUCKET_NAME: ${R2_BUCKET_NAME}
+      R2_PUBLIC_URL: ${R2_PUBLIC_URL}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  celery_beat:
+    build: .
+    restart: unless-stopped
+    command: >
+      celery -A src.worker.celery_app:celery_app beat
+      --loglevel=info
+      --scheduler celery.beat:PersistentScheduler
+      --schedule /tmp/celerybeat-schedule
+    environment:
+      DATABASE_URL: postgresql://volemoto:${DB_PASSWORD}@db:5432/volemoto
+      SECRET_KEY: ${SECRET_KEY}
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      redis:
+        condition: service_healthy
 
 volumes:
   postgres_data:
+  redis_data:

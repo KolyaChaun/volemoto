@@ -1,16 +1,18 @@
-from fastapi import APIRouter, Request, Form, Depends
+from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
 
-from src.core.config import templates
+from src.core.config import settings, templates
 from src.core.security import (
-    verify_password, create_session_token,
-    SESSION_COOKIE, SESSION_MAX_AGE, COOKIE_SECURE,
+    SESSION_COOKIE,
+    SESSION_MAX_AGE,
+    create_session_token,
+    verify_password,
 )
 from src.db.database import get_db
 from src.models.admin import Admin
 
-router = APIRouter()
+router = APIRouter(tags=["Авторизація"])
 
 
 @router.get("/admin/login")
@@ -28,21 +30,20 @@ def admin_login(
     db: Session = Depends(get_db),
 ):
     admin = db.query(Admin).filter_by(username=username.strip()).first()
-
     if not admin or not verify_password(password, admin.password_hash):
         return templates.TemplateResponse(
-            request, "admin/login.html",
+            request,
+            "admin/login.html",
             {"error": "Невірний логін або пароль"},
             status_code=401,
         )
-
     token = create_session_token(admin.id)
-    resp  = RedirectResponse("/admin", status_code=302)
+    resp = RedirectResponse("/admin", status_code=302)
     resp.set_cookie(
         SESSION_COOKIE,
         token,
         httponly=True,
-        secure=COOKIE_SECURE,
+        secure=settings.cookie_secure,
         samesite="lax",
         max_age=SESSION_MAX_AGE,
     )

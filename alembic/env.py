@@ -4,28 +4,26 @@ from logging.config import fileConfig
 
 from dotenv import load_dotenv
 from sqlalchemy import engine_from_config, pool
+
 from alembic import context
 
-# Добавляем корень проекта в sys.path чтобы импортировать src.*
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 load_dotenv()
 
-# Импортируем Base и все модели — иначе autogenerate их не увидит
-from src.db.database import Base  # noqa: E402
-import src.models.bike        # noqa: F401, E402
-import src.models.brand       # noqa: F401, E402
-import src.models.review      # noqa: F401, E402
+import src.models.admin  # noqa: F401, E402
+import src.models.bike  # noqa: F401, E402
+import src.models.brand  # noqa: F401, E402
 import src.models.hero_slide  # noqa: F401, E402
-import src.models.admin       # noqa: F401, E402
-import src.models.product     # noqa: F401, E402
+import src.models.product  # noqa: F401, E402
+import src.models.review  # noqa: F401, E402
+from src.db.database import Base  # noqa: E402
 
 config = context.config
 
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# URL берём из .env, не из alembic.ini
 config.set_main_option("sqlalchemy.url", os.getenv("DATABASE_URL"))
 
 target_metadata = Base.metadata

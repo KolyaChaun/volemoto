@@ -1,22 +1,13 @@
-"""
-Скрипт создания администратора.
-
-Запуск:
-    poetry run python scripts/create_admin.py
-
-Или в Docker:
-    docker compose exec app python scripts/create_admin.py
-"""
-import sys
 import os
+import sys
 
-# Добавляем корень проекта в путь
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from getpass import getpass
+
+from src.core.security import hash_password
 from src.db.database import SessionLocal
 from src.models.admin import Admin
-from src.core.security import hash_password
 
 
 def main():
