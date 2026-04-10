@@ -370,37 +370,61 @@ def contacts_page(request: Request):
     return templates.TemplateResponse(request, "pages/contacts.html", {})
 
 
+_EQUIPMENT_CATS = {"helmets", "gloves", "gear"}
+
 @router.get("/search", response_class=HTMLResponse)
 def search_page(request: Request, q: str = "", db: Session = Depends(get_db)):
     q = q.strip()
     bikes = []
+    products = []
     if q:
-        term  = f"%{q.lower()}%"
+        term = f"%{q.lower()}%"
         bikes = db.query(Bike).filter(
-            Bike.name.ilike(term)    |
-            Bike.brand.ilike(term)   |
-            Bike.model.ilike(term)   |
-            Bike.article.ilike(term) |
-            Bike.color.ilike(term)
+            func.lower(Bike.name).like(term)    |
+            func.lower(Bike.brand).like(term)   |
+            func.lower(Bike.model).like(term)   |
+            func.lower(Bike.article).like(term) |
+            func.lower(Bike.color).like(term)
         ).order_by(Bike.id.desc()).all()
+        q_lower = q.lower()
+        all_products = db.query(Product).order_by(Product.id.desc()).all()
+        products = [p for p in all_products if any(
+            q_lower in (f or '').lower()
+            for f in [p.name, p.brand, p.subcategory, p.article, p.compatibility, p.model]
+        )]
+    equipment = [p for p in products if p.category in _EQUIPMENT_CATS]
+    parts     = [p for p in products if p.category not in _EQUIPMENT_CATS]
+    total = len(bikes) + len(products)
     return templates.TemplateResponse(request, "pages/search.html", {
-        "bikes": bikes, "q": q, "total": len(bikes),
+        "bikes": bikes, "equipment": equipment, "parts": parts, "q": q, "total": total,
     })
+
 
 
 @router.get("/api/search")
 def api_search(q: str = "", db: Session = Depends(get_db)):
     if len(q.strip()) < 2:
         return JSONResponse([])
-    term  = f"%{q.strip().lower()}%"
+    term = f"%{q.strip().lower()}%"
     bikes = db.query(Bike).filter(
-        Bike.name.ilike(term)    |
-        Bike.brand.ilike(term)   |
-        Bike.model.ilike(term)   |
-        Bike.article.ilike(term)
-    ).limit(7).all()
-    return JSONResponse([{
+        func.lower(Bike.name).like(term)    |
+        func.lower(Bike.brand).like(term)   |
+        func.lower(Bike.model).like(term)   |
+        func.lower(Bike.article).like(term)
+    ).limit(5).all()
+    q_lower = q.strip().lower()
+    all_products = db.query(Product).all()
+    products = [p for p in all_products if any(
+        q_lower in (f or '').lower()
+        for f in [p.name, p.brand, p.subcategory, p.article, p.compatibility, p.model]
+    )][:5]
+    results = [{
+        "type": "bike",
         "id": b.id, "slug": b.slug, "name": b.name, "brand": b.brand,
-        "year": b.year, "price": b.price,
-        "photo": b.photo, "article": b.article,
-    } for b in bikes])
+        "year": b.year, "price": b.price, "photo": b.photo, "article": b.article, "category": b.category,
+    } for b in bikes] + [{
+        "type": "product",
+        "id": p.id, "slug": p.slug, "name": p.name, "brand": p.brand,
+        "category": p.category, "price": p.price, "photo": p.photo, "article": p.article,
+    } for p in products]
+    return JSONResponse(results)

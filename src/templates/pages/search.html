@@ -49,7 +49,7 @@
   <div class="nav-search">
     <form action="/search" method="get">
       <span class="search-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
-      <input type="text" name="q" placeholder="Пошук мотоцикла..." class="search-input" autocomplete="off" value="{{ q }}">
+      <input type="text" name="q" placeholder="Пошук..." class="search-input" autocomplete="off" value="{{ q }}">
       <button type="submit" class="search-btn" aria-label="Знайти"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
     </form>
   </div>
@@ -97,7 +97,7 @@
     </ul>
     <form action="/search" method="get" class="mobile-search">
       <span class="search-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
-      <input type="text" name="q" placeholder="Пошук мотоцикла..." autocomplete="off">
+      <input type="text" name="q" placeholder="Пошук..." autocomplete="off">
       <button type="submit" aria-label="Знайти"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
     </form>
     <a href="tel:+380997558803" class="mobile-phone-link">+38 099 755 88 03</a>
@@ -117,42 +117,118 @@
 
   <div class="results-title">Результати пошуку</div>
 
-  {% if bikes %}
+  {% if bikes or equipment or parts %}
     <div class="results-meta">
       За запитом <strong>«{{ q }}»</strong> знайдено <strong>{{ total }}</strong>
       {{ 'результат' if total == 1 else ('результати' if total in [2,3,4] else 'результатів') }}
     </div>
-    <div class="results-grid">
-      {% for bike in bikes %}
-      <div class="card" onclick="window.location='/catalog/{{ bike.category }}/{{ bike.slug }}'">
-        <div class="card-img">
-          {% if bike.photo %}
-            <img src="{{ bike.photo }}" alt="{{ bike.name }}">
-          {% else %}
-            <span style="font-size:40px;color:#ccc;">📷</span>
-          {% endif %}
-          {% set _s = bike.status or ('available' if bike.available else 'sold') %}
-          <div class="card-tag {% if _s == 'sold' %}card-tag-sold{% elif _s != 'available' %}card-tag-status{% endif %}">
-            {% if _s == 'available' %}В наявності{% elif _s == 'in_transit' %}В дорозі{% elif _s == 'reserved' %}Під замовлення{% else %}Продано{% endif %}
+
+    {% if bikes %}
+      {% if products %}<div class="results-section-title">Мототехніка</div>{% endif %}
+      <div class="results-grid">
+        {% for bike in bikes %}
+        <div class="card" onclick="window.location='/catalog/{{ bike.category }}/{{ bike.slug }}'">
+          <div class="card-img">
+            {% if bike.photo %}
+              <img src="{{ bike.photo }}" alt="{{ bike.name }}">
+            {% else %}
+              <span style="font-size:40px;color:#ccc;">📷</span>
+            {% endif %}
+            {% set _s = bike.status or ('available' if bike.available else 'sold') %}
+            <div class="card-tag {% if _s == 'sold' %}card-tag-sold{% elif _s != 'available' %}card-tag-status{% endif %}">
+              {% if _s == 'available' %}В наявності{% elif _s == 'in_transit' %}В дорозі{% elif _s == 'reserved' %}Під замовлення{% else %}Продано{% endif %}
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-name">{{ bike.name }}</div>
+            <div class="card-year">{{ bike.year }} рік · {{ bike.color }}</div>
+            {% if bike.article %}<div style="font-size:11px;color:#bbb;margin-bottom:4px;">Арт. {{ bike.article }}</div>{% endif %}
+            <div class="card-specs">
+              <span>{{ "{:,}".format(bike.mileage).replace(",", " ") }} км</span>
+              <span>{{ bike.engine }} cc</span>
+              <span>{{ bike.condition }}</span>
+            </div>
+            <div class="card-footer">
+              <div class="card-price">{{ "{:,}".format(bike.price).replace(",", " ") }} <em>₴</em></div>
+              <a href="/catalog/{{ bike.category }}/{{ bike.slug }}" class="btn-detail">Детальніше</a>
+            </div>
           </div>
         </div>
-        <div class="card-body">
-          <div class="card-name">{{ bike.name }}</div>
-          <div class="card-year">{{ bike.year }} рік · {{ bike.color }}</div>
-          {% if bike.article %}<div style="font-size:11px;color:#bbb;margin-bottom:4px;">Арт. {{ bike.article }}</div>{% endif %}
-          <div class="card-specs">
-            <span>{{ "{:,}".format(bike.mileage).replace(",", " ") }} км</span>
-            <span>{{ bike.engine }} cc</span>
-            <span>{{ bike.condition }}</span>
-          </div>
-          <div class="card-footer">
-            <div class="card-price">{{ "{:,}".format(bike.price).replace(",", " ") }} <em>₴</em></div>
-            <a href="/catalog/{{ bike.category }}/{{ bike.slug }}" class="btn-detail">Детальніше</a>
-          </div>
-        </div>
+        {% endfor %}
       </div>
-      {% endfor %}
-    </div>
+    {% endif %}
+
+    {% if equipment %}
+      <div class="results-section-title">Мотоекіпірування</div>
+      <div class="results-grid">
+        {% for p in equipment %}
+        {% set _url = '/equipment/' + p.slug %}
+        <div class="card" onclick="window.location='{{ _url }}'">
+          <div class="card-img">
+            {% if p.photo %}<img src="{{ p.photo }}" alt="{{ p.name }}">
+            {% else %}<span style="font-size:40px;color:#ccc;">🛡</span>{% endif %}
+            {% set _s = p.status or ('available' if p.available else 'sold') %}
+            <div class="card-tag {% if _s == 'sold' %}card-tag-sold{% elif _s != 'available' %}card-tag-status{% endif %}">
+              {% if _s == 'available' %}В наявності{% elif _s == 'in_transit' %}В дорозі{% elif _s == 'reserved' %}Під замовлення{% else %}Продано{% endif %}
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-name">{{ p.name }}</div>
+            <div class="card-year">
+              {% if p.category == 'helmets' %}Мотошолом{% elif p.category == 'gloves' %}Рукавиці{% else %}Екіпіровка{% endif %}
+              {% if p.size %} · {{ p.size }}{% endif %}{% if p.color %} · {{ p.color }}{% endif %}
+            </div>
+            {% if p.article %}<div style="font-size:11px;color:#bbb;margin-bottom:4px;">Арт. {{ p.article }}</div>{% endif %}
+            <div class="card-specs">
+              {% if p.brand %}<span>{{ p.brand }}</span>{% endif %}
+              {% if p.condition %}<span>{{ p.condition }}</span>{% endif %}
+            </div>
+            <div class="card-footer">
+              <div class="card-price">{{ "{:,}".format(p.price).replace(",", " ") }} <em>₴</em></div>
+              <a href="{{ _url }}" class="btn-detail">Детальніше</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if parts %}
+      <div class="results-section-title">Запчастини</div>
+      <div class="results-grid">
+        {% for p in parts %}
+        {% set _url = '/parts/' + p.slug %}
+        <div class="card" onclick="window.location='{{ _url }}'">
+          <div class="card-img">
+            {% if p.photo %}<img src="{{ p.photo }}" alt="{{ p.name }}">
+            {% else %}<span style="font-size:40px;color:#ccc;">🔧</span>{% endif %}
+            {% set _s = p.status or ('available' if p.available else 'sold') %}
+            <div class="card-tag {% if _s == 'sold' %}card-tag-sold{% elif _s != 'available' %}card-tag-status{% endif %}">
+              {% if _s == 'available' %}В наявності{% elif _s == 'in_transit' %}В дорозі{% elif _s == 'reserved' %}Під замовлення{% else %}Продано{% endif %}
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-name">{{ p.name }}</div>
+            <div class="card-year">
+              {% if p.category == 'parts_new' %}Запчастини нові{% else %}Запчастини б/у{% endif %}
+              {% if p.subcategory %} · {{ p.subcategory }}{% endif %}
+            </div>
+            {% if p.compatibility %}<div style="font-size:11px;color:#bbb;margin-bottom:4px;">{{ p.compatibility }}</div>{% endif %}
+            {% if p.article %}<div style="font-size:11px;color:#bbb;margin-bottom:4px;">Арт. {{ p.article }}</div>{% endif %}
+            <div class="card-specs">
+              {% if p.brand %}<span>{{ p.brand }}</span>{% endif %}
+              {% if p.condition %}<span>{{ p.condition }}</span>{% endif %}
+            </div>
+            <div class="card-footer">
+              <div class="card-price">{{ "{:,}".format(p.price).replace(",", " ") }} <em>₴</em></div>
+              <a href="{{ _url }}" class="btn-detail">Детальніше</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
   {% elif q %}
     <div class="empty-state">
       <div class="icon">🔍</div>

@@ -1,8 +1,39 @@
 (function () {
   var timer = null;
 
+  var CAT_LABELS = {
+    helmets:    'Мотошолом',
+    gloves:     'Рукавиці',
+    gear:       'Екіпіровка',
+    parts_new:  'Запчастини нові',
+    parts_used: 'Запчастини б/у',
+  };
+
+  var EQUIPMENT_CATS = ['helmets', 'gloves', 'gear'];
+
   function fmt(n) {
     return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0');
+  }
+
+  function productUrl(item) {
+    return (EQUIPMENT_CATS.indexOf(item.category) >= 0 ? '/equipment/' : '/parts/') + item.slug;
+  }
+
+  function makeThumb(photo, name, fallbackEmoji) {
+    var thumb;
+    if (photo) {
+      thumb = document.createElement('div');
+      thumb.className = 'search-dropdown-thumb-wrap';
+      var img = document.createElement('img');
+      img.src = photo;
+      img.alt = name;
+      thumb.appendChild(img);
+    } else {
+      thumb = document.createElement('div');
+      thumb.className = 'search-dropdown-thumb-empty';
+      thumb.textContent = fallbackEmoji;
+    }
+    return thumb;
   }
 
   function initSearch(input) {
@@ -18,50 +49,68 @@
       dropdown.innerHTML = '';
     }
 
-    function show(bikes, q) {
+    function show(results, q) {
       dropdown.innerHTML = '';
-      if (!bikes.length) { hide(); return; }
+      if (!results.length) { hide(); return; }
 
-      bikes.forEach(function (b) {
+      results.forEach(function (item) {
         var a = document.createElement('a');
         a.className = 'search-dropdown-item';
-        a.href = '/bike/' + b.slug;
 
-        var thumb;
-        if (b.photo) {
-          thumb = document.createElement('div');
-          thumb.className = 'search-dropdown-thumb-wrap';
-          var img = document.createElement('img');
-          img.src = b.photo;
-          img.alt = b.name;
-          thumb.appendChild(img);
+        if (item.type === 'bike') {
+          a.href = '/catalog/' + (item.category || 'moto') + '/' + item.slug;
+
+          a.appendChild(makeThumb(item.photo, item.name, '🏍'));
+
+          var info = document.createElement('div');
+          info.className = 'search-dropdown-info';
+
+          var name = document.createElement('div');
+          name.className = 'search-dropdown-name';
+          name.textContent = item.name;
+
+          var meta = document.createElement('div');
+          meta.className = 'search-dropdown-meta';
+          meta.textContent = item.year + (item.article ? ' · Арт. ' + item.article : '');
+
+          info.appendChild(name);
+          info.appendChild(meta);
+
+          var price = document.createElement('div');
+          price.className = 'search-dropdown-price';
+          price.textContent = fmt(item.price) + ' ₴';
+
+          a.appendChild(info);
+          a.appendChild(price);
+
         } else {
-          thumb = document.createElement('div');
-          thumb.className = 'search-dropdown-thumb-empty';
-          thumb.textContent = '🏍';
+          a.href = productUrl(item);
+
+          a.appendChild(makeThumb(item.photo, item.name, '🛡'));
+
+          var info = document.createElement('div');
+          info.className = 'search-dropdown-info';
+
+          var name = document.createElement('div');
+          name.className = 'search-dropdown-name';
+          name.textContent = item.name;
+
+          var meta = document.createElement('div');
+          meta.className = 'search-dropdown-meta';
+          meta.textContent = (CAT_LABELS[item.category] || item.category) +
+            (item.article ? ' · Арт. ' + item.article : '');
+
+          info.appendChild(name);
+          info.appendChild(meta);
+
+          var price = document.createElement('div');
+          price.className = 'search-dropdown-price';
+          price.textContent = fmt(item.price) + ' ₴';
+
+          a.appendChild(info);
+          a.appendChild(price);
         }
 
-        var info = document.createElement('div');
-        info.className = 'search-dropdown-info';
-
-        var name = document.createElement('div');
-        name.className = 'search-dropdown-name';
-        name.textContent = b.name;
-
-        var meta = document.createElement('div');
-        meta.className = 'search-dropdown-meta';
-        meta.textContent = b.year + (b.article ? ' · Арт. ' + b.article : '');
-
-        info.appendChild(name);
-        info.appendChild(meta);
-
-        var price = document.createElement('div');
-        price.className = 'search-dropdown-price';
-        price.textContent = fmt(b.price) + ' ₴';
-
-        a.appendChild(thumb);
-        a.appendChild(info);
-        a.appendChild(price);
         dropdown.appendChild(a);
       });
 
