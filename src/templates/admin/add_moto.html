@@ -49,6 +49,7 @@
 
   <div class="form-card">
     <form method="post" action="{{ action }}" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
 
       <div class="form-section">Основна інформація</div>
       <div class="form-grid">
@@ -171,8 +172,12 @@
 
 {% if bike and bike.photos %}
 {% for p in bike.photos %}
-<form id="del-photo-{{ p.id }}" method="post" action="/admin/photo/delete/{{ p.id }}"></form>
-<form id="main-photo-{{ p.id }}" method="post" action="/admin/photo/main/{{ p.id }}"></form>
+<form id="del-photo-{{ p.id }}" method="post" action="/admin/photo/delete/{{ p.id }}">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
+  </form>
+<form id="main-photo-{{ p.id }}" method="post" action="/admin/photo/main/{{ p.id }}">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
+  </form>
 {% endfor %}
 {% endif %}
 

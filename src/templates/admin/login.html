@@ -15,6 +15,7 @@
   <div class="error">{{ error }}</div>
   {% endif %}
   <form method="post" action="/admin/login">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
     <label>Логін</label>
     <input type="text" name="username" placeholder="admin" required autofocus>
     <label>Пароль</label>

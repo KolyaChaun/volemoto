@@ -160,6 +160,7 @@
           <td>
             <a href="/admin/edit/{{ bike.id }}" class="btn-edit">Ред.</a>
             <form method="post" action="/admin/delete/{{ bike.id }}" style="display:inline;" onsubmit="return confirm('Видалити {{ bike.name }}?')">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
               <button type="submit" class="btn-del">Вид.</button>
             </form>
           </td>
@@ -189,6 +190,7 @@
         <div class="m-bike-actions">
           <a href="/admin/edit/{{ bike.id }}" class="btn-edit">✏️</a>
           <form method="post" action="/admin/delete/{{ bike.id }}" style="display:inline;" onsubmit="return confirm('Видалити {{ bike.name }}?')">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
             <button type="submit" class="btn-del">🗑</button>
           </form>
         </div>

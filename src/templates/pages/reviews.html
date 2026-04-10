@@ -228,6 +228,7 @@
         </div>
         <div class="user-reply-form" id="reply-form-{{ r.id }}">
           <form method="post" action="/reviews/{{ r.id }}/reply">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
             <div class="reply-inputs">
               <input type="text" name="name" placeholder="Ваше ім'я" required maxlength="100">
               <textarea name="text" placeholder="Ваша відповідь..." required maxlength="1000"></textarea>
@@ -262,6 +263,7 @@
     <div class="review-form-wrap" id="new-review">
       <h2>Написати відгук</h2>
       <form method="post" action="/reviews" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
         <div class="form-row">
           <div class="form-group">
             <label>Ваше ім'я</label>

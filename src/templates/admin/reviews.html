@@ -86,6 +86,7 @@
             <div class="reply-text">{{ rep.text }}</div>
           </div>
           <form method="post" action="/admin/reviews/reply/{{ rep.id }}/delete" onsubmit="return confirm('Видалити відповідь?')">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
             <button type="submit" class="btn-del-reply" title="Видалити">✕</button>
           </form>
         </div>
@@ -95,11 +96,13 @@
 
       <div class="reply-form-wrap">
         <form method="post" action="/admin/reviews/{{ r.id }}/reply" id="reply-form-{{ r.id }}">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
           <textarea name="text" placeholder="Відповідь від VOLE MOTO..." required></textarea>
         </form>
         <div class="reply-form-actions">
           <button type="submit" form="reply-form-{{ r.id }}" class="btn-reply">💬 Відповісти</button>
           <form method="post" action="/admin/reviews/{{ r.id }}/delete" style="margin:0" onsubmit="return confirm('Видалити відгук разом з відповідями?')">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
             <button type="submit" class="btn-del-review">✕ Видалити відгук</button>
           </form>
         </div>

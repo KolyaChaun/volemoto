@@ -3,6 +3,7 @@ from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from src.constants import OPENAPI_TAGS
+from src.core.csrf import CSRFMiddleware
 from src.routers import admin, auth, public, reviews
 
 app = FastAPI(
@@ -11,6 +12,8 @@ app = FastAPI(
     version="1.0.0",
     openapi_tags=OPENAPI_TAGS,
 )
+
+app.add_middleware(CSRFMiddleware)
 
 app.mount("/static", StaticFiles(directory="src/static"), name="static")
 app.mount("/media", StaticFiles(directory="src/media"), name="media")

@@ -54,11 +54,6 @@ class Bike(Base):
         return parse_qs(parsed.query).get("v", [""])[0]
 
     @property
-    def youtube_embed_url(self) -> str:
-        vid = self.youtube_video_id
-        return f"https://www.youtube.com/embed/{vid}" if vid else ""
-
-    @property
     def slug(self) -> str:
         brand = _slugify(self.brand or "")
         model = _slugify(self.model or "")

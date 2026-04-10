@@ -57,6 +57,7 @@
 
   <div class="form-card">
     <form method="post" action="/admin/hero/upload" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
 
       <div class="form-section">Завантажити фото</div>
       <div class="form-grid">
@@ -81,6 +82,7 @@
         <img src="{{ slide.path }}" alt="Слайд {{ loop.index }}">
         <span class="hero-thumb-num">{{ loop.index }}</span>
         <form method="post" action="/admin/hero/delete/{{ slide.id }}" style="display:inline;">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
           <button type="submit" class="hero-thumb-del"
                   onclick="return confirm('Видалити цей слайд?')">×</button>
         </form>

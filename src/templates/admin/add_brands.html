@@ -50,6 +50,7 @@
   <div class="add-card">
     <h2>Додати бренд</h2>
     <form method="post" action="/admin/brands/add" enctype="multipart/form-data">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
       <div class="add-fields">
         <div class="add-row">
           <input type="text" name="name" placeholder="Honda, Kawasaki, Suzuki..." required autofocus>
@@ -76,6 +77,7 @@
         <span class="brand-name">{{ brand.name }}</span>
         <form method="post" action="/admin/brands/delete/{{ brand.id }}"
               onsubmit="return confirm('Видалити бренд {{ brand.name }}?')">
+    <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
           <button type="submit" class="btn-del">Видалити</button>
         </form>
       </div>
