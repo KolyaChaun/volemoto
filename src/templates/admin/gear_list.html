@@ -107,7 +107,7 @@
               {% if _s == 'available' %}В наявності{% elif _s == 'in_transit' %}В дорозі{% elif _s == 'reserved' %}Під замовлення{% else %}Продано{% endif %}
             </span>
           </td>
-          <td>
+          <td style="white-space:nowrap;">
             <a href="/admin/gear/edit/{{ p.id }}" class="btn-edit">Ред.</a>
             <form method="post" action="/admin/gear/delete/{{ p.id }}" style="display:inline;" onsubmit="return confirm('Видалити {{ p.name }}?')">
     <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
