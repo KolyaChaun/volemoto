@@ -88,3 +88,151 @@
   border-top: 1px solid #f5f5f5;
 }
 
+/* ── Fly-out submenu ── */
+.has-flyout {
+  position: relative;
+}
+
+.has-flyout > a {
+  justify-content: space-between !important;
+}
+
+.has-flyout:hover > a {
+  background: #edf8e5;
+  color: #2d9e00;
+  border-radius: 10px 0 0 10px; /* правий край "відкритий" — підменю продовжує */
+}
+
+.flyout-arrow {
+  margin-left: auto;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #f3f3f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #aaa;
+  flex-shrink: 0;
+  transition: background .15s, color .15s;
+}
+
+.has-flyout:hover > a .flyout-arrow {
+  background: #edf8e5;
+  color: #2d9e00;
+}
+
+.flyout-menu {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+
+  position: absolute;
+  /* вирівнюємо по верху батьківського li, перекриваємо межу основної панелі на 1px */
+  top: 0;
+  left: calc(100% + 10px);
+
+  list-style: none;
+  background: #fff;
+  /* лівий верхній кут — прямий, щоб примикати до основного дропдауна */
+  border-radius: 0 14px 14px 14px;
+  border: 1px solid #eaeaea;
+  /* ліва тінь не потрібна — вона «ховається» за основною панеллю */
+  box-shadow: 4px 4px 20px rgba(0,0,0,.10), 0 16px 48px rgba(0,0,0,.10);
+  padding: 6px;
+  min-width: 210px;
+  z-index: 1000;
+
+  transition: opacity .18s ease, visibility .18s ease, transform .18s ease;
+  transform: translateX(4px);
+}
+
+.has-flyout:hover .flyout-menu {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+/* Міст + лівий "язичок" що з'єднує з основним дропдауном */
+.flyout-menu::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -11px;
+  width: 11px;
+  height: 100%;
+}
+
+/* Зелена смужка-з'єднання зліва */
+.flyout-menu::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  bottom: 6px;
+  left: -1px;
+  width: 3px;
+  border-radius: 3px;
+  background: #2d9e00;
+}
+
+.flyout-menu li {
+  list-style: none;
+}
+
+.flyout-menu li + li {
+  border-top: 1px solid #f7f7f7;
+}
+
+.flyout-menu li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background .15s, color .15s, padding-left .15s;
+}
+
+.flyout-menu li a::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ddd;
+  flex-shrink: 0;
+  transition: background .15s, transform .15s;
+}
+
+.flyout-menu li a:hover {
+  background: #f4fbf0;
+  color: #2d9e00;
+  padding-left: 18px;
+}
+
+.flyout-menu li a:hover::before {
+  background: #2d9e00;
+  transform: scale(1.4);
+}
+
+/* ── Mobile: flyout items shown flat ── */
+.mobile-group-title > a {
+  font-weight: 700 !important;
+  color: #2d9e00 !important;
+}
+
+.mobile-sub-item > a {
+  padding-left: 32px !important;
+  font-size: 13px !important;
+  color: #555 !important;
+}
+
+.mobile-sub-item > a:hover {
+  color: #2d9e00 !important;
+}
+

@@ -29,13 +29,19 @@
       if (e.target === overlay) closeMenu();
     });
 
-    var catalogToggle = document.querySelector('.mobile-catalog-toggle');
-    if (catalogToggle) {
-      catalogToggle.addEventListener('click', function (e) {
+    document.querySelectorAll('.mobile-catalog-toggle').forEach(function (toggle) {
+      toggle.addEventListener('click', function (e) {
         e.preventDefault();
-        this.closest('.mobile-dropdown').classList.toggle('open');
+        var dropdown = this.closest('.mobile-dropdown');
+        var isOpen = dropdown.classList.contains('open');
+        // Close all open dropdowns
+        document.querySelectorAll('.mobile-dropdown.open').forEach(function (d) {
+          d.classList.remove('open');
+        });
+        // Toggle current (open if it was closed)
+        if (!isOpen) dropdown.classList.add('open');
       });
-    }
+    });
 
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') closeMenu();

@@ -21,9 +21,13 @@
   <nav class="sidebar-nav">
     <div class="nav-section">Головне</div>
     <a href="/admin" class="nav-item">📊 Дашборд</a>
-    <a href="/admin/catalog" class="nav-item">📋 Каталог</a>
+    <a href="/admin/catalog" class="nav-item">📋 Каталог мото</a>
+    <a href="/admin/gear" class="nav-item">🦺 Мотоекіпіровка</a>
+    <a href="/admin/parts" class="nav-item">🔧 Запчастини</a>
     <div class="nav-section">Додати</div>
     <a href="/admin/add" class="nav-item {% if not bike %}active{% endif %}">➕ Додати мото</a>
+    <a href="/admin/gear/add" class="nav-item">➕ Додати екіпіровку</a>
+    <a href="/admin/parts/add" class="nav-item">➕ Додати запчастину</a>
     <a href="/admin/brands" class="nav-item">➕ Додати бренди</a>
     <a href="/admin/hero" class="nav-item">➕ Додати фонові зображення</a>
     <div class="nav-section">Клієнти</div>
@@ -68,7 +72,7 @@
         </div>
         <div class="form-group">
           <label>Модель *</label>
-          <input type="text" name="model" placeholder="CBR500R, Ninja 650..." required value="{{ bike.model if bike else '' }}">
+          <input type="text" name="model" required value="{{ bike.model if bike else '' }}">
         </div>
       </div>
 
@@ -77,9 +81,9 @@
         <div class="form-group">
           <label>Категорія *</label>
           <select name="category" required>
-            <option value="moto"  {% if bike and bike.category == 'moto'  %}selected{% endif %}>🏍 Мотоцикл</option>
-            <option value="moped" {% if bike and bike.category == 'moped' %}selected{% endif %}>🛵 Мопед / Скутер</option>
-            <option value="quad"  {% if bike and bike.category == 'quad'  %}selected{% endif %}>🚜 Квадроцикл</option>
+            <option value="moto"  {% if bike and bike.category == 'moto'  %}selected{% endif %}>Мотоцикл</option>
+            <option value="moped" {% if bike and bike.category == 'moped' %}selected{% endif %}>Мопед / Скутер</option>
+            <option value="quad"  {% if bike and bike.category == 'quad'  %}selected{% endif %}>Квадроцикл</option>
           </select>
         </div>
         <div class="form-group">
@@ -96,19 +100,19 @@
         </div>
         <div class="form-group">
           <label>Колір *</label>
-          <input type="text" name="color" placeholder="Чорний, Зелений..." required value="{{ bike.color if bike else '' }}">
+          <input type="text" name="color" required value="{{ bike.color if bike else '' }}">
         </div>
         <div class="form-group">
           <label>Пробіг, км *</label>
-          <input type="number" name="mileage" min="0" required value="{{ bike.mileage if bike else '' }}" placeholder="12000">
+          <input type="number" name="mileage" min="0" required value="{{ bike.mileage if bike else '' }}">
         </div>
         <div class="form-group">
           <label>Об'єм двигуна, см³ *</label>
-          <input type="number" name="engine" min="0" required value="{{ bike.engine if bike else '' }}" placeholder="650">
+          <input type="number" name="engine" min="0" required value="{{ bike.engine if bike else '' }}">
         </div>
         <div class="form-group">
           <label>Ціна, ₴ *</label>
-          <input type="number" name="price" min="0" required value="{{ bike.price if bike else '' }}" placeholder="250000">
+          <input type="number" name="price" min="0" required value="{{ bike.price if bike else '' }}">
         </div>
         <div class="form-group">
           <label>Статус</label>
@@ -146,7 +150,7 @@
         </div>
         <div class="form-group full">
           <label>Посилання на відео-огляд YouTube</label>
-          <input type="url" name="youtube_url" placeholder="https://www.youtube.com/watch?v=..." value="{{ bike.youtube_url if bike else '' }}">
+          <input type="url" name="youtube_url" value="{{ bike.youtube_url if bike else '' }}">
         </div>
         <div class="form-group full">
           <label>Опис</label>

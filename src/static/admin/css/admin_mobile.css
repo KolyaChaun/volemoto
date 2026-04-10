@@ -182,7 +182,7 @@
   .add-card { padding: 16px !important; }
   .add-row { flex-direction: column !important; align-items: stretch !important; }
   .add-row input[type="text"] { width: 100% !important; }
-  .btn-add { width: 100%; text-align: center; padding: 11px !important; }
+  .add-row .btn-add { width: 100%; text-align: center; padding: 11px !important; }
   .brand-item { padding: 10px 16px !important; }
   .brands-header { padding: 14px 16px !important; }
 
@@ -207,7 +207,27 @@
 
   .topbar { padding: 10px 12px !important; }
   .topbar h1, .topbar-left h1 { font-size: 15px !important; }
-  .btn-add { padding: 7px 12px !important; font-size: 11px !important; }
+  .topbar .btn-add {
+    padding: 0 !important;
+    width: 36px !important;
+    height: 36px !important;
+    border-radius: 50% !important;
+    font-size: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+    margin-left: auto !important;
+  }
+  .topbar .btn-add::before {
+    content: '+';
+    font-size: 22px;
+    line-height: 1;
+    font-weight: 400;
+    display: block;
+    margin-top: -1px;
+    margin-left: 6px;
+  }
 
   .filter-tabs { gap: 4px !important; }
   .filter-tab { padding: 6px 10px !important; font-size: 11px !important; }

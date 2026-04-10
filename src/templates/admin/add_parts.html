@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ "Редагувати" if product else "Додати запчастину" }} — VOLE MOTO Admin</title>
+  <link rel="stylesheet" href="/static/admin/css/admin.css">
+  <link rel="stylesheet" href="/static/admin/css/add-moto.css">
+  <link rel="stylesheet" href="/static/admin/css/admin_mobile.css">
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-text">VOLE <span>MOTO</span></div>
+    <small>Admin Panel</small>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Головне</div>
+    <a href="/admin" class="nav-item">📊 Дашборд</a>
+    <a href="/admin/catalog" class="nav-item">📋 Каталог мото</a>
+    <a href="/admin/gear" class="nav-item">🦺 Мотоекіпіровка</a>
+    <a href="/admin/parts" class="nav-item">🔧 Запчастини</a>
+
+    <div class="nav-section">Додати</div>
+    <a href="/admin/add" class="nav-item">➕ Додати мото</a>
+    <a href="/admin/gear/add" class="nav-item">➕ Додати екіпіровку</a>
+    <a href="/admin/parts/add" class="nav-item active">➕ Додати запчастину</a>
+    <a href="/admin/brands" class="nav-item">➕ Додати бренди</a>
+    <a href="/admin/hero" class="nav-item">➕ Додати фонові зображення</a>
+
+    <div class="nav-section">Клієнти</div>
+    <a href="/admin/reviews" class="nav-item">💬 Відгуки {% if unread %}<span class="nav-badge">{{ unread }}</span>{% endif %}</a>
+
+    <div class="nav-section">Сайт</div>
+    <a href="/" target="_blank" class="nav-item">🌐 Переглянути сайт</a>
+  </nav>
+  <div class="sidebar-bottom">
+    <a href="/admin/logout" class="logout">🚪 Вийти</a>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <button class="admin-burger" id="admin-burger" aria-label="Меню"><span></span><span></span><span></span></button>
+    <a href="/admin/parts" class="back">← Назад</a>
+    <h1>{{ "Редагувати: " + product.name if product else "Додати запчастину" }}</h1>
+  </div>
+
+  <div class="form-card">
+    <form method="post" action="{{ action }}" enctype="multipart/form-data">
+
+      <div class="form-section">Основна інформація</div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Назва *</label>
+          <input type="text" name="name" required value="{{ product.name if product else '' }}">
+        </div>
+        <div class="form-group">
+          <label>Виробник</label>
+          <input type="text" name="brand" value="{{ product.brand if product else '' }}">
+        </div>
+        <div class="form-group">
+          <label>Модель</label>
+          <input type="text" name="model" value="{{ product.model if product else '' }}">
+        </div>
+        <div class="form-group">
+          <label>Нова / Б/У *</label>
+          <select name="category" required>
+            <option value="parts_new"  {% if product and product.category == 'parts_new'  %}selected{% endif %}>🔧 Нова</option>
+            <option value="parts_used" {% if product and product.category == 'parts_used' %}selected{% endif %}>🔩 Б/У</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Категорія запчастини</label>
+          <input type="hidden" name="subcategory" id="subcat-hidden" value="{{ product.subcategory if product else '' }}">
+          <select id="subcat-select" onchange="onSubcatChange(this)">
+            <option value="">— Оберіть категорію —</option>
+            {% for group in parts_subcats %}
+            <option value="{{ group.key }}"
+              {% if product and product.subcategory == group.key %}selected{% endif %}>
+              {{ group.label }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Колір</label>
+          <input type="text" name="color" value="{{ product.color if product else '' }}">
+        </div>
+      </div>
+
+      <div class="form-section">Ціна та стан</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Стан</label>
+          <select name="condition">
+            {% for cond in ["Нові", "Відмінний", "Дуже добрий", "Добрий", "Задовільний"] %}
+            <option value="{{ cond }}" {% if product and product.condition == cond %}selected{% endif %}>{{ cond }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Ціна, ₴ *</label>
+          <input type="number" name="price" min="0" required value="{{ product.price if product else '' }}">
+        </div>
+        <div class="form-group">
+          <label>Статус</label>
+          <select name="status">
+            <option value="available"  {% if not product or product.status == 'available'  %}selected{% endif %}>В наявності</option>
+            <option value="reserved"   {% if product and product.status == 'reserved'   %}selected{% endif %}>Під замовлення</option>
+            <option value="sold"       {% if product and product.status == 'sold'       %}selected{% endif %}>Продано</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section">Фото та опис</div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Фото (можна вибрати декілька)</label>
+          <input type="file" name="photos" accept="image/*" multiple>
+          {% if product and product.photos %}
+          <div class="photos-grid">
+            {% for ph in product.photos %}
+            <div class="photo-thumb">
+              <img src="{{ ph.path }}" alt="">
+              {% if ph.path == product.photo %}
+                <div class="photo-main-badge">★ Головне</div>
+              {% else %}
+                <button type="button" onclick="document.getElementById('main-photo-{{ ph.id }}').submit()" class="photo-thumb-main" title="Зробити головним">★</button>
+              {% endif %}
+              <button type="button" class="photo-thumb-del" title="Видалити"
+                      onclick="if(confirm('Видалити це фото?')) document.getElementById('del-photo-{{ ph.id }}').submit()">×</button>
+            </div>
+            {% endfor %}
+          </div>
+          <div style="font-size:12px;color:#999;margin-top:6px;">Натисніть ★ щоб зробити фото головним.</div>
+          {% endif %}
+        </div>
+        <div class="form-group full">
+          <label>Опис</label>
+          <textarea name="description" placeholder="Детальний опис запчастини...">{{ product.description if product else '' }}</textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-save">
+          {{ "Зберегти зміни" if product else "Додати запчастину" }}
+        </button>
+        <a href="/admin/parts" class="btn-cancel">Скасувати</a>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+{% if product and product.photos %}
+{% for ph in product.photos %}
+<form id="del-photo-{{ ph.id }}" method="post" action="/admin/parts/photo/delete/{{ ph.id }}"></form>
+<form id="main-photo-{{ ph.id }}" method="post" action="/admin/parts/photo/main/{{ ph.id }}"></form>
+{% endfor %}
+{% endif %}
+
+<script src="/static/admin/js/admin_mobile.js"></script>
+<script src="/static/js/file_input.js"></script>
+<script>
+function onSubcatChange(sel) {
+  document.getElementById('subcat-hidden').value = sel.value;
+}
+</script>
+</body>
+</html>

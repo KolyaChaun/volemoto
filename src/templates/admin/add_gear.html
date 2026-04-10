@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ "Редагувати" if product else "Додати екіпіровку" }} — VOLE MOTO Admin</title>
+  <link rel="stylesheet" href="/static/admin/css/admin.css">
+  <link rel="stylesheet" href="/static/admin/css/add-moto.css">
+  <link rel="stylesheet" href="/static/admin/css/admin_mobile.css">
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-text">VOLE <span>MOTO</span></div>
+    <small>Admin Panel</small>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Головне</div>
+    <a href="/admin" class="nav-item">📊 Дашборд</a>
+    <a href="/admin/catalog" class="nav-item">📋 Каталог мото</a>
+    <a href="/admin/gear" class="nav-item">🦺 Мотоекіпіровка</a>
+    <a href="/admin/parts" class="nav-item">🔧 Запчастини</a>
+
+    <div class="nav-section">Додати</div>
+    <a href="/admin/add" class="nav-item">➕ Додати мото</a>
+    <a href="/admin/gear/add" class="nav-item active">➕ Додати екіпіровку</a>
+    <a href="/admin/parts/add" class="nav-item">➕ Додати запчастину</a>
+    <a href="/admin/brands" class="nav-item">➕ Додати бренди</a>
+    <a href="/admin/hero" class="nav-item">➕ Додати фонові зображення</a>
+
+    <div class="nav-section">Клієнти</div>
+    <a href="/admin/reviews" class="nav-item">💬 Відгуки {% if unread %}<span class="nav-badge">{{ unread }}</span>{% endif %}</a>
+
+    <div class="nav-section">Сайт</div>
+    <a href="/" target="_blank" class="nav-item">🌐 Переглянути сайт</a>
+  </nav>
+  <div class="sidebar-bottom">
+    <a href="/admin/logout" class="logout">🚪 Вийти</a>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <button class="admin-burger" id="admin-burger" aria-label="Меню"><span></span><span></span><span></span></button>
+    <a href="/admin/gear" class="back">← Назад</a>
+    <h1>{{ "Редагувати: " + product.name if product else "Додати екіпіровку" }}</h1>
+  </div>
+
+  <div class="form-card">
+    <form method="post" action="{{ action }}" enctype="multipart/form-data">
+
+      <div class="form-section">Основна інформація</div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Назва *</label>
+          <input type="text" name="name" required value="{{ product.name if product else '' }}">
+        </div>
+        {% if product and product.article %}
+        <div class="form-group">
+          <label>Артикул</label>
+          <input type="text" value="{{ product.article }}" readonly style="background:#f5f5f5;color:#999;cursor:default;">
+        </div>
+        {% endif %}
+        <div class="form-group">
+          <label>Виробник</label>
+          <input type="text" name="brand" value="{{ product.brand if product else '' }}">
+        </div>
+        <div class="form-group">
+          <label>Модель</label>
+          <input type="text" name="model" value="{{ product.model if product else '' }}">
+        </div>
+        <div class="form-group">
+          <label>Категорія *</label>
+          <select name="category" required>
+            <option value="helmets"  {% if product and product.category == 'helmets' %}selected{% endif %}>Мотошоломи</option>
+            <option value="gloves"   {% if product and product.category == 'gloves'  %}selected{% endif %}>Рукавиці</option>
+            <option value="gear"     {% if product and product.category == 'gear'    %}selected{% endif %}>Екіпіровка</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section">Характеристики</div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Розмір (можна вибрати декілька)</label>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;">
+            {% for s in ["XS","S","M","L","XL","XXL","2XL","3XL"] %}
+            {% set cur_sizes = (product.size or '').split(',') | map('trim') | list if product else [] %}
+            <label style="display:flex;align-items:center;gap:5px;background:#f5f5f5;border:1px solid #e0e0e0;border-radius:8px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600;">
+              <input type="checkbox" name="size_list" value="{{ s }}"
+                     {% if s in cur_sizes %}checked{% endif %}
+                     style="accent-color:#2d9e00;">
+              {{ s }}
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+        <div class="form-group full">
+          <label>Колір (введіть та натисніть Enter або кому)</label>
+          <div id="color-tags" style="display:flex;flex-wrap:wrap;gap:6px;padding:8px;border:1px solid #e0e0e0;border-radius:8px;background:#fff;min-height:42px;cursor:text;" onclick="document.getElementById('color-input').focus()">
+            {% if product and product.color %}
+              {% for c in product.color.split(',') %}
+              {% set cv = c.strip() %}
+              {% if cv %}
+              <span class="color-tag" style="display:inline-flex;align-items:center;gap:4px;background:#edf8e5;color:#2d9e00;border:1px solid #c8edb8;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:600;">
+                {{ cv }}
+                <button type="button" onclick="removeTag(this)" style="background:none;border:none;cursor:pointer;color:#2d9e00;font-size:14px;line-height:1;padding:0;">×</button>
+                <input type="hidden" name="color_list" value="{{ cv }}">
+              </span>
+              {% endif %}
+              {% endfor %}
+            {% endif %}
+            <input type="text" id="color-input" style="border:none;outline:none;font-size:13px;min-width:120px;flex:1;background:transparent;">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Стан</label>
+          <select name="condition">
+            {% for cond in ["Нові", "Відмінний", "Дуже добрий", "Добрий", "Задовільний"] %}
+            <option value="{{ cond }}" {% if product and product.condition == cond %}selected{% endif %}>{{ cond }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Ціна, ₴ *</label>
+          <input type="number" name="price" min="0" required value="{{ product.price if product else '' }}">
+        </div>
+        <div class="form-group">
+          <label>Статус</label>
+          <select name="status">
+            <option value="available"  {% if not product or product.status == 'available'  %}selected{% endif %}>В наявності</option>
+            <option value="in_transit" {% if product and product.status == 'in_transit' %}selected{% endif %}>В дорозі</option>
+            <option value="reserved"   {% if product and product.status == 'reserved'   %}selected{% endif %}>Під замовлення</option>
+            <option value="sold"       {% if product and product.status == 'sold'       %}selected{% endif %}>Продано</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-section">Фото та опис</div>
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Фото (можна вибрати декілька)</label>
+          <input type="file" name="photos" accept="image/*" multiple>
+          {% if product and product.photos %}
+          <div class="photos-grid">
+            {% for ph in product.photos %}
+            <div class="photo-thumb">
+              <img src="{{ ph.path }}" alt="">
+              {% if ph.path == product.photo %}
+                <div class="photo-main-badge">★ Головне</div>
+              {% else %}
+                <button type="button" onclick="document.getElementById('main-photo-{{ ph.id }}').submit()" class="photo-thumb-main" title="Зробити головним">★</button>
+              {% endif %}
+              <button type="button" class="photo-thumb-del" title="Видалити"
+                      onclick="if(confirm('Видалити це фото?')) document.getElementById('del-photo-{{ ph.id }}').submit()">×</button>
+            </div>
+            {% endfor %}
+          </div>
+          <div style="font-size:12px;color:#999;margin-top:6px;">Натисніть ★ щоб зробити фото головним.</div>
+          {% endif %}
+        </div>
+        <div class="form-group full">
+          <label>Опис</label>
+          <textarea name="description" placeholder="Детальний опис товару...">{{ product.description if product else '' }}</textarea>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-save">
+          {{ "Зберегти зміни" if product else "Додати екіпіровку" }}
+        </button>
+        <a href="/admin/gear" class="btn-cancel">Скасувати</a>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+{% if product and product.photos %}
+{% for ph in product.photos %}
+<form id="del-photo-{{ ph.id }}" method="post" action="/admin/gear/photo/delete/{{ ph.id }}"></form>
+<form id="main-photo-{{ ph.id }}" method="post" action="/admin/gear/photo/main/{{ ph.id }}"></form>
+{% endfor %}
+{% endif %}
+
+<script src="/static/admin/js/admin_mobile.js"></script>
+<script src="/static/js/file_input.js"></script>
+<script>
+  const colorInput = document.getElementById('color-input');
+  const colorTags  = document.getElementById('color-tags');
+
+  colorInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      addColorTag(this.value.trim().replace(/,$/, ''));
+      this.value = '';
+    }
+  });
+  colorInput.addEventListener('blur', function() {
+    if (this.value.trim()) { addColorTag(this.value.trim()); this.value = ''; }
+  });
+
+  function addColorTag(val) {
+    if (!val) return;
+    const span = document.createElement('span');
+    span.className = 'color-tag';
+    span.style.cssText = 'display:inline-flex;align-items:center;gap:4px;background:#edf8e5;color:#2d9e00;border:1px solid #c8edb8;border-radius:20px;padding:3px 10px;font-size:12px;font-weight:600;';
+    span.innerHTML = val +
+      '<button type="button" onclick="removeTag(this)" style="background:none;border:none;cursor:pointer;color:#2d9e00;font-size:14px;line-height:1;padding:0;">×</button>' +
+      '<input type="hidden" name="color_list" value="' + val.replace(/"/g, '&quot;') + '">';
+    colorTags.insertBefore(span, colorInput);
+  }
+
+  function removeTag(btn) {
+    btn.parentElement.remove();
+  }
+</script>
+</body>
+</html>

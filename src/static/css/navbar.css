@@ -144,6 +144,7 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity .25s ease;
+  overflow: hidden;
 }
 .mobile-overlay.open {
   opacity: 1;
@@ -208,17 +209,22 @@
   padding: 0;
   max-height: 0;
   overflow: hidden;
-  transition: max-height .25s ease;
+  transition: max-height .35s ease;
   background: #f9f9f9;
 }
-.mobile-dropdown.open .mobile-submenu { max-height: 200px; }
+.mobile-dropdown.open .mobile-submenu { max-height: 600px; }
+
+/* Звичайні пункти підменю */
 .mobile-submenu li a {
   display: block;
-  padding: 12px 24px 12px 40px;
+  padding: 12px 24px 12px 36px;
   font-size: 14px; color: #444;
   border-bottom: 1px solid #eee;
+  text-decoration: none;
+  transition: color .15s, background .15s;
 }
-.mobile-submenu li a:hover { color: #2d9e00; }
+.mobile-submenu li a:hover { color: #2d9e00; background: #f2f9ee; }
+
 
 /* ── Mobile search ── */
 .mobile-search {

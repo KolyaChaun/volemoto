@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ bike.name }} — VOLE MOTO</title>
+  <title>{% if cat %}{{ cats[cat] }}{% else %}Мотоекіпіровка{% endif %} — VOLE MOTO</title>
   <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
   <link rel="stylesheet" href="/static/css/base.css">
   <link rel="stylesheet" href="/static/css/navbar.css">
   <link rel="stylesheet" href="/static/css/cards.css">
   <link rel="stylesheet" href="/static/css/footer.css">
   <link rel="stylesheet" href="/static/css/autocomplete.css">
-  <link rel="stylesheet" href="/static/css/pages/bike-detail.css">
+  <link rel="stylesheet" href="/static/css/pages/catalog.css">
   <link rel="stylesheet" href="/static/css/responsive.css">
   <link rel="stylesheet" href="/static/css/dropdown.css">
 </head>
@@ -22,7 +22,7 @@
   <ul class="nav-links">
     <li><a href="/">Головна</a></li>
     <li class="nav-dropdown">
-      <a href="/#catalog">Каталог ▾</a>
+      <a href="#" class="active">Каталог ▾</a>
       <ul class="dropdown-menu">
         <li><a href="/catalog/moto">Мотоцикли</a></li>
         <li><a href="/catalog/moped">Мопеди</a></li>
@@ -51,7 +51,7 @@
   <div class="nav-search">
     <form action="/search" method="get">
       <span class="search-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
-      <input type="text" name="q" placeholder="Пошук мотоцикла..." class="search-input" autocomplete="off">
+      <input type="text" name="q" placeholder="Пошук..." class="search-input" autocomplete="off">
       <button type="submit" class="search-btn" aria-label="Знайти"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
     </form>
   </div>
@@ -79,7 +79,7 @@
         </ul>
       </li>
       <li class="mobile-dropdown">
-        <button class="mobile-catalog-toggle">Мотоекіпірування ▾</button>
+        <button class="mobile-catalog-toggle active">Мотоекіпірування ▾</button>
         <ul class="mobile-submenu">
           <li><a href="/equipment?cat=helmets">Мотошоломи</a></li>
           <li><a href="/equipment?cat=gloves">Рукавиці</a></li>
@@ -99,7 +99,7 @@
     </ul>
     <form action="/search" method="get" class="mobile-search">
       <span class="search-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
-      <input type="text" name="q" placeholder="Пошук мотоцикла..." autocomplete="off">
+      <input type="text" name="q" placeholder="Пошук..." autocomplete="off">
       <button type="submit" aria-label="Знайти"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
     </form>
     <a href="tel:+380997558803" class="mobile-phone-link">+38 099 755 88 03</a>
@@ -112,211 +112,192 @@
   </div>
 </div>
 
-<!-- BREADCRUMBS -->
-<div class="breadcrumbs">
-  <a href="/">Головна</a>
-  <span>›</span>
-  <a href="/catalog/{{ bike.category }}">{{ {"moto":"Мотоцикли","moped":"Мопеди","quad":"Квадроцикли"}.get(bike.category,"Каталог") }}</a>
-  <span>›</span>
-  {{ bike.name }}
-</div>
+<div class="page-wrap">
 
-<!-- MAIN GRID -->
-<div class="detail-page">
+  <!-- BREADCRUMBS -->
+  <div class="breadcrumbs">
+    <a href="/">Головна</a>
+    <span>›</span>
+    <a href="/equipment">Мотоекіпіровка</a>
+    {% if cat %}
+    <span>›</span>
+    {{ cats[cat] }}
+    {% endif %}
+  </div>
 
-  <div class="detail-left">
-  <!-- GALLERY -->
-  <div class="detail-gallery">
-    <div class="gallery">
-      <div class="gallery-main" id="gMain">
-        {% if bike.photos %}
-          {% for p in bike.photos %}
-          <img src="{{ p.path }}" alt="{{ bike.name }}"
-               class="{{ 'active' if loop.first else '' }}"
-               onclick="lbOpen({{ loop.index0 }})">
-          {% endfor %}
-          {% if bike.youtube_video_id %}
-          <div class="g-yt-slide" data-yt-id="{{ bike.youtube_video_id }}">
-            <iframe id="ytFrame" frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen></iframe>
-          </div>
-          {% endif %}
-          {% set total_slides = bike.photos|length + (1 if bike.youtube_video_id else 0) %}
-          {% if total_slides > 1 %}
-          <button class="g-arrow g-prev" onclick="gMove(-1)">&#8249;</button>
-          <button class="g-arrow g-next" onclick="gMove(1)">&#8250;</button>
-          <div class="g-counter" id="gCounter">1 / {{ total_slides }}</div>
-          {% endif %}
-        {% elif bike.photo %}
-          <img src="{{ bike.photo }}" alt="{{ bike.name }}" class="active" onclick="lbOpen(0)">
-        {% else %}
-          <div class="gallery-no-photo">📷</div>
-        {% endif %}
+  <!-- PAGE HEADER -->
+  <div class="cat-header">
+    <h1>
+      {% if cat %}{{ cats[cat] }}{% else %}Мотоекіпіровка{% endif %}
+      <span class="cat-header-count">{{ total }} товарів</span>
+    </h1>
+    <div class="sort-row">
+      <button class="filter-toggle" onclick="toggleFilters()">Фільтри</button>
+      <span class="sort-label">Сортування:</span>
+      <select class="sort-select" onchange="applySort(this.value)">
+        <option value="newest"     {% if sort=='newest'     %}selected{% endif %}>Новіші спочатку</option>
+        <option value="price_asc"  {% if sort=='price_asc'  %}selected{% endif %}>Ціна: від дешевих</option>
+        <option value="price_desc" {% if sort=='price_desc' %}selected{% endif %}>Ціна: від дорогих</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- FILTER OVERLAY -->
+  <div class="filter-overlay" id="filter-overlay" onclick="toggleFilters()"></div>
+
+  <div class="catalog-layout">
+
+    <!-- FILTERS -->
+    <form id="filters-form" class="filters-sidebar" method="get" action="/equipment">
+      <input type="hidden" name="sort" value="{{ sort }}">
+
+      <div class="filters-title">
+        Фільтри
+        <a href="/equipment{% if cat %}?cat={{ cat }}{% endif %}" class="filters-reset">Скинути</a>
+        <button type="button" class="filters-close" onclick="toggleFilters()" aria-label="Закрити">✕</button>
       </div>
 
-      {% set has_thumbs = bike.photos|length > 1 or (bike.photos and bike.youtube_video_id) %}
-      {% if has_thumbs %}
-      <div class="gallery-thumbs">
-        {% for p in bike.photos %}
-        <div class="g-thumb {{ 'active' if loop.first else '' }}" onclick="gTo({{ loop.index0 }})">
-          <img src="{{ p.path }}" alt="">
+      <div class="filter-group">
+        <div class="filter-group-label">Ціна, ₴</div>
+        <div class="filter-range">
+          <input type="number" name="min_price" placeholder="від" value="{{ min_price if min_price else '' }}">
+          <input type="number" name="max_price" placeholder="до" value="{{ max_price if max_price else '' }}">
+        </div>
+      </div>
+
+      <div class="filter-group">
+        <div class="filter-group-label">Категорія</div>
+        <select name="cat" class="filter-select" onchange="this.form.submit()">
+          <option value="">Всі категорії</option>
+          {% for key, label in cats.items() %}
+          <option value="{{ key }}" {% if cat == key %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      {% if brands %}
+      <div class="filter-group">
+        <div class="filter-group-label">Виробник</div>
+        <div class="brand-list" id="brand-list">
+          {% for b in brands %}
+          <label class="filter-checkbox brand-item{% if loop.index > 8 %} brand-hidden{% endif %}">
+            <input type="checkbox" name="brand" value="{{ b }}"
+                   {% if b in selected_brands %}checked{% endif %}>
+            {{ b }}
+            <span class="filter-count">{{ brand_counts.get(b, 0) }}</span>
+          </label>
+          {% endfor %}
+        </div>
+        {% if brands|length > 8 %}
+        <button type="button" class="brand-show-more" id="brand-more-btn" onclick="toggleBrands()">
+          Показати ще {{ brands|length - 8 }} ▾
+        </button>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {% if colors %}
+      <div class="filter-group">
+        <div class="filter-group-label">Колір</div>
+        <div class="brand-list" id="color-list">
+          {% for c in colors %}
+          <label class="filter-checkbox brand-item{% if loop.index > 8 %} color-hidden{% endif %}">
+            <input type="checkbox" name="color" value="{{ c }}"
+                   {% if c in selected_colors %}checked{% endif %}>
+            {{ c }}
+            <span class="filter-count">{{ color_counts.get(c, 0) }}</span>
+          </label>
+          {% endfor %}
+        </div>
+        {% if colors|length > 8 %}
+        <button type="button" class="brand-show-more" id="color-more-btn" onclick="toggleColors()">
+          Показати ще {{ colors|length - 8 }} ▾
+        </button>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {% if sizes %}
+      <div class="filter-group">
+        <div class="filter-group-label">Розмір</div>
+        <div class="brand-list" id="size-list">
+          {% for s in sizes %}
+          <label class="filter-checkbox brand-item{% if loop.index > 8 %} size-hidden{% endif %}">
+            <input type="checkbox" name="size" value="{{ s }}"
+                   {% if s in selected_sizes %}checked{% endif %}>
+            {{ s }}
+            <span class="filter-count">{{ size_counts.get(s, 0) }}</span>
+          </label>
+          {% endfor %}
+        </div>
+        {% if sizes|length > 8 %}
+        <button type="button" class="brand-show-more" id="size-more-btn" onclick="toggleSizes()">
+          Показати ще {{ sizes|length - 8 }} ▾
+        </button>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      <div class="filter-group">
+        <div class="filter-group-label">Наявність</div>
+        <label class="filter-checkbox">
+          <input type="checkbox" name="available_only" value="true"
+                 {% if available_only %}checked{% endif %}
+                 onchange="this.form.submit()">
+          Тільки в наявності
+        </label>
+      </div>
+
+      <button type="submit" class="btn-apply">Застосувати</button>
+    </form>
+
+    <!-- PRODUCT GRID -->
+    <div class="catalog-grid">
+      {% if items %}
+        {% for item in items %}
+        <div class="card bike-card {% if loop.index > 13 %}hidden-card{% endif %}"
+             onclick="window.location='/equipment/{{ item.slug }}'" style="cursor:pointer{% if loop.index > 13 %};display:none{% endif %}">
+          <div class="card-img card-img--contain">
+            {% if item.photo %}
+            <img src="{{ item.photo }}" alt="{{ item.name }}">
+            {% else %}
+            <div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:56px;color:#ddd;">⛑️</div>
+            {% endif %}
+            {% set _s = item.status or ('available' if item.available else 'sold') %}
+            <div class="card-tag {% if _s == 'sold' %}card-tag-sold{% elif _s != 'available' %}card-tag-status{% endif %}">
+              {% if _s == 'available' %}В наявності{% elif _s == 'in_transit' %}В дорозі{% elif _s == 'reserved' %}Під замовлення{% else %}Продано{% endif %}
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="card-name">{{ item.name }}</div>
+            <div class="card-year">{{ item.brand }}</div>
+            <div class="card-specs"></div>
+            <div class="card-footer">
+              <div class="card-price">{{ "{:,}".format(item.price).replace(",", " ") }} <em>₴</em></div>
+              <a href="/equipment/{{ item.slug }}" class="btn-detail">Детальніше</a>
+            </div>
+          </div>
         </div>
         {% endfor %}
-        {% if bike.youtube_video_id %}
-        <div class="g-thumb g-thumb-yt" onclick="gTo({{ bike.photos|length }})">
-          <img src="https://img.youtube.com/vi/{{ bike.youtube_video_id }}/mqdefault.jpg" alt="Відео">
-          <div class="g-thumb-play">▶</div>
+      {% else %}
+        <div class="empty-state">
+          <div style="font-size:56px;">🔍</div>
+          <p>Нічого не знайдено. Спробуйте змінити фільтри.</p>
+          <a href="/equipment{% if cat %}?cat={{ cat }}{% endif %}" style="color:#2d9e00;font-weight:700;">Скинути фільтри</a>
         </div>
-        {% endif %}
-      </div>
       {% endif %}
     </div>
+
+    {% if items|length > 13 %}
+    <div id="show-more-wrap" style="text-align:center;margin-top:28px;grid-column:1/-1;">
+      <button id="show-more-btn" onclick="showMore()" style="background:#fff;border:2px solid #2d9e00;color:#2d9e00;padding:13px 36px;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;">
+        Показати ще
+      </button>
+    </div>
+    {% endif %}
+
   </div>
 
-  <!-- DESCRIPTION -->
-  {% if bike.description %}
-  <div class="desc-block">
-    <h3>Опис</h3>
-    <div class="desc-text">{{ bike.description }}</div>
-  </div>
-  {% endif %}
-  </div><!-- end detail-left -->
-
-  <!-- RIGHT PANEL -->
-  <div class="right-panel">
-  <div class="info-card">
-    <div style="display:flex; align-items:center; gap:12px; margin-bottom:4px;">
-      {% set _s = bike.status or ('available' if bike.available else 'sold') %}
-      <div class="avail-badge {% if _s == 'available' %}avail-yes{% elif _s == 'sold' %}avail-no{% else %}avail-status{% endif %}">
-        {% if _s == 'available' %}В наявності{% elif _s == 'in_transit' %}В дорозі{% elif _s == 'reserved' %}Під завдатком{% else %}Продано{% endif %}
-      </div>
-      {% if bike.article %}
-      <div style="font-size:12px; color:#aaa; font-weight:600;">Артикул: {{ bike.article }}</div>
-      {% endif %}
-    </div>
-    <div class="bike-title">
-      {{ {"moto":"Мотоцикл","moped":"Мопед","quad":"Квадроцикл"}.get(bike.category,"") }}
-      {{ bike.name }}
-    </div>
-
-    <div class="price-row">
-      <div class="price-main">{{ "{:,}".format(bike.price).replace(",", " ") }}</div>
-      <div class="price-cur">₴</div>
-    </div>
-
-    <div class="specs-item">
-      <span class="specs-key">Бренд</span>
-      <span class="specs-val">{{ bike.brand }}</span>
-    </div>
-    <div class="specs-item">
-      <span class="specs-key">Модель</span>
-      <span class="specs-val">{{ bike.model }}</span>
-    </div>
-    <div class="specs-item">
-      <span class="specs-key">Пробіг</span>
-      <span class="specs-val">{{ "{:,}".format(bike.mileage).replace(",", " ") }} км</span>
-    </div>
-    <div class="specs-item">
-      <span class="specs-key">Об'єм двигуна</span>
-      <span class="specs-val">{{ bike.engine }} см³</span>
-    </div>
-    <div class="specs-list">
-      <div class="specs-item">
-        <span class="specs-key">Рік випуску</span>
-        <span class="specs-val">{{ bike.year }}</span>
-      </div>
-      <div class="specs-item">
-        <span class="specs-key">Колір</span>
-        <span class="specs-val">{{ bike.color }}</span>
-      </div>
-      <div class="specs-item">
-        <span class="specs-key">Стан</span>
-        <span class="specs-val">{{ bike.condition }}</span>
-      </div>
-      {% if bike.article %}
-      <div class="specs-item">
-        <span class="specs-key">Артикул</span>
-        <span class="specs-val">{{ bike.article }}</span>
-      </div>
-      {% endif %}
-    </div>
-  </div>
-
-  <!-- CONTACT CARD (inside right-panel) -->
-  <div class="contact-card">
-    <a href="tel:+380997558803" class="btn-buy">📞 Зателефонувати</a>
-    <a href="https://t.me/+380634271592" target="_blank" class="btn-call">
-      <svg width="18" height="18" viewBox="0 0 240 240" fill="#0088cc">
-        <path d="M120 0C53.73 0 0 53.73 0 120s53.73 120 120 120 120-53.73 120-120S186.27 0 120 0zm57.49 84.08l-18.39 87.03c-1.39 6.56-5.05 8.21-10.24 5.12l-28.29-20.86-13.65 13.16c-1.51 1.51-2.77 2.77-5.06 2.77l1.81-25.72 46.78-42.26c2.03-1.81-.44-2.83-3.15-1.02l-57.68 36.27-24.79-7.74c-5.37-1.68-5.48-5.37 1.12-7.96l96.43-37.17c4.47-1.69 8.37 1.02 6.87 7.37z"/>
-      </svg>
-      Telegram
-    </a>
-    <div class="contact-note">Пн–Сб: 9:00 – 18:00 · Дніпро</div>
-    <div class="contact-address">
-      <span>📍</span>
-      Аеропортовська вул., 51, Дніпро 49000
-    </div>
-  </div>
-
-  </div><!-- end right-panel -->
-
-</div>
-
-<!-- SIMILAR -->
-{% if similar %}
-<div class="similar-wrap">
-  <h3>Схожі пропозиції</h3>
-  <div class="bikes-grid">
-    {% for b in similar %}
-    <div class="card" onclick="window.location='/catalog/{{ b.category }}/{{ b.slug }}'" style="cursor:pointer">
-      <div class="card-img">
-        {% if b.photo %}
-        <img src="{{ b.photo }}" alt="{{ b.name }}">
-        {% else %}
-        <svg width="64" height="64" fill="none" stroke="#bbb" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/><path d="M5 17H3v-4l3-5h8l4 5v4H19"/><path d="M12 4l3 5"/></svg>
-        {% endif %}
-        {% set _s = b.status or ('available' if b.available else 'sold') %}
-        <div class="card-tag {% if _s == 'sold' %}card-tag-sold{% elif _s != 'available' %}card-tag-status{% endif %}">
-          {% if _s == 'available' %}В наявності{% elif _s == 'in_transit' %}В дорозі{% elif _s == 'reserved' %}Під завдатком{% else %}Продано{% endif %}
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="card-name">{{ b.name }}</div>
-        <div class="card-year">{{ b.year }} рік · {{ b.color }}</div>
-        <div class="card-specs">
-          <span>{{ "{:,}".format(b.mileage).replace(",", " ") }} км</span>
-          <span>{{ b.engine }} см³</span>
-          <span>{{ b.condition }}</span>
-        </div>
-        <div class="card-footer">
-          <div class="card-price">{{ "{:,}".format(b.price).replace(",", " ") }} <em>₴</em></div>
-          <a href="/catalog/{{ b.category }}/{{ b.slug }}" class="btn-detail">Детальніше</a>
-        </div>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-</div>
-{% endif %}
-
-<!-- LIGHTBOX -->
-<div class="lightbox" id="lightbox" onclick="lbClose(event)">
-  <button class="lb-close" onclick="lbClose()">×</button>
-  <button class="lb-arrow lb-prev" onclick="lbMove(-1); event.stopPropagation()">‹</button>
-  <img id="lbImg" src="" alt="">
-  <button class="lb-arrow lb-next" onclick="lbMove(1); event.stopPropagation()">›</button>
-</div>
-
-<!-- MOBILE STICKY CTA -->
-<div class="mobile-sticky-cta">
-  <a href="tel:+380997558803" class="btn-buy">📞 Зателефонувати</a>
-  <a href="https://t.me/+380634271592" target="_blank" class="btn-call">
-    <svg width="18" height="18" viewBox="0 0 240 240" fill="#0088cc">
-      <path d="M120 0C53.73 0 0 53.73 0 120s53.73 120 120 120 120-53.73 120-120S186.27 0 120 0zm57.49 84.08l-18.39 87.03c-1.39 6.56-5.05 8.21-10.24 5.12l-28.29-20.86-13.65 13.16c-1.51 1.51-2.77 2.77-5.06 2.77l1.81-25.72 46.78-42.26c2.03-1.81-.44-2.83-3.15-1.02l-57.68 36.27-24.79-7.74c-5.37-1.68-5.48-5.37 1.12-7.96l96.43-37.17c4.47-1.69 8.37 1.02 6.87 7.37z"/>
-    </svg>
-    Telegram
-  </a>
 </div>
 
 <!-- FOOTER -->
@@ -352,8 +333,53 @@
   </div>
 </footer>
 
-<script src="/static/js/bike-detail.js"></script>
-<script src="/static/js/autocomplete.js"></script>
 <script src="/static/js/navbar.js"></script>
+<script src="/static/js/catalog.js"></script>
+<script src="/static/js/autocomplete.js"></script>
+<script>
+  function makeToggle(cls, btnId) {
+    return function() {
+      const hidden = document.querySelectorAll('.' + cls);
+      const btn = document.getElementById(btnId);
+      if (!btn) return;
+      const isExpanded = btn.dataset.expanded === '1';
+      hidden.forEach(function(el) { el.style.display = isExpanded ? '' : 'flex'; });
+      btn.dataset.expanded = isExpanded ? '' : '1';
+      btn.textContent = isExpanded ? btn.dataset.more : 'Сховати ▴';
+    };
+  }
+  var toggleBrands = makeToggle('brand-hidden', 'brand-more-btn');
+  var toggleColors = makeToggle('color-hidden', 'color-more-btn');
+  var toggleSizes  = makeToggle('size-hidden',  'size-more-btn');
+  (function() {
+    ['brand-more-btn','color-more-btn','size-more-btn'].forEach(function(id) {
+      var btn = document.getElementById(id);
+      if (btn) btn.dataset.more = btn.textContent.trim();
+    });
+  })();
+  function applySort(v) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('sort', v);
+    window.location = url.toString();
+  }
+  function toggleFilters() {
+    const sidebar = document.querySelector('.filters-sidebar');
+    const overlay = document.getElementById('filter-overlay');
+    const open = sidebar.classList.toggle('open');
+    overlay.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  var _shown = 13;
+  function showMore() {
+    const cards = document.querySelectorAll('.hidden-card');
+    let count = 0;
+    cards.forEach(function(c) {
+      if (count < 13) { c.style.display = ''; c.classList.remove('hidden-card'); count++; }
+    });
+    if (!document.querySelector('.hidden-card')) {
+      document.getElementById('show-more-wrap').style.display = 'none';
+    }
+  }
+</script>
 </body>
 </html>

@@ -21,10 +21,14 @@
   <nav class="sidebar-nav">
     <div class="nav-section">Головне</div>
     <a href="/admin" class="nav-item active">📊 Дашборд</a>
-    <a href="/admin/catalog" class="nav-item">📋 Каталог</a>
+    <a href="/admin/catalog" class="nav-item">📋 Каталог мото</a>
+    <a href="/admin/gear" class="nav-item">🦺 Мотоекіпіровка</a>
+    <a href="/admin/parts" class="nav-item">🔧 Запчастини</a>
 
     <div class="nav-section">Додати</div>
     <a href="/admin/add" class="nav-item">➕ Додати мото</a>
+    <a href="/admin/gear/add" class="nav-item">➕ Додати екіпіровку</a>
+    <a href="/admin/parts/add" class="nav-item">➕ Додати запчастину</a>
     <a href="/admin/brands" class="nav-item">➕ Додати бренди</a>
     <a href="/admin/hero" class="nav-item">➕ Додати фонові зображення</a>
 
@@ -55,7 +59,7 @@
       <div class="stat-icon green">🏍</div>
       <div class="stat-body">
         <div class="stat-num">{{ total }}</div>
-        <div class="stat-label">Всього оголошень</div>
+        <div class="stat-label">Мото оголошень</div>
       </div>
     </div>
     <div class="stat-card">
@@ -66,17 +70,17 @@
       </div>
     </div>
     <div class="stat-card">
-      <div class="stat-icon orange">🏍</div>
+      <div class="stat-icon orange">🦺</div>
       <div class="stat-body">
-        <div class="stat-num">{{ motos }}</div>
-        <div class="stat-label">Мотоцикли</div>
+        <div class="stat-num">{{ gear_total }}</div>
+        <div class="stat-label">Екіпіровка</div>
       </div>
     </div>
     <div class="stat-card">
-      <div class="stat-icon teal">🛵</div>
+      <div class="stat-icon teal">🔧</div>
       <div class="stat-body">
-        <div class="stat-num">{{ mopeds }}</div>
-        <div class="stat-label">Мопеди / Скутери</div>
+        <div class="stat-num">{{ parts_total }}</div>
+        <div class="stat-label">Запчастини</div>
       </div>
     </div>
     <div class="stat-card">
@@ -94,9 +98,17 @@
     <div class="panel">
       <div class="panel-header">Швидкі дії</div>
       <div class="panel-body">
+        <div style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Додати</div>
+        <div class="quick-actions" style="margin-bottom:16px;">
+          <a href="/admin/add" class="qa-btn"><span>➕</span>Мотоцикл</a>
+          <a href="/admin/gear/add" class="qa-btn"><span>➕</span>Екіпіровку</a>
+          <a href="/admin/parts/add" class="qa-btn"><span>➕</span>Запчастину</a>
+        </div>
+        <div style="font-size:11px;font-weight:700;color:#aaa;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Перейти</div>
         <div class="quick-actions">
-          <a href="/admin/add" class="qa-btn"><span>➕</span>Додати мотоцикл</a>
-          <a href="/admin/catalog" class="qa-btn"><span>📋</span>Весь каталог</a>
+          <a href="/admin/catalog" class="qa-btn"><span>📋</span>Каталог мото</a>
+          <a href="/admin/gear" class="qa-btn"><span>📋</span>Екіпіровка</a>
+          <a href="/admin/parts" class="qa-btn"><span>📋</span>Запчастини</a>
           <a href="/admin/brands" class="qa-btn"><span>🏷</span>Бренди</a>
           <a href="/admin/hero" class="qa-btn"><span>🖼</span>Фонові зображення</a>
           <a href="/admin/reviews" class="qa-btn"><span>💬</span>Відгуки{% if unread %} ({{ unread }}){% endif %}</a>
@@ -107,12 +119,13 @@
     <div class="panel">
       <div class="panel-header">За категоріями</div>
       <div class="cat-list">
-        {% set cats = [("🏍 Мотоцикли", motos), ("🛵 Мопеди", mopeds), ("🚜 Квадроцикли", quads)] %}
+        {% set grand_total = total + gear_total + parts_total %}
+        {% set cats = [("Мотоцикли", motos), ("Мопеди / Скутери", mopeds), ("Квадроцикли", quads), ("Екіпіровка", gear_total), ("Запчастини", parts_total)] %}
         {% for label, count in cats %}
         <div class="cat-item">
           <div class="cat-item-left">{{ label }}</div>
           <div class="cat-bar-wrap">
-            <div class="cat-bar" style="width:{{ ((count / total * 100) | round | int) if total else 0 }}%"></div>
+            <div class="cat-bar" style="width:{{ ((count / grand_total * 100) | round | int) if grand_total else 0 }}%"></div>
           </div>
           <div class="cat-num">{{ count }}</div>
         </div>
@@ -124,7 +137,7 @@
 
   <!-- RECENT BIKES -->
   <div class="panel recent-panel">
-    <div class="panel-header">Останні додані</div>
+    <div class="panel-header">Останні додані мотоцикли</div>
 
     <!-- Desktop table -->
     <table class="recent-table">
@@ -141,7 +154,7 @@
             {% else %}<div class="td-photo" style="display:flex;align-items:center;justify-content:center;color:#ccc;font-size:16px;">📷</div>{% endif %}
           </td>
           <td><div class="td-name">{{ bike.name }}</div><div class="td-sub">{{ bike.year }} · {{ bike.color }}</div></td>
-          <td>{{ {"moto":"🏍 Мото","moped":"🛵 Мопед","quad":"🚜 Квадро"}.get(bike.category, bike.category) }}</td>
+          <td>{{ {"moto":"Мото","moped":"Мопед","quad":"Квадро"}.get(bike.category, bike.category) }}</td>
           <td style="font-weight:700;">{{ "{:,}".format(bike.price).replace(",", " ") }} ₴</td>
           <td>{% set _s = bike.status or ('available' if bike.available else 'sold') %}<span class="badge {% if _s == 'available' %}badge-yes{% elif _s == 'sold' %}badge-no{% else %}badge-status{% endif %}">{% if _s == 'available' %}В наявності{% elif _s == 'in_transit' %}В дорозі{% elif _s == 'reserved' %}Під завдатком{% else %}Продано{% endif %}</span></td>
           <td>

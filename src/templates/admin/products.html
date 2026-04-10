@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Товари — VOLE MOTO Admin</title>
+  <link rel="stylesheet" href="/static/admin/css/admin.css">
+  <link rel="stylesheet" href="/static/admin/css/admin_mobile.css">
+</head>
+<body>
+
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-text">VOLE <span>MOTO</span></div>
+    <small>Admin Panel</small>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Головне</div>
+    <a href="/admin" class="nav-item">📊 Дашборд</a>
+    <a href="/admin/catalog" class="nav-item">📋 Каталог мото</a>
+    <a href="/admin/products" class="nav-item active">🛍 Товари</a>
+
+    <div class="nav-section">Додати</div>
+    <a href="/admin/add" class="nav-item">➕ Додати мото</a>
+    <a href="/admin/gear/add" class="nav-item">➕ Додати екіпіровку</a>
+    <a href="/admin/parts/add" class="nav-item">➕ Додати запчастину</a>
+    <a href="/admin/brands" class="nav-item">➕ Додати бренди</a>
+    <a href="/admin/hero" class="nav-item">➕ Додати фонові зображення</a>
+
+    <div class="nav-section">Клієнти</div>
+    <a href="/admin/reviews" class="nav-item">💬 Відгуки {% if unread %}<span class="nav-badge">{{ unread }}</span>{% endif %}</a>
+
+    <div class="nav-section">Сайт</div>
+    <a href="/" target="_blank" class="nav-item">🌐 Переглянути сайт</a>
+  </nav>
+  <div class="sidebar-bottom">
+    <a href="/admin/logout" class="logout">🚪 Вийти</a>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <button class="admin-burger" id="admin-burger" aria-label="Меню"><span></span><span></span><span></span></button>
+    <h1>Товари</h1>
+    <a href="/admin/products/add" class="btn-add">＋ Додати товар</a>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="stat-label">Всього</div>
+      <div class="stat-num">{{ total }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Шоломи</div>
+      <div class="stat-num green">{{ helmets }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Рукавиці</div>
+      <div class="stat-num green">{{ gloves }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Екіпіровка</div>
+      <div class="stat-num green">{{ gear }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Запчастини</div>
+      <div class="stat-num green">{{ parts }}</div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-header">
+      <h2 id="table-title">Всі товари ({{ total }})</h2>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-box">
+        <input type="text" id="search-input" placeholder="Пошук за назвою, артикулом, брендом..." oninput="applyFilters()">
+        <button onclick="document.getElementById('search-input').value=''; applyFilters()">✕</button>
+      </div>
+      <div class="filter-tabs">
+        <button class="filter-tab active" data-cat="all"        onclick="setCat(this,'all')">Всі</button>
+        <button class="filter-tab"        data-cat="helmets"    onclick="setCat(this,'helmets')">⛑️ Шоломи</button>
+        <button class="filter-tab"        data-cat="gloves"     onclick="setCat(this,'gloves')">🧤 Рукавиці</button>
+        <button class="filter-tab"        data-cat="gear"       onclick="setCat(this,'gear')">🦺 Екіпіровка</button>
+        <button class="filter-tab"        data-cat="parts_new"  onclick="setCat(this,'parts_new')">🔧 Запч. нові</button>
+        <button class="filter-tab"        data-cat="parts_used" onclick="setCat(this,'parts_used')">🔩 Запч. б/у</button>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Фото</th>
+          <th>Назва / Артикул</th>
+          <th>Категорія</th>
+          <th>Розмір / Сумісність</th>
+          <th>Ціна</th>
+          <th>Статус</th>
+          <th>Дії</th>
+        </tr>
+      </thead>
+      <tbody id="bikes-tbody">
+        {% set cat_labels = {
+          'helmets':'⛑️ Мотошолом',
+          'gloves':'🧤 Рукавиці',
+          'gear':'🦺 Екіпіровка',
+          'parts_new':'🔧 Запчастини нові',
+          'parts_used':'🔩 Запчастини б/у'
+        } %}
+        {% for p in products %}
+        <tr data-cat="{{ p.category }}"
+            data-search="{{ (p.name ~ ' ' ~ p.article ~ ' ' ~ p.brand)|lower }}">
+          <td>
+            {% if p.photo %}
+            <img src="{{ p.photo }}" class="td-photo" alt="">
+            {% else %}
+            <div class="td-photo" style="display:flex;align-items:center;justify-content:center;color:#ccc;font-size:18px;">📷</div>
+            {% endif %}
+          </td>
+          <td>
+            <div class="td-name">{{ p.name }}</div>
+            <div class="td-sub">{{ p.brand }} · {{ p.condition }}</div>
+            {% if p.article %}<div class="td-article">{{ p.article }}</div>{% endif %}
+          </td>
+          <td>{{ cat_labels.get(p.category, p.category) }}</td>
+          <td>
+            {% if p.size %}{{ p.size }}{% endif %}
+            {% if p.compatibility %}<span style="color:#999;font-size:12px;">{{ p.compatibility[:40] }}{% if p.compatibility|length > 40 %}…{% endif %}</span>{% endif %}
+          </td>
+          <td style="font-weight:700;">{{ "{:,}".format(p.price).replace(",", " ") }} ₴</td>
+          <td>
+            {% set _s = p.status or ('available' if p.available else 'sold') %}
+            <span class="badge {% if _s == 'available' %}badge-yes{% elif _s == 'sold' %}badge-no{% else %}badge-status{% endif %}">
+              {% if _s == 'available' %}В наявності{% elif _s == 'in_transit' %}В дорозі{% elif _s == 'reserved' %}Під замовлення{% else %}Продано{% endif %}
+            </span>
+          </td>
+          <td>
+            <a href="/admin/products/edit/{{ p.id }}" class="btn-edit">Ред.</a>
+            <form method="post" action="/admin/products/delete/{{ p.id }}" style="display:inline;" onsubmit="return confirm('Видалити {{ p.name }}?')">
+              <button type="submit" class="btn-del">Вид.</button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" style="text-align:center;color:#bbb;padding:40px;">Товарів ще немає.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div id="no-results" class="no-results" style="display:none;">Нічого не знайдено</div>
+
+    <!-- MOBILE CARDS -->
+    <div class="mobile-bike-list" id="mobile-bike-list">
+      {% for p in products %}
+      <div class="m-bike-card" data-cat="{{ p.category }}"
+           data-search="{{ (p.name ~ ' ' ~ p.article ~ ' ' ~ p.brand)|lower }}">
+        <div class="m-bike-photo">
+          {% if p.photo %}<img src="{{ p.photo }}" alt="">{% else %}📷{% endif %}
+        </div>
+        <div class="m-bike-info">
+          <div class="m-bike-name">{{ p.name }}</div>
+          <div class="m-bike-meta">
+            {{ p.brand }} ·
+            {% set _s = p.status or ('available' if p.available else 'sold') %}
+            <span class="badge {% if _s == 'available' %}badge-yes{% elif _s == 'sold' %}badge-no{% else %}badge-status{% endif %}" style="font-size:10px;padding:1px 7px;">
+              {% if _s == 'available' %}В наявності{% elif _s == 'in_transit' %}В дорозі{% elif _s == 'reserved' %}Під замовлення{% else %}Продано{% endif %}
+            </span>
+          </div>
+        </div>
+        <div class="m-bike-price">{{ "{:,}".format(p.price).replace(",", " ") }} ₴</div>
+        <div class="m-bike-actions">
+          <a href="/admin/products/edit/{{ p.id }}" class="btn-edit">✏️</a>
+          <form method="post" action="/admin/products/delete/{{ p.id }}" style="display:inline;"
+                onsubmit="return confirm('Видалити {{ p.name }}?')">
+            <button type="submit" class="btn-del">🗑</button>
+          </form>
+        </div>
+      </div>
+      {% else %}
+      <div class="no-results">Товарів ще немає.</div>
+      {% endfor %}
+    </div>
+    <div id="mobile-no-results" class="no-results" style="display:none;">Нічого не знайдено</div>
+  </div>
+</div>
+
+<script src="/static/admin/js/catalog.js"></script>
+<script src="/static/admin/js/admin_mobile.js"></script>
+</body>
+</html>

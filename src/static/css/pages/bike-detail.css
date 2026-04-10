@@ -6,16 +6,14 @@ body { background: #f5f6f8; }
 .breadcrumbs span { margin: 0 6px; }
 
 .detail-page { max-width: 1200px; margin: 0 auto 60px; padding: 0 24px; display: grid; grid-template-columns: 1fr 380px; gap: 12px; align-items: start; }
-.detail-page > .detail-gallery { grid-column: 1; grid-row: 1; min-width: 0; }
+.detail-page > .detail-left    { grid-column: 1; grid-row: 1; min-width: 0; display: flex; flex-direction: column; gap: 12px; }
 .detail-page > .right-panel    { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
-.detail-page > .desc-block     { grid-column: 1; grid-row: 2; min-width: 0; }
 
 @media (max-width: 960px) {
-  .detail-page { grid-template-columns: 1fr; gap: 10px; }
-  .detail-page > .right-panel { display: contents; }
-  .detail-page > .detail-gallery,
-  .detail-page > .desc-block  { grid-column: auto; grid-row: auto; }
-  .detail-gallery { order: 1; }
+  .detail-page { grid-template-columns: 1fr; gap: 10px; overflow: hidden; }
+  .detail-page > .detail-left  { grid-column: auto; grid-row: auto; display: contents; }
+  .detail-page > .right-panel  { display: contents; grid-row: auto; }
+  .detail-gallery { order: 1; min-width: 0; }
   .info-card      { order: 2; }
   .desc-block     { order: 3; }
   .contact-card   { order: 4; }
@@ -24,6 +22,8 @@ body { background: #f5f6f8; }
 .gallery { background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #e8e8e8; }
 .gallery-main { position: relative; background: #f0f0f0; aspect-ratio: 4/3; overflow: hidden; }
 .gallery-main img { width: 100%; height: 100%; object-fit: cover; display: none; cursor: zoom-in; }
+.gallery--contain .gallery-main img { object-fit: contain; background: #fff; }
+.gallery--contain .g-thumb img { object-fit: contain; background: #f5f5f5; }
 .gallery-main img.active { display: block; }
 .gallery-no-photo { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 80px; color: #ddd; }
 .g-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,.4); color: #fff; border: none; width: 44px; height: 44px; border-radius: 50%; font-size: 24px; cursor: pointer; z-index: 2; display: flex; align-items: center; justify-content: center; transition: background .15s; }
@@ -31,7 +31,7 @@ body { background: #f5f6f8; }
 .g-prev { left: 14px; }
 .g-next { right: 14px; }
 .g-counter { position: absolute; bottom: 12px; right: 14px; background: rgba(0,0,0,.5); color: #fff; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; }
-.gallery-thumbs { display: flex; gap: 8px; padding: 12px; flex-wrap: nowrap; overflow-x: auto; border-top: 1px solid #f0f0f0; }
+.gallery-thumbs { display: flex; gap: 8px; padding: 12px; flex-wrap: nowrap; overflow-x: auto; border-top: 1px solid #f0f0f0; max-width: 100%; min-width: 0; }
 .gallery-thumbs::-webkit-scrollbar { height: 4px; }
 .gallery-thumbs::-webkit-scrollbar-thumb { background: #ddd; border-radius: 2px; }
 .g-thumb { width: 76px; height: 58px; border-radius: 6px; overflow: hidden; border: 2px solid transparent; cursor: pointer; flex-shrink: 0; transition: border-color .15s; }
@@ -40,7 +40,6 @@ body { background: #f5f6f8; }
 .g-thumb:hover { border-color: #aaa; }
 
 .desc-block { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 24px; }
-@media (min-width: 961px) { .desc-block { margin-top: -163px; } }
 .desc-block h3 { font-size: 15px; font-weight: 800; color: #111; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
 .g-yt-slide { display: none; position: absolute; inset: 0; background: #000; z-index: 1; }
 .g-yt-slide.active { display: block; }
@@ -63,7 +62,7 @@ body { background: #f5f6f8; }
 
 .price-row { display: flex; align-items: baseline; gap: 8px; padding: 14px 0; border-top: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0; margin-bottom: 16px; }
 .price-main { font-size: 32px; font-weight: 800; color: #111; }
-.price-cur { font-size: 18px; color: #999; font-weight: 600; }
+.price-cur { font-size: 18px; color: #2d9e00; font-weight: 600; }
 
 .specs-list { display: flex; flex-direction: column; gap: 0; }
 .specs-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f5f5f5; gap: 12px; }

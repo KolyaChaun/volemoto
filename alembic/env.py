@@ -18,6 +18,7 @@ import src.models.brand       # noqa: F401, E402
 import src.models.review      # noqa: F401, E402
 import src.models.hero_slide  # noqa: F401, E402
 import src.models.admin       # noqa: F401, E402
+import src.models.product     # noqa: F401, E402
 
 config = context.config
 

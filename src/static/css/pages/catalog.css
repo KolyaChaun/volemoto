@@ -1,26 +1,29 @@
-body { background: #f5f6f8; }
+body { background: #f4f5f7; }
 
 .page-wrap { max-width: 1280px; margin: 0 auto; padding: 0 24px 60px; }
 
-.breadcrumbs { padding: 14px 0; font-size: 13px; color: #999; }
-.breadcrumbs a { color: #999; text-decoration: none; }
+.breadcrumbs { padding: 16px 0 12px; font-size: 13px; color: #bbb; }
+.breadcrumbs a { color: #bbb; text-decoration: none; transition: color .15s; }
 .breadcrumbs a:hover { color: #2d9e00; }
 .breadcrumbs span { margin: 0 6px; }
 
 .cat-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; gap: 16px; flex-wrap: wrap; }
 .cat-header h1 { font-size: 26px; font-weight: 800; color: #111; }
-.cat-header-count { font-size: 14px; color: #999; font-weight: 400; margin-left: 10px; }
+.cat-header-count {
+  font-size: 12px; color: #2d9e00; font-weight: 700;
+  background: #edf8e5; padding: 3px 10px; border-radius: 20px;
+  margin-left: 10px; vertical-align: middle;
+}
 
 .sort-row { display: flex; align-items: center; gap: 10px; }
 .sort-label { font-size: 13px; color: #999; white-space: nowrap; }
-.sort-select { padding: 8px 14px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 13px; font-weight: 600; color: #333; background: #fff; cursor: pointer; outline: none; }
+.sort-select { padding: 8px 14px; border: 1.5px solid #e8e8e8; border-radius: 10px; font-size: 13px; font-weight: 600; color: #333; background: #fff; cursor: pointer; outline: none; transition: border-color .15s; }
 .sort-select:focus { border-color: #2d9e00; }
-/* When wrapped by custom select, sort trigger gets bolder text */
 .sort-row .cs-trigger { font-weight: 600; }
 
 .catalog-layout { display: grid; grid-template-columns: 260px 1fr; gap: 24px; align-items: start; }
 
-.filters-sidebar { background: #fff; border: 1px solid #e8e8e8; border-radius: 12px; padding: 20px; position: sticky; top: 80px; }
+.filters-sidebar { background: #fff; border: none; border-radius: 16px; padding: 20px; position: sticky; top: 80px; box-shadow: 0 2px 12px rgba(0,0,0,.06); }
 .filters-title { font-size: 14px; font-weight: 800; color: #111; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; }
 .filters-reset { font-size: 12px; color: #2d9e00; text-decoration: none; font-weight: 600; }
 .filters-reset:hover { text-decoration: underline; }
@@ -29,11 +32,11 @@ body { background: #f5f6f8; }
 .filter-group-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #bbb; margin-bottom: 10px; }
 
 .filter-range { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.filter-range input { width: 100%; padding: 8px 10px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 13px; outline: none; }
+.filter-range input { width: 100%; padding: 8px 10px; border: 1.5px solid #e8e8e8; border-radius: 10px; font-size: 13px; outline: none; transition: border-color .15s; }
 .filter-range input:focus { border-color: #2d9e00; }
 .filter-range input::placeholder { color: #ccc; }
 
-.filter-select { width: 100%; padding: 8px 12px; border: 1px solid #e0e0e0; border-radius: 8px; font-size: 13px; outline: none; background: #fff; cursor: pointer; }
+.filter-select { width: 100%; padding: 8px 12px; border: 1.5px solid #e8e8e8; border-radius: 10px; font-size: 13px; outline: none; background: #fff; cursor: pointer; transition: border-color .15s; }
 .filter-select:focus { border-color: #2d9e00; }
 
 /* ── Custom brand select ── */
@@ -71,9 +74,41 @@ body { background: #f5f6f8; }
 
 .filter-checkbox { display: flex; align-items: center; gap: 8px; font-size: 13px; color: #444; cursor: pointer; }
 .filter-checkbox input { width: 16px; height: 16px; accent-color: #2d9e00; cursor: pointer; }
+.filter-count { margin-left: auto; font-size: 11px; color: #aaa; font-weight: 600; background: #f0f0f0; border-radius: 20px; padding: 1px 7px; }
 
-.btn-apply { width: 100%; background: #2d9e00; color: #fff; border: none; padding: 11px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 4px; }
-.btn-apply:hover { background: #259000; }
+.btn-apply { width: 100%; background: #2d9e00; color: #fff; border: none; padding: 12px; border-radius: 50px; font-size: 14px; font-weight: 700; cursor: pointer; margin-top: 8px; transition: background .15s, box-shadow .15s; box-shadow: 0 4px 12px rgba(45,158,0,.25); }
+.btn-apply:hover { background: #259000; box-shadow: 0 6px 18px rgba(45,158,0,.35); }
+
+.brand-list { display: flex; flex-direction: column; gap: 6px; }
+.brand-item { display: flex !important; }
+.brand-hidden, .color-hidden, .size-hidden { display: none !important; }
+.brand-show-more { width: 100%; margin-top: 8px; background: none; border: 1px solid #e0e0e0; border-radius: 8px; padding: 7px 12px; font-size: 12px; font-weight: 600; color: #2d9e00; cursor: pointer; text-align: center; transition: background .15s, border-color .15s; }
+.brand-show-more:hover { background: #f4fbf0; border-color: #2d9e00; }
+
+/* ── Parts subcategory filter ── */
+.subcat-list { display: flex; flex-direction: column; gap: 2px; }
+.subcat-group { display: flex; flex-direction: column; }
+.subcat-parent {
+  display: block; padding: 8px 10px; border-radius: 8px;
+  font-size: 13px; font-weight: 700; color: #333;
+  cursor: pointer; transition: background .12s, color .12s;
+  user-select: none;
+}
+.subcat-parent:hover { background: #f4fbf0; color: #2d9e00; }
+.subcat-parent.active { background: #edf8e5; color: #2d9e00; }
+.subcat-children {
+  display: none; flex-direction: column; gap: 1px;
+  padding-left: 12px; margin-bottom: 2px;
+}
+.subcat-children.open { display: flex; }
+.subcat-child {
+  display: block; padding: 6px 10px; border-radius: 6px;
+  font-size: 12px; font-weight: 500; color: #666;
+  cursor: pointer; transition: background .12s, color .12s;
+  user-select: none; border-left: 2px solid #f0f0f0;
+}
+.subcat-child:hover { background: #f4fbf0; color: #2d9e00; border-left-color: #2d9e00; }
+.subcat-child.active { background: #edf8e5; color: #2d9e00; font-weight: 700; border-left-color: #2d9e00; }
 
 .catalog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 
@@ -192,6 +227,29 @@ body { background: #f5f6f8; }
   }
   .sort-select:focus { border-color: #2d9e00; outline: none; }
 }
+
+/* ── Subcategory tabs (equipment / parts pages) ── */
+.cat-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 24px;
+}
+.cat-tab {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 18px;
+  border-radius: 50px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  background: #f0f1f3;
+  border: 2px solid transparent;
+  text-decoration: none;
+  transition: all .15s;
+}
+.cat-tab:hover  { background: #e6f5dc; color: #2d9e00; }
+.cat-tab.active { background: #2d9e00; color: #fff; border-color: #2d9e00; }
 
 @media (max-width: 600px) { .catalog-grid { grid-template-columns: 1fr; } }
 
