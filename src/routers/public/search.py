@@ -1,10 +1,11 @@
 from fastapi import APIRouter, Depends, Request
 from fastapi.responses import HTMLResponse, JSONResponse
-from sqlalchemy import func
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
 from src.constants import GEAR_CATEGORIES
 from src.core.config import templates
+from src.core.search_utils import normalize_query
 from src.db.database import get_db
 from src.models.bike import Bike
 from src.models.product import Product
@@ -12,40 +13,57 @@ from src.models.product import Product
 router = APIRouter(tags=["Сайт — пошук"])
 
 
+def _bike_conditions(terms: list[str]):
+    conditions = []
+    for term in terms:
+        like = f"%{term}%"
+        conditions.extend(
+            [
+                func.lower(Bike.name).like(like),
+                func.lower(Bike.brand).like(like),
+                func.lower(Bike.model).like(like),
+                func.lower(Bike.article).like(like),
+                func.lower(Bike.color).like(like),
+            ]
+        )
+    return or_(*conditions)
+
+
+def _product_conditions(terms: list[str]):
+    conditions = []
+    for term in terms:
+        like = f"%{term}%"
+        conditions.extend(
+            [
+                func.lower(Product.name).like(like),
+                func.lower(Product.brand).like(like),
+                func.lower(Product.model).like(like),
+                func.lower(Product.article).like(like),
+                func.lower(Product.compatibility).like(like),
+                func.lower(Product.subcategory).like(like),
+            ]
+        )
+    return or_(*conditions)
+
+
 @router.get("/search", response_class=HTMLResponse)
 def search_page(request: Request, q: str = "", db: Session = Depends(get_db)):
     q = q.strip()
     bikes, products = [], []
     if q:
-        term = f"%{q.lower()}%"
+        terms = normalize_query(q)
         bikes = (
             db.query(Bike)
-            .filter(
-                func.lower(Bike.name).like(term)
-                | func.lower(Bike.brand).like(term)
-                | func.lower(Bike.model).like(term)
-                | func.lower(Bike.article).like(term)
-                | func.lower(Bike.color).like(term)
-            )
+            .filter(_bike_conditions(terms))
             .order_by(Bike.id.desc())
             .all()
         )
-        q_lower = q.lower()
-        products = [
-            p
-            for p in db.query(Product).order_by(Product.id.desc()).all()
-            if any(
-                q_lower in (f or "").lower()
-                for f in [
-                    p.name,
-                    p.brand,
-                    p.subcategory,
-                    p.article,
-                    p.compatibility,
-                    p.model,
-                ]
-            )
-        ]
+        products = (
+            db.query(Product)
+            .filter(_product_conditions(terms))
+            .order_by(Product.id.desc())
+            .all()
+        )
     equipment = [p for p in products if p.category in GEAR_CATEGORIES]
     parts = [p for p in products if p.category not in GEAR_CATEGORIES]
     return templates.TemplateResponse(
@@ -65,34 +83,22 @@ def search_page(request: Request, q: str = "", db: Session = Depends(get_db)):
 def api_search(q: str = "", db: Session = Depends(get_db)):
     if len(q.strip()) < 2:
         return JSONResponse([])
-    term = f"%{q.strip().lower()}%"
+
+    terms = normalize_query(q)
     bikes = (
         db.query(Bike)
-        .filter(
-            func.lower(Bike.name).like(term)
-            | func.lower(Bike.brand).like(term)
-            | func.lower(Bike.model).like(term)
-            | func.lower(Bike.article).like(term)
-        )
+        .filter(_bike_conditions(terms))
+        .order_by(Bike.id.desc())
         .limit(5)
         .all()
     )
-    q_lower = q.strip().lower()
-    products = [
-        p
-        for p in db.query(Product).all()
-        if any(
-            q_lower in (f or "").lower()
-            for f in [
-                p.name,
-                p.brand,
-                p.subcategory,
-                p.article,
-                p.compatibility,
-                p.model,
-            ]
-        )
-    ][:5]
+    products = (
+        db.query(Product)
+        .filter(_product_conditions(terms))
+        .order_by(Product.id.desc())
+        .limit(5)
+        .all()
+    )
     return JSONResponse(
         [
             {

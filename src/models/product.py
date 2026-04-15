@@ -29,9 +29,7 @@ class Product(Base):
     photo = Column(String(300), default="")
     category = Column(String(30))
     size = Column(String(100), default="")
-    compatibility = Column(
-        String(500), default=""
-    )
+    compatibility = Column(String(500), default="")
     model = Column(String(200), default="")
     color = Column(String(100), default="")
     subcategory = Column(String(100), default="")

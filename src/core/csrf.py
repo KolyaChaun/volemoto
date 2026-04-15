@@ -39,7 +39,9 @@ class CSRFMiddleware(BaseHTTPMiddleware):
                 form_token = ""
 
             if not form_token or not hmac.compare_digest(token, form_token):
-                return HTMLResponse("403 Forbidden: CSRF validation failed", status_code=403)
+                return HTMLResponse(
+                    "403 Forbidden: CSRF validation failed", status_code=403
+                )
 
         response = await call_next(request)
         response.set_cookie(CSRF_COOKIE, token, httponly=False, samesite="lax")

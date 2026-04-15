@@ -44,7 +44,9 @@ def save_single_file(upload: UploadFile, folder: str) -> str:
     ext = upload.filename.rsplit(".", 1)[-1].lower()
     data = upload.file.read(MAX_FILE_SIZE + 1)
     if len(data) > MAX_FILE_SIZE:
-        raise ValueError(f"Файл перевищує максимальний розмір {MAX_FILE_SIZE // 1024 // 1024} МБ")
+        raise ValueError(
+            f"Файл перевищує максимальний розмір {MAX_FILE_SIZE // 1024 // 1024} МБ"
+        )
 
     if ext in HEIC_EXTENSIONS:
         data = _normalize_to_jpeg(data)

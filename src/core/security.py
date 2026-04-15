@@ -12,7 +12,6 @@ SESSION_MAX_AGE = 60 * 60 * 8
 _serializer = URLSafeTimedSerializer(settings.secret_key)
 
 
-
 def verify_password(password: str, password_hash: str) -> bool:
     return bcrypt.checkpw(password.encode(), password_hash.encode())
 
