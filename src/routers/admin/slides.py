@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, File, HTTPException, Request, UploadFile
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
@@ -11,6 +11,7 @@ from src.models.admin import Admin
 from src.models.hero_slide import HeroSlide
 from src.repositories.review_repo import ReviewRepository
 from src.services.file_service import delete_file_by_path, save_single_file
+from src.services.settings_service import get_settings, set_setting
 
 router = APIRouter(tags=["Адмін — слайди"])
 
@@ -22,10 +23,16 @@ def hero_page(
     _: Admin = Depends(require_admin),
 ):
     slides = db.query(HeroSlide).order_by(HeroSlide.sort_order, HeroSlide.id).all()
+    settings = get_settings(db)
     return templates.TemplateResponse(
         request,
         "admin/hero.html",
-        {"slides": slides, "unread": ReviewRepository(db).unread_count()},
+        {
+            "slides": slides,
+            "unread": ReviewRepository(db).unread_count(),
+            "sold_count": settings.get("sold_count", "620"),
+            "subscribers_count": settings.get("subscribers_count", "13 600"),
+        },
     )
 
 
@@ -44,6 +51,20 @@ async def hero_upload(
         db.add(HeroSlide(path=path, sort_order=max_order + i))
     db.commit()
     return RedirectResponse("/admin/hero", status_code=302)
+
+
+@router.post("/hero/settings")
+def hero_settings_update(
+    request: Request,
+    sold_count: str = Form(...),
+    subscribers_count: str = Form(...),
+    db: Session = Depends(get_db),
+    _: Admin = Depends(require_admin),
+):
+    set_setting(db, "sold_count", sold_count.strip())
+    set_setting(db, "subscribers_count", subscribers_count.strip())
+    db.commit()
+    return RedirectResponse("/admin", status_code=302)
 
 
 @router.post("/hero/delete/{slide_id}")

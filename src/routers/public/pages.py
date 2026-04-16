@@ -9,6 +9,7 @@ from src.models.bike import Bike
 from src.models.brand import Brand
 from src.models.hero_slide import HeroSlide
 from src.models.review import Review
+from src.services.settings_service import fmt_number, get_settings
 
 router = APIRouter(tags=["Сайт — сторінки"])
 
@@ -20,6 +21,7 @@ def index(request: Request, db: Session = Depends(get_db)):
     quads = db.query(Bike).filter_by(category="quad").limit(6).all()
     slides = db.query(HeroSlide).order_by(HeroSlide.sort_order, HeroSlide.id).all()
     recent_reviews = db.query(Review).order_by(Review.id.desc()).limit(4).all()
+    settings = get_settings(db)
     return templates.TemplateResponse(
         request,
         "pages/index.html",
@@ -29,6 +31,8 @@ def index(request: Request, db: Session = Depends(get_db)):
             "quads": quads,
             "slide_urls": [s.path for s in slides] if slides else FALLBACK_SLIDES,
             "recent_reviews": recent_reviews,
+            "sold_count": settings.get("sold_count", "620"),
+            "subscribers_count": fmt_number(settings.get("subscribers_count", "13600")),
         },
     )
 

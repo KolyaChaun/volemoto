@@ -37,7 +37,7 @@
     <a href="/admin/gear/add" class="nav-item">➕ Додати екіпіровку</a>
     <a href="/admin/parts/add" class="nav-item">➕ Додати запчастину</a>
     <a href="/admin/brands" class="nav-item">➕ Додати бренди</a>
-    <a href="/admin/hero" class="nav-item active">➕ Додати фонові зображення</a>
+    <a href="/admin/hero" class="nav-item active">➕ Додати зміни на головній сторінці</a>
     <div class="nav-section">Клієнти</div>
     <a href="/admin/reviews" class="nav-item">💬 Відгуки {% if unread %}<span class="nav-badge">{{ unread }}</span>{% endif %}</a>
     <div class="nav-section">Сайт</div>
@@ -52,11 +52,30 @@
   <div class="topbar">
     <button class="admin-burger" id="admin-burger" aria-label="Меню"><span></span><span></span><span></span></button>
     <a href="/admin" class="back">← Назад</a>
-    <h1>Фотові зображення слайдера</h1>
+    <h1>Зміни на головній сторінці</h1>
   </div>
 
   <div class="form-card">
-    <form method="post" action="/admin/hero/upload" enctype="multipart/form-data">
+
+    <div class="form-section">Лічильники Hero-секції</div>
+    <form method="post" action="/admin/hero/settings">
+      <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Продано мотоциклів</label>
+          <input type="text" name="sold_count" value="{{ sold_count }}" placeholder="наприклад: 620 (+ додається автоматично)" required>
+        </div>
+        <div class="form-group">
+          <label>Підписників Instagram</label>
+          <input type="text" name="subscribers_count" value="{{ subscribers_count }}" placeholder="наприклад: 13 600" required>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-save">Зберегти</button>
+      </div>
+    </form>
+
+    <form method="post" action="/admin/hero/upload" enctype="multipart/form-data" style="margin-top:32px;">
     <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
 
       <div class="form-section">Завантажити фото</div>
