@@ -94,6 +94,8 @@
 .nav-social-btn[aria-label="Instagram"]:hover { background: rgba(225,48,108,.12); }
 .nav-social-btn[aria-label="YouTube"]   { color: #FF0000; }
 .nav-social-btn[aria-label="YouTube"]:hover   { background: rgba(255,0,0,.1); }
+.nav-social-btn[aria-label="TikTok"]   { color: #010101; }
+.nav-social-btn[aria-label="TikTok"]:hover   { background: rgba(1,1,1,.1); }
 
 /* ── Map button ── */
 .nav-map-btn {
@@ -297,6 +299,7 @@
 .mobile-social-btn[aria-label="Telegram"]  { color: #2CA5E0; background: rgba(44,165,224,.1); }
 .mobile-social-btn[aria-label="Instagram"] { color: #E1306C; background: rgba(225,48,108,.1); }
 .mobile-social-btn[aria-label="YouTube"]   { color: #FF0000; background: rgba(255,0,0,.07); }
+.mobile-social-btn[aria-label="TikTok"]   { color: #010101; background: rgba(1,1,1,.07); }
 .mobile-social-btn[aria-label="Карта"]     { color: #2d9e00; background: #f0fbea; }
 
 /* ── Mobile phone link in drawer ── */
