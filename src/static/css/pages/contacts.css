@@ -13,19 +13,21 @@ body { background: #f5f6f8; }
 .info-sub { font-size: 13px; color: #999; margin-top: 3px; }
 
 .socials-row { display: flex; gap: 10px; margin-top: 32px; flex-wrap: wrap; }
+.socials-row .soc-btn { flex: 1; justify-content: center; }
 .soc-btn { display: flex; align-items: center; gap: 7px; padding: 9px 18px; border-radius: 8px; font-size: 13px; font-weight: 700; text-decoration: none; transition: opacity .15s; color: #fff; }
 .soc-btn:hover { opacity: .85; }
 .soc-btn.ig { background: #e1306c; }
+.soc-btn.tt { background: #010101; }
 .soc-btn.tg { background: #0088cc; }
 
-.map-box { border-radius: 12px; overflow: hidden; border: 1px solid #e0e0e0; box-shadow: 0 4px 20px rgba(0,0,0,.07); }
+.map-box { border-radius: 12px; overflow: hidden; border: 1px solid #e0e0e0; box-shadow: 0 4px 20px rgba(0,0,0,.07); box-sizing: border-box; width: 100%; }
 .map-box iframe { width: 100%; height: 420px; display: block; border: none; }
 .map-address { padding: 12px 18px; font-size: 13px; color: #666; border-top: 1px solid #f0f0f0; display: flex; align-items: center; gap: 6px; background: #fff; }
 
 .phone-bar { background: #2d9e00; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 72px; }
 .phone-bar-text { font-size: 13px; color: rgba(255,255,255,.75); }
 .phone-bar-num { font-size: 22px; font-weight: 800; color: #fff; text-decoration: none; letter-spacing: .02em; }
-.phone-bar-btn { background: #fff; color: #2d9e00; padding: 10px 24px; border-radius: 6px; font-size: 14px; font-weight: 800; text-decoration: none; white-space: nowrap; }
+.phone-bar-btn { background: #fff; color: #2d9e00; padding: 12px 32px; border-radius: 50px; font-size: 14px; font-weight: 700; text-decoration: none; white-space: nowrap; }
 .phone-bar-btn:hover { background: #f0f0f0; }
 
 /* ── Mobile sticky CTA ── */
@@ -75,6 +77,6 @@ body { background: #f5f6f8; }
   .contacts-left h1 { font-size: 22px; margin-bottom: 24px; }
   .info-value { font-size: 17px; }
   .map-box iframe { height: 260px; }
-  .socials-row { gap: 8px; }
-  .soc-btn { padding: 10px 14px; font-size: 13px; }
+  .socials-row { gap: 8px; flex-wrap: nowrap; }
+  .soc-btn { padding: 10px 8px; font-size: 12px; }
 }
