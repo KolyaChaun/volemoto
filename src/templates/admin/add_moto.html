@@ -90,7 +90,7 @@
         <div class="form-group">
           <label>Стан *</label>
           <select name="condition" required>
-            {% for cond in ["Відмінний", "Дуже добрий", "Добрий", "Задовільний"] %}
+            {% for cond in ["Нові", "Б/У"] %}
             <option value="{{ cond }}" {% if bike and bike.condition == cond %}selected{% endif %}>{{ cond }}</option>
             {% endfor %}
           </select>
@@ -183,5 +183,10 @@
 
 <script src="/static/admin/js/admin_mobile.js"></script>
 <script src="/static/js/file_input.js"></script>
+<script>
+document.querySelectorAll('input[type=number]').forEach(function(el) {
+  el.addEventListener('wheel', function(e) { e.preventDefault(); }, { passive: false });
+});
+</script>
 </body>
 </html>

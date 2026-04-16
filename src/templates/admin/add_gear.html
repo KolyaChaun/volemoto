@@ -195,6 +195,9 @@
 <script src="/static/admin/js/admin_mobile.js"></script>
 <script src="/static/js/file_input.js"></script>
 <script>
+document.querySelectorAll('input[type=number]').forEach(function(el) {
+  el.addEventListener('wheel', function(e) { e.preventDefault(); }, { passive: false });
+});
   const colorInput = document.getElementById('color-input');
   const colorTags  = document.getElementById('color-tags');
 

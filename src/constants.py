@@ -13,7 +13,7 @@ PARTS_CATEGORIES = {"parts_new", "parts_used"}
 
 ALL_CATEGORIES = BIKE_CATEGORIES | set(PRODUCT_CATEGORIES)
 
-BIKE_CONDITIONS = ["Відмінний", "Дуже добрий", "Добрий", "Задовільний"]
+BIKE_CONDITIONS = ["Нові", "Б/У"]
 PRODUCT_CONDITIONS = ["Нове", "Відмінний", "Дуже добрий", "Добрий", "Задовільний"]
 
 CATALOG_LABELS = {
