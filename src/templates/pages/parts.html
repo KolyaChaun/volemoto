@@ -252,7 +252,7 @@
               {% if item.compatibility %}<span title="{{ item.compatibility }}">{{ item.compatibility[:35] }}{% if item.compatibility|length > 35 %}…{% endif %}</span>{% endif %}
             </div>
             <div class="card-footer">
-              <div class="card-price">{{ "{:,}".format(item.price).replace(",", " ") }} <em>₴</em></div>
+              <div class="card-price">{{ "{:,}".format(item.price).replace(",", " ") }} <em>грн</em></div>
               <a href="/parts/{{ item.slug }}" class="btn-detail">Детальніше</a>
             </div>
           </div>

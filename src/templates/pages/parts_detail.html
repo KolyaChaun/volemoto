@@ -193,7 +193,7 @@
 
     <div class="price-row">
       <div class="price-main">{{ "{:,}".format(product.price).replace(",", " ") }}</div>
-      <div class="price-cur">₴</div>
+      <div class="price-cur">грн</div>
     </div>
 
     {% if product.brand %}
@@ -275,7 +275,7 @@
         <div class="card-year">{{ s.brand }}</div>
         <div class="card-specs"><span>{{ s.condition }}</span></div>
         <div class="card-footer">
-          <div class="card-price">{{ "{:,}".format(s.price).replace(",", " ") }} <em>₴</em></div>
+          <div class="card-price">{{ "{:,}".format(s.price).replace(",", " ") }} <em>грн</em></div>
           <a href="{% if s.category in ('helmets','gloves','gear') %}/equipment/{{ s.slug }}{% else %}/parts/{{ s.slug }}{% endif %}" class="btn-detail">Детальніше</a>
         </div>
       </div>

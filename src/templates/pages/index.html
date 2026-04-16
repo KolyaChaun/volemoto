@@ -189,7 +189,7 @@
             <span>{{ bike.condition }}</span>
           </div>
           <div class="card-footer">
-            <div class="card-price">{{ "{:,}".format(bike.price).replace(",", " ") }} <em>₴</em></div>
+            <div class="card-price">{% if uah_price(bike.price) %}<div class="card-price-uah"><div class="cp-main">{{ uah_price(bike.price) }}<em>грн</em></div><div class="cp-usd">{{ usd_amount(bike.price) }} $</div></div>{% else %}<div class="card-price-na">—</div>{% endif %}</div>
             <a href="/catalog/{{ bike.category }}/{{ bike.slug }}" class="btn-detail">Детальніше</a>
           </div>
         </div>
@@ -227,7 +227,7 @@
             <span>{{ bike.condition }}</span>
           </div>
           <div class="card-footer">
-            <div class="card-price">{{ "{:,}".format(bike.price).replace(",", " ") }} <em>₴</em></div>
+            <div class="card-price">{% if uah_price(bike.price) %}<div class="card-price-uah"><div class="cp-main">{{ uah_price(bike.price) }}<em>грн</em></div><div class="cp-usd">{{ usd_amount(bike.price) }} $</div></div>{% else %}<div class="card-price-na">—</div>{% endif %}</div>
             <a href="/catalog/{{ bike.category }}/{{ bike.slug }}" class="btn-detail">Детальніше</a>
           </div>
         </div>
@@ -265,7 +265,7 @@
             <span>{{ bike.condition }}</span>
           </div>
           <div class="card-footer">
-            <div class="card-price">{{ "{:,}".format(bike.price).replace(",", " ") }} <em>₴</em></div>
+            <div class="card-price">{% if uah_price(bike.price) %}<div class="card-price-uah"><div class="cp-main">{{ uah_price(bike.price) }}<em>грн</em></div><div class="cp-usd">{{ usd_amount(bike.price) }} $</div></div>{% else %}<div class="card-price-na">—</div>{% endif %}</div>
             <a href="/catalog/{{ bike.category }}/{{ bike.slug }}" class="btn-detail">Детальніше</a>
           </div>
         </div>

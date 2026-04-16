@@ -52,6 +52,11 @@
 .card-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .card-price { font-size: 19px; font-weight: 800; color: #111; }
 .card-price em { font-size: 13px; color: #2d9e00; font-style: normal; font-weight: 600; }
+.card-price-uah { display: flex; flex-direction: column; gap: 1px; line-height: 1.2; }
+.card-price-uah .cp-main { font-size: 19px; font-weight: 800; color: #111; }
+.card-price-uah .cp-main em { font-size: 13px; font-style: normal; font-weight: 700; color: #2d9e00; margin-left: 3px; }
+.card-price-uah .cp-usd { font-size: 11px; font-weight: 600; color: #bbb; }
+.card-price-na { font-size: 18px; font-weight: 700; color: #ccc; }
 .btn-detail {
   background: #f2f2f2; color: #333; font-size: 12px; font-weight: 700;
   padding: 8px 18px; border-radius: 50px;

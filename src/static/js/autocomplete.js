@@ -78,7 +78,11 @@
 
           var price = document.createElement('div');
           price.className = 'search-dropdown-price';
-          price.textContent = fmt(item.price) + ' ₴';
+          if (item.price_uah) {
+            price.textContent = item.price_uah + ' ₴';
+          } else if (item.price) {
+            price.textContent = fmt(item.price) + ' $';
+          }
 
           a.appendChild(info);
           a.appendChild(price);

@@ -155,7 +155,7 @@
           </td>
           <td><div class="td-name">{{ bike.name }}</div><div class="td-sub">{{ bike.year }} · {{ bike.color }}</div></td>
           <td>{{ {"moto":"Мото","moped":"Мопед","quad":"Квадро"}.get(bike.category, bike.category) }}</td>
-          <td style="font-weight:700;">{{ "{:,}".format(bike.price).replace(",", " ") }} ₴</td>
+          <td style="font-weight:700;">{{ "{:,}".format(bike.price).replace(",", " ") }} $</td>
           <td>{% set _s = bike.status or ('available' if bike.available else 'sold') %}<span class="badge {% if _s == 'available' %}badge-yes{% elif _s == 'sold' %}badge-no{% else %}badge-status{% endif %}">{% if _s == 'available' %}В наявності{% elif _s == 'in_transit' %}В дорозі{% elif _s == 'reserved' %}Під завдатком{% else %}Продано{% endif %}</span></td>
           <td>
             <a href="/admin/edit/{{ bike.id }}" class="btn-edit">Ред.</a>

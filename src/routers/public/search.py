@@ -9,6 +9,7 @@ from src.core.search_utils import normalize_query
 from src.db.database import get_db
 from src.models.bike import Bike
 from src.models.product import Product
+from src.services.currency_service import uah_price
 
 router = APIRouter(tags=["Сайт — пошук"])
 
@@ -109,6 +110,7 @@ def api_search(q: str = "", db: Session = Depends(get_db)):
                 "brand": b.brand,
                 "year": b.year,
                 "price": b.price,
+                "price_uah": uah_price(b.price),
                 "photo": b.photo,
                 "article": b.article,
                 "category": b.category,

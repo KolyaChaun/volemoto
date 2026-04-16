@@ -317,6 +317,18 @@ zookeeper = ["kazoo (>=1.3.1)"]
 zstd = ["zstandard (==0.23.0)"]
 
 [[package]]
+name = "certifi"
+version = "2026.2.25"
+description = "Python package for providing Mozilla's CA Bundle."
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+files = [
+    {file = "certifi-2026.2.25-py3-none-any.whl", hash = "sha256:027692e4402ad994f1c42e52a4997a9763c646b73e4096e4d5d6db8af1d6f0fa"},
+    {file = "certifi-2026.2.25.tar.gz", hash = "sha256:e887ab5cee78ea814d3472169153c2d12cd43b14bd03329a39a9c6e2e80bfba7"},
+]
+
+[[package]]
 name = "click"
 version = "8.3.1"
 description = "Composable command line interface toolkit"
@@ -2051,4 +2063,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12"
-content-hash = "7ab306f781e1631e027a0e1703434ee853e9c6bed63560289188e1d4f64b3dba"
+content-hash = "8ca52cf0e2b3492b5272a08b8929d96b5554373f43ee95b89c59f006777cf1d5"

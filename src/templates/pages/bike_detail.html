@@ -200,9 +200,14 @@
       {{ bike.name }}
     </div>
 
-    <div class="price-row">
-      <div class="price-main">{{ "{:,}".format(bike.price).replace(",", " ") }}</div>
-      <div class="price-cur">₴</div>
+    <div class="bike-price-row">
+      {% if uah_price(bike.price) %}
+        <div class="price-main">{{ uah_price(bike.price) }}<em>грн</em></div>
+        <div class="price-sub">{{ usd_amount(bike.price) }} $</div>
+        <div class="price-note">Ціна в гривнях може змінюватися в залежності від курсу</div>
+      {% else %}
+        <div class="price-na">Ціна не вказана</div>
+      {% endif %}
     </div>
 
     <div class="specs-item">
@@ -290,7 +295,7 @@
           <span>{{ b.condition }}</span>
         </div>
         <div class="card-footer">
-          <div class="card-price">{{ "{:,}".format(b.price).replace(",", " ") }} <em>₴</em></div>
+          <div class="card-price">{% if uah_price(b.price) %}<div class="card-price-uah"><div class="cp-main">{{ uah_price(b.price) }}<em>грн</em></div><div class="cp-usd">{{ usd_amount(b.price) }} $</div></div>{% else %}<div class="card-price-na">—</div>{% endif %}</div>
           <a href="/catalog/{{ b.category }}/{{ b.slug }}" class="btn-detail">Детальніше</a>
         </div>
       </div>

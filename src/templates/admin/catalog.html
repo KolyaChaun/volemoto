@@ -118,7 +118,7 @@
           <td>{{ {"moto":"Мотоцикл","moped":"Мопед","quad":"Квадроцикл"}.get(bike.category, bike.category) }}</td>
           <td>{{ bike.year }}</td>
           <td>{{ "{:,}".format(bike.mileage).replace(",", " ") }} км</td>
-          <td style="font-weight:700;">{{ "{:,}".format(bike.price).replace(",", " ") }} ₴</td>
+          <td style="font-weight:700;">{{ "{:,}".format(bike.price).replace(",", " ") }} $</td>
           <td>
             {% set _s = bike.status or ('available' if bike.available else 'sold') %}
             <span class="badge {% if _s == 'available' %}badge-yes{% elif _s == 'sold' %}badge-no{% else %}badge-status{% endif %}">
