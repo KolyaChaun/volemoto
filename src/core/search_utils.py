@@ -42,7 +42,7 @@ _CHAR_MAP: dict[str, str] = {
 }
 
 
-def _has_cyrillic(text: str) -> bool:
+def has_cyrillic(text: str) -> bool:
     return any(unicodedata.name(ch, "").startswith("CYRILLIC") for ch in text)
 
 
@@ -55,7 +55,7 @@ def normalize_query(query: str) -> list[str]:
     if not base:
         return []
 
-    if not _has_cyrillic(base):
+    if not has_cyrillic(base):
         return [base]
 
     transliterated = _transliterate(base)

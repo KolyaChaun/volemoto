@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from src.constants import GEAR_CATEGORIES
 from src.core.config import templates
-from src.core.search_utils import normalize_query
+from src.core.search_utils import has_cyrillic, normalize_query
 from src.db.database import get_db
 from src.models.bike import Bike
 from src.models.product import Product
@@ -13,8 +13,10 @@ from src.services.currency_service import uah_price
 
 router = APIRouter(tags=["Сайт — пошук"])
 
+_WORD_SIM_THRESHOLD = 0.4
 
-def _bike_conditions(terms: list[str]):
+
+def _bike_conditions(terms: list[str], fuzzy_terms: list[str]):
     conditions = []
     for term in terms:
         like = f"%{term}%"
@@ -27,10 +29,19 @@ def _bike_conditions(terms: list[str]):
                 func.lower(Bike.color).like(like),
             ]
         )
+    for term in fuzzy_terms:
+        bike_text = func.lower(
+            func.coalesce(Bike.brand, "")
+            + " "
+            + func.coalesce(Bike.name, "")
+            + " "
+            + func.coalesce(Bike.model, "")
+        )
+        conditions.append(func.word_similarity(term, bike_text) > _WORD_SIM_THRESHOLD)
     return or_(*conditions)
 
 
-def _product_conditions(terms: list[str]):
+def _product_conditions(terms: list[str], fuzzy_terms: list[str]):
     conditions = []
     for term in terms:
         like = f"%{term}%"
@@ -44,6 +55,15 @@ def _product_conditions(terms: list[str]):
                 func.lower(Product.subcategory).like(like),
             ]
         )
+    for term in fuzzy_terms:
+        product_text = func.lower(
+            func.coalesce(Product.brand, "")
+            + " "
+            + func.coalesce(Product.name, "")
+            + " "
+            + func.coalesce(Product.model, "")
+        )
+        conditions.append(func.word_similarity(term, product_text) > _WORD_SIM_THRESHOLD)
     return or_(*conditions)
 
 
@@ -53,15 +73,16 @@ def search_page(request: Request, q: str = "", db: Session = Depends(get_db)):
     bikes, products = [], []
     if q:
         terms = normalize_query(q)
+        fuzzy = [t for t in terms if not has_cyrillic(t)] if has_cyrillic(q) else []
         bikes = (
             db.query(Bike)
-            .filter(_bike_conditions(terms))
+            .filter(_bike_conditions(terms, fuzzy))
             .order_by(Bike.id.desc())
             .all()
         )
         products = (
             db.query(Product)
-            .filter(_product_conditions(terms))
+            .filter(_product_conditions(terms, fuzzy))
             .order_by(Product.id.desc())
             .all()
         )
@@ -86,16 +107,17 @@ def api_search(q: str = "", db: Session = Depends(get_db)):
         return JSONResponse([])
 
     terms = normalize_query(q)
+    fuzzy = [t for t in terms if not has_cyrillic(t)] if has_cyrillic(q) else []
     bikes = (
         db.query(Bike)
-        .filter(_bike_conditions(terms))
+        .filter(_bike_conditions(terms, fuzzy))
         .order_by(Bike.id.desc())
         .limit(5)
         .all()
     )
     products = (
         db.query(Product)
-        .filter(_product_conditions(terms))
+        .filter(_product_conditions(terms, fuzzy))
         .order_by(Product.id.desc())
         .limit(5)
         .all()
