@@ -14,6 +14,7 @@ from src.core.config import templates
 from src.db.database import get_db
 from src.models.bike import Bike
 from src.repositories.bike_repo import BikeFilters, BikeRepository
+from src.services.currency_service import get_cached_rate
 
 router = APIRouter(tags=["Сайт — мотоцикли"])
 
@@ -43,14 +44,31 @@ def catalog(
     max_mileage: Optional[str] = None,
     min_engine: Optional[str] = None,
     max_engine: Optional[str] = None,
+    price_currency: Optional[str] = "usd",
 ):
     if category not in (BIKE_CATEGORIES | set(PRODUCT_CATEGORIES)):
         raise HTTPException(status_code=404)
 
+    price_currency = price_currency if price_currency in ("uah", "usd") else "usd"
+
+    usd_rate = get_cached_rate()
+    rate_available = usd_rate is not None and usd_rate > 1
+    if not rate_available:
+        usd_rate = 1.0
+        price_currency = "usd"
+
+    def price_to_usd(v: Optional[str]) -> Optional[int]:
+        val = _to_int(v)
+        if val is None:
+            return None
+        if price_currency == "uah":
+            return max(1, round(val / usd_rate))
+        return val
+
     filters = BikeFilters(
         brand=brand.strip() if brand and brand.strip() else None,
-        min_price=_to_int(min_price),
-        max_price=_to_int(max_price),
+        min_price=price_to_usd(min_price),
+        max_price=price_to_usd(max_price),
         min_year=_to_int(min_year),
         max_year=_to_int(max_year),
         condition=condition.strip() if condition and condition.strip() else None,
@@ -77,8 +95,11 @@ def catalog(
             "brand": filters.brand,
             "condition": filters.condition,
             "available_only": filters.available_only,
-            "min_price": filters.min_price,
-            "max_price": filters.max_price,
+            "min_price": _to_int(min_price),
+            "max_price": _to_int(max_price),
+            "price_currency": price_currency,
+            "usd_rate": round(usd_rate, 2),
+            "rate_available": rate_available,
             "min_year": filters.min_year,
             "max_year": filters.max_year,
             "min_mileage": filters.min_mileage,

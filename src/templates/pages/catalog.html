@@ -160,12 +160,20 @@
         <button type="button" class="filters-close" onclick="toggleFilters()" aria-label="Закрити">✕</button>
       </div>
 
+      <input type="hidden" name="price_currency" id="price_currency" value="{{ price_currency }}">
+
       <div class="filter-group">
-        <div class="filter-group-label">Ціна, ₴</div>
+        <div class="filter-group-label">Ціна</div>
+        {% if rate_available %}
+        <div class="currency-segment">
+          <button type="button" class="cs-opt{% if price_currency == 'uah' %} cs-active{% endif %}" onclick="setCurrency('uah')">₴ UAH</button>
+          <button type="button" class="cs-opt{% if price_currency != 'uah' %} cs-active{% endif %}" onclick="setCurrency('usd')">$ USD</button>
+        </div>
+        {% endif %}
         <div class="filter-range">
-          <input type="number" name="min_price" placeholder="від"
+          <input type="number" name="min_price" id="min_price" placeholder="від"
                  value="{{ min_price if min_price else '' }}">
-          <input type="number" name="max_price" placeholder="до"
+          <input type="number" name="max_price" id="max_price" placeholder="до"
                  value="{{ max_price if max_price else '' }}">
         </div>
       </div>
@@ -323,5 +331,39 @@
 <script src="/static/js/catalog.js"></script>
 <script src="/static/js/autocomplete.js"></script>
 <script src="/static/js/navbar.js"></script>
+<script>
+(function() {
+  var USD_RATE = {{ usd_rate | default(41) }};
+
+  function setCurrency(cur) {
+    var prev = document.getElementById('price_currency').value;
+    if (prev === cur) return;
+
+    var minEl = document.getElementById('min_price');
+    var maxEl = document.getElementById('max_price');
+    var minVal = parseFloat(minEl.value);
+    var maxVal = parseFloat(maxEl.value);
+
+    if (cur === 'uah' && prev === 'usd') {
+      if (!isNaN(minVal) && minVal > 0) minEl.value = Math.round(minVal * USD_RATE);
+      else minEl.value = '';
+      if (!isNaN(maxVal) && maxVal > 0) maxEl.value = Math.round(maxVal * USD_RATE);
+      else maxEl.value = '';
+    } else if (cur === 'usd' && prev === 'uah') {
+      if (!isNaN(minVal) && minVal > 0) minEl.value = Math.round(minVal / USD_RATE);
+      else minEl.value = '';
+      if (!isNaN(maxVal) && maxVal > 0) maxEl.value = Math.round(maxVal / USD_RATE);
+      else maxEl.value = '';
+    }
+
+    document.getElementById('price_currency').value = cur;
+    document.querySelectorAll('.cs-opt').forEach(function(b) {
+      b.classList.toggle('cs-active', b.textContent.trim() === (cur === 'uah' ? '₴ UAH' : '$ USD'));
+    });
+  }
+
+  window.setCurrency = setCurrency;
+})();
+</script>
 </body>
 </html>
