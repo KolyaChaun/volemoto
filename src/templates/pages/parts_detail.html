@@ -236,12 +236,31 @@
 
   <!-- CONTACT CARD -->
   <div class="contact-card">
-    <a href="tel:+380997558803" class="btn-buy">📞 Зателефонувати</a>
+    <a href="#" class="btn-buy" onclick="openPhone(event)">📞 Зателефонувати</a>
+    <div class="phone-tip" style="display:none;background:#fff;border:1px solid #e8e8e8;border-left:3px solid #2d9e00;border-radius:6px;padding:7px 12px;font-size:13px;color:#1a1a1a;margin-top:-4px;box-shadow:0 2px 8px rgba(0,0,0,.07);align-items:center;justify-content:center;gap:8px;">
+      <span style="color:#2d9e00;font-size:15px;">📞</span>
+      <span style="font-weight:600;letter-spacing:.02em;">+38 099 755 88 03</span>
+    </div>
     <a href="https://t.me/+380634271592" target="_blank" class="btn-call">
       <svg width="18" height="18" viewBox="0 0 240 240" fill="#0088cc">
         <path d="M120 0C53.73 0 0 53.73 0 120s53.73 120 120 120 120-53.73 120-120S186.27 0 120 0zm57.49 84.08l-18.39 87.03c-1.39 6.56-5.05 8.21-10.24 5.12l-28.29-20.86-13.65 13.16c-1.51 1.51-2.77 2.77-5.06 2.77l1.81-25.72 46.78-42.26c2.03-1.81-.44-2.83-3.15-1.02l-57.68 36.27-24.79-7.74c-5.37-1.68-5.48-5.37 1.12-7.96l96.43-37.17c4.47-1.69 8.37 1.02 6.87 7.37z"/>
       </svg>
       Telegram
+    </a>
+    <a href="viber://chat?number=%2B380997558803" class="btn-call" onclick="openViber(event)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="#7360f2">
+        <path d="M11.4 1C6.4 1.3 2.5 5.2 2 10.2c-.3 3 .6 5.8 2.4 7.9l-.8 3.8c-.1.5.4 1 .9.8l3.8-1c1.5.8 3.2 1.3 5 1.3h.1C19 23 23 18.8 23 13.6V13c-.2-6.5-5.8-12.3-11.6-12zm5.6 16.4c-.6.6-1.3.9-2 .9-.3 0-.6 0-.9-.1-1.5-.4-3-1.3-4.3-2.5-1.2-1.2-2.1-2.7-2.5-4.2-.4-1.6.1-3.2 1.4-4.3.4-.4.9-.5 1.3-.3l2 .9c.4.2.6.6.5 1l-.4 1.8c-.1.3 0 .6.2.8l1.6 1.6c.2.2.5.3.8.2l1.8-.4c.4-.1.8.1 1 .5l.9 2c.2.4.1.9-.4 1.1z"/>
+      </svg>
+      Viber
+    </a>
+    <div id="viber-tip" style="display:none;background:#f4f0ff;border:1px solid #c9bdf7;border-radius:6px;padding:5px 10px;font-size:12px;color:#7360f2;text-align:center;margin-top:-6px;">
+      Встановіть Viber або: <strong>+38 099 755 88 03</strong>
+    </div>
+    <a href="https://wa.me/380997558803" target="_blank" class="btn-call">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366">
+        <path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.4-.5c.1-.2.2-.3.3-.5.1-.2 0-.4 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4C8 9.8 7 10.8 7 12.8s1.5 3.9 1.7 4.1c.2.3 2.8 4.4 6.9 6 1 .4 1.7.6 2.3.8 1 .3 1.9.2 2.6.1.8-.1 2.4-1 2.7-1.9.3-.9.3-1.7.2-1.9-.1-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.9.5 3.7 1.4 5.3L2 22l4.8-1.4C8.3 21.5 10.1 22 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18c-1.7 0-3.4-.5-4.8-1.3l-.3-.2-3.2.9.9-3.1-.2-.3C3.5 14.7 3 13.4 3 12c0-5 4-9 9-9s9 4 9 9-4 9-9 9z"/>
+      </svg>
+      WhatsApp
     </a>
     <div class="contact-note">Пн–Сб: 9:00 – 18:00 · Дніпро</div>
     <div class="contact-address">
@@ -329,7 +348,19 @@
   </div>
 </footer>
 
+<!-- MOBILE STICKY CTA -->
+<div class="mobile-sticky-cta">
+  <a href="tel:+380997558803" class="btn-buy">📞 Зателефонувати</a>
+  <a href="https://t.me/+380634271592" target="_blank" class="btn-call">
+    <svg width="18" height="18" viewBox="0 0 240 240" fill="#0088cc">
+      <path d="M120 0C53.73 0 0 53.73 0 120s53.73 120 120 120 120-53.73 120-120S186.27 0 120 0zm57.49 84.08l-18.39 87.03c-1.39 6.56-5.05 8.21-10.24 5.12l-28.29-20.86-13.65 13.16c-1.51 1.51-2.77 2.77-5.06 2.77l1.81-25.72 46.78-42.26c2.03-1.81-.44-2.83-3.15-1.02l-57.68 36.27-24.79-7.74c-5.37-1.68-5.48-5.37 1.12-7.96l96.43-37.17c4.47-1.69 8.37 1.02 6.87 7.37z"/>
+    </svg>
+    Telegram
+  </a>
+</div>
+
 <script src="/static/js/navbar.js"></script>
 <script src="/static/js/bike-detail.js"></script>
+<script src="/static/js/messengers.js"></script>
 </body>
 </html>

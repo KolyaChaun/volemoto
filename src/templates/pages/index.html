@@ -134,7 +134,14 @@
     <p class="hero-desc">Продаж Honda, Kawasaki, Suzuki, BMW. Технічна перевірка, юридичний супровід та оформлення документів.</p>
     <div class="hero-btns">
       <a href="/catalog/moto" class="btn-main">Переглянути каталог</a>
-      <a href="tel:+380997558803" class="btn-sec">Зателефонувати</a>
+      <a href="#" class="btn-sec" onclick="openPhone(event)">Зателефонувати</a>
+      <div class="phone-tip" data-fixed="1" style="display:none;position:fixed;background:#fff;border:1px solid #eee;border-radius:8px;padding:10px 14px;box-shadow:0 4px 16px rgba(0,0,0,.12);flex-direction:column;gap:6px;min-width:220px;z-index:9999;">
+        <span style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.06em;">Номер телефону</span>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <span style="font-size:16px;font-weight:700;color:#1a1a1a;letter-spacing:.02em;">+38 099 755 88 03</span>
+          <button onclick="copyPhone(this,event)" style="display:inline-flex;align-items:center;gap:5px;border:none;background:#f0f7ee;color:#2d9e00;border-radius:5px;padding:5px 9px;font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Копіювати</button>
+        </div>
+      </div>
     </div>
     <div class="hero-info">
       <div class="hero-info-item">
@@ -356,7 +363,14 @@
     <h2>Не знайшли потрібний мотоцикл?</h2>
     <p>Телефонуйте — підберемо варіант під ваш бюджет та побажання</p>
   </div>
-  <a href="tel:+380997558803" class="btn-white">Зателефонувати</a>
+  <a href="#" class="btn-white" onclick="openPhone(event)">Зателефонувати</a>
+  <div class="phone-tip" data-fixed="1" style="display:none;position:fixed;background:#fff;border:1px solid #eee;border-radius:8px;padding:10px 14px;box-shadow:0 4px 16px rgba(0,0,0,.12);flex-direction:column;gap:6px;min-width:220px;z-index:9999;">
+    <span style="font-size:11px;color:#999;text-transform:uppercase;letter-spacing:.06em;">Номер телефону</span>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+      <span style="font-size:16px;font-weight:700;color:#1a1a1a;letter-spacing:.02em;">+38 099 755 88 03</span>
+      <button onclick="copyPhone(this,event)" style="display:inline-flex;align-items:center;gap:5px;border:none;background:#f0f7ee;color:#2d9e00;border-radius:5px;padding:5px 9px;font-size:12px;font-weight:600;cursor:pointer;flex-shrink:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Копіювати</button>
+    </div>
+  </div>
 </div>
 
 <!-- FOOTER -->
@@ -394,6 +408,7 @@
 </footer>
 <script src="/static/js/autocomplete.js"></script>
 <script src="/static/js/navbar.js"></script>
+<script src="/static/js/messengers.js"></script>
 
 <!-- REVIEW LIGHTBOX -->
 <div id="rlb" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1000;align-items:center;justify-content:center;" onclick="rlbClose(event)">
