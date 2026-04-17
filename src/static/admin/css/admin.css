@@ -19,7 +19,7 @@ body { font-family: Arial, sans-serif; background: #f5f6f8; color: #222; font-si
 .nav-item.active { background: rgba(45,158,0,.2); color: #4ecb00; }
 .nav-badge { margin-left: auto; background: #e53935; color: #fff; font-size: 11px; font-weight: 800; min-width: 20px; height: 20px; border-radius: 10px; padding: 0 6px; display: inline-flex; align-items: center; justify-content: center; }
 .sidebar-bottom { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,.07); }
-.logout { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 8px; color: rgba(255,255,255,.35); font-weight: 600; text-decoration: none; font-size: 13px; transition: background .15s, color .15s; }
+.logout { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 8px; color: rgba(255,255,255,.35); font-weight: 600; text-decoration: none; font-size: 13px; transition: background .15s, color .15s; background: none; border: none; cursor: pointer; width: 100%; }
 .logout:hover { background: rgba(200,0,0,.15); color: #f77; }
 
 /* ── MAIN LAYOUT ── */

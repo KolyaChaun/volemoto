@@ -63,7 +63,9 @@ def _product_conditions(terms: list[str], fuzzy_terms: list[str]):
             + " "
             + func.coalesce(Product.model, "")
         )
-        conditions.append(func.word_similarity(term, product_text) > _WORD_SIM_THRESHOLD)
+        conditions.append(
+            func.word_similarity(term, product_text) > _WORD_SIM_THRESHOLD
+        )
     return or_(*conditions)
 
 

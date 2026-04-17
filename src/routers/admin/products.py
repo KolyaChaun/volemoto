@@ -147,7 +147,7 @@ async def edit_gear(
     if not product:
         raise HTTPException(404)
     ProductService(db).update(
-        product=product,
+        entity=product,
         data={
             "name": name,
             "brand": brand,
@@ -336,7 +336,7 @@ async def edit_parts(
     if not product:
         raise HTTPException(404)
     ProductService(db).update(
-        product=product,
+        entity=product,
         data={
             "name": name,
             "brand": brand,

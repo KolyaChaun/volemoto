@@ -1,7 +1,7 @@
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
-from fastapi.responses import RedirectResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 
 from src.constants import OPENAPI_TAGS
@@ -16,6 +16,7 @@ from src.services.currency_service import (
     uah_price,
     usd_amount,
 )
+from src.services.file_service import InvalidFileError
 
 
 @asynccontextmanager
@@ -50,6 +51,11 @@ app.include_router(reviews.router)
 @app.exception_handler(401)
 async def unauthorized_handler(request: Request, exc):
     return RedirectResponse("/admin/login", status_code=302)
+
+
+@app.exception_handler(InvalidFileError)
+async def invalid_file_handler(request: Request, exc: InvalidFileError):
+    return JSONResponse(status_code=422, content={"detail": str(exc)})
 
 
 if __name__ == "__main__":

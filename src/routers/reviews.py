@@ -5,11 +5,12 @@ from fastapi.responses import HTMLResponse, RedirectResponse
 from sqlalchemy.orm import Session
 
 from src.core.config import templates
+from src.core.rate_limit import rate_limit
 from src.core.security import get_optional_admin
 from src.db.database import get_db
 from src.models.review import Review, ReviewReply
 from src.repositories.review_repo import ReviewRepository
-from src.services.file_service import save_photos
+from src.services.file_service import InvalidFileError, save_photos
 
 router = APIRouter(tags=["Відгуки"])
 
@@ -43,6 +44,7 @@ def reviews_page(
 
 
 @router.post("/reviews")
+@rate_limit(max_calls=5, period=60)
 async def reviews_add(
     request: Request,
     name: str = Form(...),
@@ -51,11 +53,14 @@ async def reviews_add(
     photos: List[UploadFile] = File(None),
     db: Session = Depends(get_db),
 ):
+    MAX_PHOTOS = 5
     if not (1 <= rating <= 5 and name.strip() and text.strip()):
         return RedirectResponse("/reviews", status_code=302)
-    photo_paths = save_photos(
-        [f for f in (photos or []) if f and f.filename], "reviews"
-    )
+    valid_photos = [f for f in (photos or []) if f and f.filename][:MAX_PHOTOS]
+    try:
+        photo_paths = save_photos(valid_photos, "reviews")
+    except InvalidFileError:
+        return RedirectResponse("/reviews", status_code=302)
     ReviewRepository(db).save(
         Review(name=name.strip(), rating=rating, text=text.strip()),
         photo_paths,
@@ -64,6 +69,7 @@ async def reviews_add(
 
 
 @router.post("/reviews/{review_id}/reply")
+@rate_limit(max_calls=5, period=60)
 def review_user_reply(
     request: Request,
     review_id: int,

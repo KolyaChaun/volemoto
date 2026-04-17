@@ -50,7 +50,7 @@ def admin_login(
     return resp
 
 
-@router.get("/admin/logout")
+@router.post("/admin/logout")
 def admin_logout():
     resp = RedirectResponse("/admin/login", status_code=302)
     resp.delete_cookie(SESSION_COOKIE)

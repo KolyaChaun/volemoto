@@ -28,6 +28,7 @@ def dashboard(
     total = len(bikes)
     avail = sum(1 for b in bikes if b.available)
     products = db.query(Product).all()
+    unread = ReviewRepository(db).unread_count()
     return templates.TemplateResponse(
         request,
         "admin/dashboard.html",
@@ -44,9 +45,9 @@ def dashboard(
             "parts_total": sum(
                 1 for p in products if p.category in ("parts_new", "parts_used")
             ),
-            "reviews": ReviewRepository(db).unread_count(),
+            "reviews": unread,
             "recent": bikes[:6],
-            "unread": ReviewRepository(db).unread_count(),
+            "unread": unread,
         },
     )
 
@@ -188,7 +189,7 @@ async def edit_bike(
     if not bike:
         raise HTTPException(404)
     BikeService(db).update(
-        bike=bike,
+        entity=bike,
         data={
             "name": name,
             "brand": brand,

@@ -1,0 +1,35 @@
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<div class="sidebar">
+  <div class="sidebar-logo">
+    <div class="sidebar-logo-text">VOLE <span>MOTO</span></div>
+    <small>Admin Panel</small>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Головне</div>
+    {% set p = request.url.path %}
+    <a href="/admin"         class="nav-item {% if p == '/admin' %}active{% endif %}">📊 Дашборд</a>
+    <a href="/admin/catalog" class="nav-item {% if p == '/admin/catalog' or p.startswith('/admin/edit/') %}active{% endif %}">📋 Каталог мото</a>
+    <a href="/admin/gear"    class="nav-item {% if p == '/admin/gear'    or p.startswith('/admin/gear/edit/') %}active{% endif %}">🦺 Мотоекіпіровка</a>
+    <a href="/admin/parts"   class="nav-item {% if p == '/admin/parts'   or p.startswith('/admin/parts/edit/') %}active{% endif %}">🔧 Запчастини</a>
+
+    <div class="nav-section">Додати</div>
+    <a href="/admin/add"        class="nav-item {% if p == '/admin/add' %}active{% endif %}">➕ Додати мото</a>
+    <a href="/admin/gear/add"   class="nav-item {% if p == '/admin/gear/add' %}active{% endif %}">➕ Додати екіпіровку</a>
+    <a href="/admin/parts/add"  class="nav-item {% if p == '/admin/parts/add' %}active{% endif %}">➕ Додати запчастину</a>
+    <a href="/admin/brands"     class="nav-item {% if p == '/admin/brands' %}active{% endif %}">➕ Додати бренди</a>
+    <a href="/admin/hero"       class="nav-item {% if p == '/admin/hero' %}active{% endif %}">➕ Додати зміни на головній сторінці</a>
+
+    <div class="nav-section">Клієнти</div>
+    <a href="/admin/reviews" class="nav-item {% if p == '/admin/reviews' %}active{% endif %}">💬 Відгуки {% if unread %}<span class="nav-badge">{{ unread }}</span>{% endif %}</a>
+
+    <div class="nav-section">Сайт</div>
+    <a href="/" target="_blank" class="nav-item">🌐 Переглянути сайт</a>
+  </nav>
+  <div class="sidebar-bottom">
+    <form method="post" action="/admin/logout" style="margin:0;">
+      <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
+      <button type="submit" class="logout">🚪 Вийти</button>
+    </form>
+  </div>
+</div>

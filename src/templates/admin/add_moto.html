@@ -11,34 +11,7 @@
 </head>
 <body>
 
-<div class="sidebar-overlay" id="sidebar-overlay"></div>
-
-<div class="sidebar">
-  <div class="sidebar-logo">
-    <div class="sidebar-logo-text">VOLE <span>MOTO</span></div>
-    <small>Admin Panel</small>
-  </div>
-  <nav class="sidebar-nav">
-    <div class="nav-section">Головне</div>
-    <a href="/admin" class="nav-item">📊 Дашборд</a>
-    <a href="/admin/catalog" class="nav-item">📋 Каталог мото</a>
-    <a href="/admin/gear" class="nav-item">🦺 Мотоекіпіровка</a>
-    <a href="/admin/parts" class="nav-item">🔧 Запчастини</a>
-    <div class="nav-section">Додати</div>
-    <a href="/admin/add" class="nav-item {% if not bike %}active{% endif %}">➕ Додати мото</a>
-    <a href="/admin/gear/add" class="nav-item">➕ Додати екіпіровку</a>
-    <a href="/admin/parts/add" class="nav-item">➕ Додати запчастину</a>
-    <a href="/admin/brands" class="nav-item">➕ Додати бренди</a>
-    <a href="/admin/hero" class="nav-item">➕ Додати зміни на головній сторінці</a>
-    <div class="nav-section">Клієнти</div>
-    <a href="/admin/reviews" class="nav-item">💬 Відгуки {% if unread %}<span class="nav-badge">{{ unread }}</span>{% endif %}</a>
-    <div class="nav-section">Сайт</div>
-    <a href="/" target="_blank" class="nav-item">🌐 Переглянути сайт</a>
-  </nav>
-  <div class="sidebar-bottom">
-    <a href="/admin/logout" class="logout">🚪 Вийти</a>
-  </div>
-</div>
+{% include "admin/parts/sidebar.html" %}
 
 <div class="main">
   <div class="topbar">

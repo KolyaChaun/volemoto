@@ -12,6 +12,11 @@ from src.services.storage import storage
 
 register_heif_opener()
 
+
+class InvalidFileError(Exception):
+    """Raised when an uploaded file fails validation."""
+
+
 CONTENT_TYPES = {
     "jpg": "image/jpeg",
     "jpeg": "image/jpeg",
@@ -44,9 +49,13 @@ def save_single_file(upload: UploadFile, folder: str) -> str:
     ext = upload.filename.rsplit(".", 1)[-1].lower()
     data = upload.file.read(MAX_FILE_SIZE + 1)
     if len(data) > MAX_FILE_SIZE:
-        raise ValueError(
+        raise InvalidFileError(
             f"Файл перевищує максимальний розмір {MAX_FILE_SIZE // 1024 // 1024} МБ"
         )
+
+    allowed = set(CONTENT_TYPES.keys()) | HEIC_EXTENSIONS
+    if ext not in allowed:
+        raise InvalidFileError(f"Недозволений тип файлу: .{ext}")
 
     if ext in HEIC_EXTENSIONS:
         data = _normalize_to_jpeg(data)

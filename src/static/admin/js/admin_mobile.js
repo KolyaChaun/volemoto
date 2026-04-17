@@ -1,3 +1,11 @@
+// Number inputs: block value-change on scroll, pass scroll to page instead
+document.querySelectorAll('input[type="number"]').forEach(function (el) {
+  el.addEventListener('wheel', function (e) {
+    e.preventDefault();
+    window.scrollBy({ top: e.deltaY, behavior: 'auto' });
+  }, { passive: false });
+});
+
 (function () {
   var burger = document.getElementById('admin-burger');
   var sidebar = document.querySelector('.sidebar');
