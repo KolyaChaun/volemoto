@@ -13,8 +13,8 @@ from src.constants import (
 from src.core.config import templates
 from src.db.database import get_db
 from src.models.bike import Bike
-from src.repositories.bike_repo import BikeFilters, BikeRepository
-from src.services.currency_service import get_cached_rate
+from src.repositories.bike_repo import BikeRepository
+from src.services.bike_service import build_bike_filters, resolve_price_currency
 
 router = APIRouter(tags=["Сайт — мотоцикли"])
 
@@ -49,35 +49,22 @@ def catalog(
     if category not in (BIKE_CATEGORIES | set(PRODUCT_CATEGORIES)):
         raise HTTPException(status_code=404)
 
-    price_currency = price_currency if price_currency in ("uah", "usd") else "usd"
-
-    usd_rate = get_cached_rate()
-    rate_available = usd_rate is not None and usd_rate > 1
-    if not rate_available:
-        usd_rate = 1.0
-        price_currency = "usd"
-
-    def price_to_usd(v: Optional[str]) -> Optional[int]:
-        val = _to_int(v)
-        if val is None:
-            return None
-        if price_currency == "uah":
-            return max(1, round(val / usd_rate))
-        return val
-
-    filters = BikeFilters(
-        brand=brand.strip() if brand and brand.strip() else None,
-        min_price=price_to_usd(min_price),
-        max_price=price_to_usd(max_price),
-        min_year=_to_int(min_year),
-        max_year=_to_int(max_year),
-        condition=condition.strip() if condition and condition.strip() else None,
-        available_only=_flag(available_only),
-        min_mileage=_to_int(min_mileage),
-        max_mileage=_to_int(max_mileage),
-        min_engine=_to_int(min_engine),
-        max_engine=_to_int(max_engine),
+    currency, usd_rate, rate_available = resolve_price_currency(price_currency)
+    filters = build_bike_filters(
         sort=sort,
+        brand=brand,
+        min_price=min_price,
+        max_price=max_price,
+        min_year=min_year,
+        max_year=max_year,
+        condition=condition,
+        available_only=_flag(available_only),
+        min_mileage=min_mileage,
+        max_mileage=max_mileage,
+        min_engine=min_engine,
+        max_engine=max_engine,
+        price_currency=currency,
+        usd_rate=usd_rate,
     )
     repo = BikeRepository(db)
     bikes = repo.get_filtered(category, filters)
@@ -97,7 +84,7 @@ def catalog(
             "available_only": filters.available_only,
             "min_price": _to_int(min_price),
             "max_price": _to_int(max_price),
-            "price_currency": price_currency,
+            "price_currency": currency,
             "usd_rate": round(usd_rate, 2),
             "rate_available": rate_available,
             "min_year": filters.min_year,
