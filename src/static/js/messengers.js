@@ -57,16 +57,29 @@ function openPhone(e) {
 
 function copyPhone(btn, e) {
   if (e) { e.stopPropagation(); }
-  navigator.clipboard.writeText('+380997558803').then(function () {
+  function onCopied() {
     btn.innerHTML = CHECK_ICON;
     btn.style.background = '#f0f7ee';
     btn.style.color = '#2d9e00';
     setTimeout(function () {
       btn.innerHTML = COPY_ICON + ' Копіювати';
-      btn.style.background = '#f0f7ee';
-      btn.style.color = '#2d9e00';
     }, 2000);
-  });
+  }
+  var number = '+380997558803';
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(number).then(onCopied);
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = number;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    onCopied();
+  }
 }
 
 function openViber(e) {
