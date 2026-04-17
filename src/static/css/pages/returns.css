@@ -1,0 +1,23 @@
+.info-page { max-width: 960px; margin: 48px auto 64px; padding: 0 24px; }
+.info-page h1 { font-size: 32px; font-weight: 800; color: #1a1a1a; margin-bottom: 36px; }
+.info-page h1 span { color: #2d9e00; }
+
+.info-section { margin-bottom: 36px; }
+.info-section h2 { font-size: 16px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: #2d9e00; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 2px solid #e8f5e0; }
+.info-section p { font-size: 15px; color: #444; line-height: 1.7; margin-bottom: 10px; }
+.info-section ul { padding-left: 20px; margin: 0; }
+.info-section ul li { font-size: 15px; color: #444; line-height: 1.7; margin-bottom: 6px; }
+
+.return-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 8px; }
+.return-card { background: #f8f8f8; border-radius: 10px; padding: 20px; border-top: 3px solid #2d9e00; }
+.return-card .rc-icon { font-size: 28px; margin-bottom: 10px; }
+.return-card .rc-title { font-size: 15px; font-weight: 700; color: #1a1a1a; margin-bottom: 8px; }
+.return-card .rc-text { font-size: 14px; color: #555; line-height: 1.6; }
+
+.notice { background: #f0f7ee; border-left: 4px solid #2d9e00; border-radius: 0 8px 8px 0; padding: 14px 18px; margin-top: 8px; }
+.notice p { margin: 0; font-size: 14px; color: #333; line-height: 1.6; }
+
+.breadcrumbs { max-width: 960px; margin: 0 auto; padding: 16px 24px 0; font-size: 13px; color: #999; }
+.breadcrumbs a { color: #999; text-decoration: none; }
+.breadcrumbs a:hover { color: #2d9e00; }
+.breadcrumbs span { margin: 0 6px; }

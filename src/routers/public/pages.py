@@ -46,3 +46,13 @@ def brands_page(request: Request, db: Session = Depends(get_db)):
 @router.get("/contacts", response_class=HTMLResponse)
 def contacts_page(request: Request):
     return templates.TemplateResponse(request, "pages/contacts.html", {})
+
+
+@router.get("/otrimannya-i-oplata", response_class=HTMLResponse)
+def payment_page(request: Request):
+    return templates.TemplateResponse(request, "pages/payment.html", {})
+
+
+@router.get("/povernennya-ta-obmin", response_class=HTMLResponse)
+def returns_page(request: Request):
+    return templates.TemplateResponse(request, "pages/returns.html", {})

@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ cat_label }} — VOLE MOTO</title>
+  <title>Повернення та обмін — VOLE MOTO</title>
   <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
   <link rel="stylesheet" href="/static/css/base.css">
   <link rel="stylesheet" href="/static/css/navbar.css">
-  <link rel="stylesheet" href="/static/css/cards.css">
   <link rel="stylesheet" href="/static/css/footer.css">
   <link rel="stylesheet" href="/static/css/autocomplete.css">
-  <link rel="stylesheet" href="/static/css/pages/catalog.css">
   <link rel="stylesheet" href="/static/css/responsive.css">
   <link rel="stylesheet" href="/static/css/dropdown.css">
+  <link rel="stylesheet" href="/static/css/pages/returns.css">
 </head>
 <body>
 
@@ -22,7 +21,7 @@
   <ul class="nav-links">
     <li><a href="/">Головна</a></li>
     <li class="nav-dropdown">
-      <a href="#" class="active">Каталог ▾</a>
+      <a href="/catalog/moto">Каталог ▾</a>
       <ul class="dropdown-menu">
         <li><a href="/catalog/moto">Мотоцикли</a></li>
         <li><a href="/catalog/moped">Мопеди</a></li>
@@ -46,7 +45,7 @@
     <li><a href="/brands">Бренди</a></li>
     <li><a href="/reviews">Відгуки</a></li>
     <li><a href="/otrimannya-i-oplata">Отримання і оплата</a></li>
-    <li><a href="/povernennya-ta-obmin">Повернення та обмін</a></li>
+    <li><a href="/povernennya-ta-obmin" class="active">Повернення та обмін</a></li>
     <li><a href="/contacts">Контакти</a></li>
   </ul>
   <div class="nav-search">
@@ -73,7 +72,7 @@
     <ul class="mobile-nav-links">
       <li><a href="/">Головна</a></li>
       <li class="mobile-dropdown">
-        <button class="mobile-catalog-toggle active">Мототехніка ▾</button>
+        <button class="mobile-catalog-toggle">Мототехніка ▾</button>
         <ul class="mobile-submenu">
           <li><a href="/catalog/moto">Мотоцикли</a></li>
           <li><a href="/catalog/moped">Мопеди</a></li>
@@ -97,7 +96,7 @@
       <li><a href="/brands">Бренди</a></li>
       <li><a href="/reviews">Відгуки</a></li>
       <li><a href="/otrimannya-i-oplata">Отримання і оплата</a></li>
-      <li><a href="/povernennya-ta-obmin">Повернення та обмін</a></li>
+      <li><a href="/povernennya-ta-obmin" class="active">Повернення та обмін</a></li>
       <li><a href="/contacts">Контакти</a></li>
     </ul>
     <form action="/search" method="get" class="mobile-search">
@@ -116,175 +115,68 @@
   </div>
 </div>
 
-<div class="page-wrap">
+<!-- BREADCRUMBS -->
+<div class="breadcrumbs">
+  <a href="/">Головна</a><span>›</span>Повернення та обмін
+</div>
 
-  <!-- BREADCRUMBS -->
-  <div class="breadcrumbs">
-    <a href="/">Головна</a>
-    <span>›</span>
-    <a href="/catalog/{{ category }}">{{ cat_label }}</a>
-  </div>
+<!-- MAIN CONTENT -->
+<div class="info-page">
+  <h1>Повернення та <span>обмін</span></h1>
+  <p style="font-size:15px;color:#444;line-height:1.7;margin-bottom:32px;margin-top:-18px;">Компанія здійснює повернення і обмін товарів належної якості згідно Закону України «<a href="https://zakon.rada.gov.ua/laws/show/1023-12#Text" target="_blank" style="color:#2d9e00;text-decoration:none;font-weight:700;">Про захист прав споживачів</a>».</p>
 
-  <!-- PAGE HEADER -->
-  <div class="cat-header">
-    <h1>
-      {{ cat_label }}
-      <span class="cat-header-count">{{ total }} оголошень</span>
-    </h1>
-    <div class="sort-row">
-      <button class="filter-toggle" onclick="toggleFilters()">Фільтри</button>
-      <span class="sort-label">Сортування:</span>
-      <select class="sort-select" onchange="applySort(this.value)">
-        <option value="newest"     {% if sort=='newest'     %}selected{% endif %}>Новіші спочатку</option>
-        <option value="price_asc"  {% if sort=='price_asc'  %}selected{% endif %}>Ціна: від дешевих</option>
-        <option value="price_desc" {% if sort=='price_desc' %}selected{% endif %}>Ціна: від дорогих</option>
-        <option value="year_desc"  {% if sort=='year_desc'  %}selected{% endif %}>Рік: новіші</option>
-        <option value="year_asc"   {% if sort=='year_asc'   %}selected{% endif %}>Рік: старіші</option>
-        <option value="mileage"    {% if sort=='mileage'    %}selected{% endif %}>Пробіг: менший</option>
-      </select>
+  <div class="info-section">
+    <h2>Строки повернення і обміну</h2>
+    <p>Повернення та обмін товарів можливий протягом <strong>14 днів</strong> після отримання товару покупцем.</p>
+    <div class="notice">
+      <p>Зворотня доставка товарів здійснюється за рахунок покупця.</p>
     </div>
   </div>
 
-  <!-- FILTER OVERLAY -->
-  <div class="filter-overlay" id="filter-overlay" onclick="toggleFilters()"></div>
+  <div class="info-section">
+    <h2>Умови повернення для товарів належної якості</h2>
+    <p><strong>Повернення товарів належної якості</strong></p>
+    <p>Протягом 14 днів після отримання товару покупцем Ви маєте право на повернення або обмін придбаного на нашому сайті товару за умови, що:</p>
+    <ul>
+      <li>товар не було введено в експлуатацію і не має слідів використання: подряпин, сколів, потертостей тощо.</li>
+      <li>товар повністю зберіг товарний вигляд;</li>
+      <li>товар укомплектований, збережено всі ярлики, плівки та заводське маркування.</li>
+    </ul>
+    <p style="margin-top:14px;"><strong>Процедура повернення товару Належної якості:</strong></p>
+    <ul>
+      <li>зателефонуйте <a href="tel:+380664004544" style="color:#2d9e00;font-weight:600;">+380664004544</a> та повідомте про намір повернути оплачений товар або надішліть електронний лист на пошту <a href="mailto:avtomobileparts.spare@gmail.com" style="color:#2d9e00;font-weight:600;">avtomobileparts.spare@gmail.com</a> з темою листа "Повернення або обмін товару"</li>
+      <li>товар можете повернути на адресу: Відділення Нової Пошти №2, м. Дніпро, номер телефону одержувача — <a href="tel:+380505157095" style="color:#2d9e00;font-weight:600;">+38 (050) 515-70-95</a> ТОВ "Автомобіле Партс" ЄДРПОУ 44224946. Оплачує послуги доставки – Покупець.</li>
+      <li>повідомте № декларації відправленої посилки та № банківської картки для повернення вартості товару на вайбер <a href="viber://chat?number=+380664004544" style="color:#2d9e00;font-weight:600;">+380664004544</a> або в тому самому листі на пошту <a href="mailto:avtomobileparts.spare@gmail.com" style="color:#2d9e00;font-weight:600;">avtomobileparts.spare@gmail.com</a></li>
+      <li>після отримання, перевірки вмісту посилки на відповідність умовам повернення товару, ми повертаємо Вам гроші на банківську картку або надсилаємо інший товар протягом трьох робочих днів. Комісія за переказ коштів лягає на Покупця.</li>
+    </ul>
+  </div>
 
-  <div class="catalog-layout">
+  <div class="info-section">
+    <h2>Повернення товарів неналежної якості</h2>
+    <p>Ми ретельно перевіряємо товар перед відправкою, але все ж таки не виключаємо можливість браку. Якщо Ви отримали бракований товар, його можна повернути або обміняти протягом 14 днів із дня отримання.</p>
+    <p><strong>Процедура повернення товару Неналежної якості:</strong></p>
+    <ul>
+      <li>зателефонуйте <a href="tel:+380997558803" style="color:#2d9e00;font-weight:600;">+380997558803</a> та повідомте про намір повернути оплачений товар або надішліть електронний лист на пошту <a href="mailto:avtomobileparts.spare@gmail.com" style="color:#2d9e00;font-weight:600;">avtomobileparts.spare@gmail.com</a> з темою листа "Повернення або обмін товару";</li>
+      <li>товар можете повернути на адресу: Відділення Нової Пошти №2, м. Дніпро, номер телефону одержувача — <a href="tel:+380505157095" style="color:#2d9e00;font-weight:600;">+38 (050) 515-70-95</a> ТОВ "Автомобіле Партс" ЄДРПОУ 44224946;</li>
+      <li>повідомте № декларації відправленої посилки та № банківської картки для повернення вартості товару на вайбер <a href="viber://chat?number=+380664004544" style="color:#2d9e00;font-weight:600;">+380664004544</a> та надішліть електронний лист на пошту <a href="mailto:avtomobileparts.spare@gmail.com" style="color:#2d9e00;font-weight:600;">avtomobileparts.spare@gmail.com</a> з темою листа "Повернення або обмін товару";</li>
+      <li>після отримання товару протягом трьох робочих днів ми повертаємо Вам гроші на банківську картку або надсилаємо інший товар. Послуги перевізників та за переказ грошей відбуваються за рахунок Продавця.</li>
+    </ul>
+  </div>
 
-    <!-- FILTERS -->
-    <form id="filters-form" class="filters-sidebar" method="get" action="/catalog/{{ category }}">
-      <input type="hidden" name="sort" value="{{ sort }}">
-
-      <div class="filters-title">
-        Фільтри
-        <a href="/catalog/{{ category }}" class="filters-reset">Скинути</a>
-        <button type="button" class="filters-close" onclick="toggleFilters()" aria-label="Закрити">✕</button>
-      </div>
-
-      <div class="filter-group">
-        <div class="filter-group-label">Ціна, ₴</div>
-        <div class="filter-range">
-          <input type="number" name="min_price" placeholder="від"
-                 value="{{ min_price if min_price else '' }}">
-          <input type="number" name="max_price" placeholder="до"
-                 value="{{ max_price if max_price else '' }}">
-        </div>
-      </div>
-
-      <div class="filter-group">
-        <div class="filter-group-label">Рік випуску</div>
-        <div class="filter-range">
-          <input type="number" name="min_year" placeholder="від"
-                 value="{{ min_year if min_year else '' }}">
-          <input type="number" name="max_year" placeholder="до"
-                 value="{{ max_year if max_year else '' }}">
-        </div>
-      </div>
-
-      <div class="filter-group">
-        <div class="filter-group-label">Пробіг, км</div>
-        <div class="filter-range">
-          <input type="number" name="min_mileage" placeholder="від"
-                 value="{{ min_mileage if min_mileage is not none else '' }}">
-          <input type="number" name="max_mileage" placeholder="до"
-                 value="{{ max_mileage if max_mileage is not none else '' }}">
-        </div>
-      </div>
-
-      <div class="filter-group">
-        <div class="filter-group-label">Об'єм двигуна, см³</div>
-        <div class="filter-range">
-          <input type="number" name="min_engine" placeholder="від"
-                 value="{{ min_engine if min_engine is not none else '' }}">
-          <input type="number" name="max_engine" placeholder="до"
-                 value="{{ max_engine if max_engine is not none else '' }}">
-        </div>
-      </div>
-
-      {% if brands %}
-      <div class="filter-group">
-        <div class="filter-group-label">Бренд</div>
-        <select name="brand" class="filter-select">
-          <option value="">Всі бренди</option>
-          {% for b in brands %}
-          <option value="{{ b }}" {% if brand == b %}selected{% endif %}>{{ b }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      {% endif %}
-
-      <div class="filter-group">
-        <div class="filter-group-label">Стан</div>
-        <select name="condition" class="filter-select">
-          <option value="">Будь-який стан</option>
-          {% for c in conditions %}
-          <option value="{{ c }}" {% if condition == c %}selected{% endif %}>{{ c }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <label class="filter-checkbox">
-          <input type="checkbox" name="available_only" value="true"
-                 {% if available_only %}checked{% endif %}
-                 onchange="this.form.submit()">
-          Тільки в наявності
-        </label>
-      </div>
-
-      <button type="submit" class="btn-apply">Застосувати</button>
-    </form>
-
-    <!-- GRID -->
-    <div class="catalog-grid">
-      {% if bikes %}
-        {% for bike in bikes %}
-        <div class="card bike-card {% if loop.index > 21 %}hidden-card{% endif %}" onclick="window.location='/catalog/{{ bike.category }}/{{ bike.slug }}'" style="cursor:pointer{% if loop.index > 21 %};display:none{% endif %}">
-          <div class="card-img">
-            {% if bike.photo %}
-            <img src="{{ bike.photo }}" alt="{{ bike.name }}">
-            {% else %}
-            <svg width="64" height="64" fill="none" stroke="#bbb" stroke-width="1.5" viewBox="0 0 24 24">
-              <circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/>
-              <path d="M5 17H3v-4l3-5h8l4 5v4H19"/><path d="M12 4l3 5"/>
-            </svg>
-            {% endif %}
-            {% set _s = bike.status or ('available' if bike.available else 'sold') %}
-            <div class="card-tag {% if _s == 'sold' %}card-tag-sold{% elif _s != 'available' %}card-tag-status{% endif %}">
-              {% if _s == 'available' %}В наявності{% elif _s == 'in_transit' %}В дорозі{% elif _s == 'reserved' %}Під завдатком{% else %}Продано{% endif %}
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="card-name">{{ bike.name }}</div>
-            <div class="card-year">{{ bike.year }} рік · {{ bike.color }}</div>
-            <div class="card-specs">
-              <span>{{ "{:,}".format(bike.mileage).replace(",", " ") }} км</span>
-              <span>{{ bike.engine }} см³</span>
-              <span>{{ bike.condition }}</span>
-            </div>
-            <div class="card-footer">
-              <div class="card-price">{% if uah_price(bike.price) %}<div class="card-price-uah"><div class="cp-main">{{ uah_price(bike.price) }}<em>грн</em></div><div class="cp-usd">{{ usd_amount(bike.price) }} $</div></div>{% else %}<div class="card-price-na">—</div>{% endif %}</div>
-              <a href="/catalog/{{ bike.category }}/{{ bike.slug }}" class="btn-detail">Детальніше</a>
-            </div>
-          </div>
-        </div>
-        {% endfor %}
-      {% else %}
-        <div class="empty-state">
-          <div style="font-size:56px;">🔍</div>
-          <p>Нічого не знайдено. Спробуйте змінити фільтри.</p>
-          <a href="/catalog/{{ category }}" style="color:#2d9e00;font-weight:700;">Скинути фільтри</a>
-        </div>
-      {% endif %}
+  <div class="info-section">
+    <div class="notice">
+      <p>Відповідно закону «<a href="https://zakon.rada.gov.ua/laws/show/1023-12#Text" target="_blank" style="color:#2d9e00;text-decoration:none;font-weight:700;">Про захист прав споживачів</a>», компанія може відмовити споживачеві в обміні та поверненні товарів належної якості, якщо вони відносяться до категорій, зазначених у чинному <a href="https://zakon.rada.gov.ua/laws/show/172-94-%D0%BF#Text" target="_blank" style="color:#2d9e00;text-decoration:none;font-weight:700;">Переліку непродовольчих товарів належної якості, що не підлягають поверненню та обміну</a>.</p>
     </div>
+  </div>
 
-    {% if bikes|length > 21 %}
-    <div id="show-more-wrap" style="text-align:center;margin-top:28px;grid-column:1/-1;">
-      <button id="show-more-btn" onclick="showMore()" style="background:#fff;border:2px solid #2d9e00;color:#2d9e00;padding:13px 36px;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;">
-        Показати ще 20
-      </button>
-    </div>
-    {% endif %}
-
+  <div class="info-section">
+    <h2>Контакти для повернення</h2>
+    <ul>
+      <li>Телефон: <a href="tel:+380997558803" style="color:#2d9e00;font-weight:600;">+38 099 755 88 03</a></li>
+      <li>Email: <a href="mailto:volemoto@ukr.net" style="color:#2d9e00;font-weight:600;">volemoto@ukr.net</a></li>
+      <li>Telegram: <a href="https://t.me/+380634271592" target="_blank" style="color:#2d9e00;font-weight:600;">@volemoto</a></li>
+      <li>Графік: Пн–Сб: 9:00 – 18:00</li>
+    </ul>
   </div>
 </div>
 
@@ -320,7 +212,6 @@
     <span>Дніпро, Україна</span>
   </div>
 </footer>
-<script src="/static/js/catalog.js"></script>
 <script src="/static/js/autocomplete.js"></script>
 <script src="/static/js/navbar.js"></script>
 </body>

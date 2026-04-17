@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ cat_label }} — VOLE MOTO</title>
+  <title>Отримання і оплата — VOLE MOTO</title>
   <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
   <link rel="stylesheet" href="/static/css/base.css">
   <link rel="stylesheet" href="/static/css/navbar.css">
-  <link rel="stylesheet" href="/static/css/cards.css">
   <link rel="stylesheet" href="/static/css/footer.css">
   <link rel="stylesheet" href="/static/css/autocomplete.css">
-  <link rel="stylesheet" href="/static/css/pages/catalog.css">
   <link rel="stylesheet" href="/static/css/responsive.css">
   <link rel="stylesheet" href="/static/css/dropdown.css">
+  <link rel="stylesheet" href="/static/css/pages/payment.css">
 </head>
 <body>
 
@@ -22,7 +21,7 @@
   <ul class="nav-links">
     <li><a href="/">Головна</a></li>
     <li class="nav-dropdown">
-      <a href="#" class="active">Каталог ▾</a>
+      <a href="/catalog/moto">Каталог ▾</a>
       <ul class="dropdown-menu">
         <li><a href="/catalog/moto">Мотоцикли</a></li>
         <li><a href="/catalog/moped">Мопеди</a></li>
@@ -45,7 +44,7 @@
     </li>
     <li><a href="/brands">Бренди</a></li>
     <li><a href="/reviews">Відгуки</a></li>
-    <li><a href="/otrimannya-i-oplata">Отримання і оплата</a></li>
+    <li><a href="/otrimannya-i-oplata" class="active">Отримання і оплата</a></li>
     <li><a href="/povernennya-ta-obmin">Повернення та обмін</a></li>
     <li><a href="/contacts">Контакти</a></li>
   </ul>
@@ -73,7 +72,7 @@
     <ul class="mobile-nav-links">
       <li><a href="/">Головна</a></li>
       <li class="mobile-dropdown">
-        <button class="mobile-catalog-toggle active">Мототехніка ▾</button>
+        <button class="mobile-catalog-toggle">Мототехніка ▾</button>
         <ul class="mobile-submenu">
           <li><a href="/catalog/moto">Мотоцикли</a></li>
           <li><a href="/catalog/moped">Мопеди</a></li>
@@ -96,7 +95,7 @@
       </li>
       <li><a href="/brands">Бренди</a></li>
       <li><a href="/reviews">Відгуки</a></li>
-      <li><a href="/otrimannya-i-oplata">Отримання і оплата</a></li>
+      <li><a href="/otrimannya-i-oplata" class="active">Отримання і оплата</a></li>
       <li><a href="/povernennya-ta-obmin">Повернення та обмін</a></li>
       <li><a href="/contacts">Контакти</a></li>
     </ul>
@@ -116,175 +115,97 @@
   </div>
 </div>
 
-<div class="page-wrap">
+<!-- BREADCRUMBS -->
+<div class="breadcrumbs">
+  <a href="/">Головна</a><span>›</span>Отримання і оплата
+</div>
 
-  <!-- BREADCRUMBS -->
-  <div class="breadcrumbs">
-    <a href="/">Головна</a>
-    <span>›</span>
-    <a href="/catalog/{{ category }}">{{ cat_label }}</a>
-  </div>
+<!-- MAIN CONTENT -->
+<div class="info-page">
+  <h1>Отримання і <span>оплата</span></h1>
 
-  <!-- PAGE HEADER -->
-  <div class="cat-header">
-    <h1>
-      {{ cat_label }}
-      <span class="cat-header-count">{{ total }} оголошень</span>
-    </h1>
-    <div class="sort-row">
-      <button class="filter-toggle" onclick="toggleFilters()">Фільтри</button>
-      <span class="sort-label">Сортування:</span>
-      <select class="sort-select" onchange="applySort(this.value)">
-        <option value="newest"     {% if sort=='newest'     %}selected{% endif %}>Новіші спочатку</option>
-        <option value="price_asc"  {% if sort=='price_asc'  %}selected{% endif %}>Ціна: від дешевих</option>
-        <option value="price_desc" {% if sort=='price_desc' %}selected{% endif %}>Ціна: від дорогих</option>
-        <option value="year_desc"  {% if sort=='year_desc'  %}selected{% endif %}>Рік: новіші</option>
-        <option value="year_asc"   {% if sort=='year_asc'   %}selected{% endif %}>Рік: старіші</option>
-        <option value="mileage"    {% if sort=='mileage'    %}selected{% endif %}>Пробіг: менший</option>
-      </select>
+  <div class="info-section">
+    <h2>Способи оплати товару</h2>
+    <p>Здійснити оплату Ви можете наступними способами:</p>
+    <div class="payment-methods">
+      <div class="pay-item" style="align-items:center;">
+        <div class="pay-icon">💳</div>
+        <div class="pay-text">
+          <strong>Через термінал самообслуговування (Комісія від 0,5%);</strong>
+        </div>
+      </div>
+      <div class="pay-item" style="align-items:center;">
+        <div class="pay-icon">💵</div>
+        <div class="pay-text">
+          <strong>Кур'єру при отриманні товару (По місту Дніпро та Кам'янське);</strong>
+        </div>
+      </div>
+      <div class="pay-item" style="align-items:center;">
+        <div class="pay-icon">🏦</div>
+        <div class="pay-text">
+          <strong>Перерахуванням на розрахунковий рахунок підприємства за реквізитами.</strong>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- FILTER OVERLAY -->
-  <div class="filter-overlay" id="filter-overlay" onclick="toggleFilters()"></div>
-
-  <div class="catalog-layout">
-
-    <!-- FILTERS -->
-    <form id="filters-form" class="filters-sidebar" method="get" action="/catalog/{{ category }}">
-      <input type="hidden" name="sort" value="{{ sort }}">
-
-      <div class="filters-title">
-        Фільтри
-        <a href="/catalog/{{ category }}" class="filters-reset">Скинути</a>
-        <button type="button" class="filters-close" onclick="toggleFilters()" aria-label="Закрити">✕</button>
+  <div class="info-section">
+    <h2>ДЛЯ ЮРИДИЧНИХ І ФІЗИЧНИХ ОСІБ (БЕЗ ПДВ):</h2>
+    <div class="requisites-grid">
+      <div class="req-card">
+        <h3>Реквізити</h3>
+        <div class="req-row"><span class="req-label">Отримувач:</span><span class="req-value">ФОП Денисов Володимир Володимирович</span></div>
+        <div class="req-row"><span class="req-label">IBAN:</span><span class="req-value">UA 60 322001 00000 2600 2310 1041 61</span></div>
+        <div class="req-row"><span class="req-label">ІПН/ЄДРПОУ:</span><span class="req-value">3383604070</span></div>
+        <div class="req-row"><span class="req-label">Банк:</span><span class="req-value">АТ «УНІВЕРСАЛ БАНК»</span></div>
+        <div class="req-row"><span class="req-label">МФО:</span><span class="req-value">322001</span></div>
+        <div class="req-row"><span class="req-label">ЄДРПОУ Банку:</span><span class="req-value">21133352</span></div>
       </div>
-
-      <div class="filter-group">
-        <div class="filter-group-label">Ціна, ₴</div>
-        <div class="filter-range">
-          <input type="number" name="min_price" placeholder="від"
-                 value="{{ min_price if min_price else '' }}">
-          <input type="number" name="max_price" placeholder="до"
-                 value="{{ max_price if max_price else '' }}">
-        </div>
-      </div>
-
-      <div class="filter-group">
-        <div class="filter-group-label">Рік випуску</div>
-        <div class="filter-range">
-          <input type="number" name="min_year" placeholder="від"
-                 value="{{ min_year if min_year else '' }}">
-          <input type="number" name="max_year" placeholder="до"
-                 value="{{ max_year if max_year else '' }}">
-        </div>
-      </div>
-
-      <div class="filter-group">
-        <div class="filter-group-label">Пробіг, км</div>
-        <div class="filter-range">
-          <input type="number" name="min_mileage" placeholder="від"
-                 value="{{ min_mileage if min_mileage is not none else '' }}">
-          <input type="number" name="max_mileage" placeholder="до"
-                 value="{{ max_mileage if max_mileage is not none else '' }}">
-        </div>
-      </div>
-
-      <div class="filter-group">
-        <div class="filter-group-label">Об'єм двигуна, см³</div>
-        <div class="filter-range">
-          <input type="number" name="min_engine" placeholder="від"
-                 value="{{ min_engine if min_engine is not none else '' }}">
-          <input type="number" name="max_engine" placeholder="до"
-                 value="{{ max_engine if max_engine is not none else '' }}">
-        </div>
-      </div>
-
-      {% if brands %}
-      <div class="filter-group">
-        <div class="filter-group-label">Бренд</div>
-        <select name="brand" class="filter-select">
-          <option value="">Всі бренди</option>
-          {% for b in brands %}
-          <option value="{{ b }}" {% if brand == b %}selected{% endif %}>{{ b }}</option>
-          {% endfor %}
-        </select>
-      </div>
-      {% endif %}
-
-      <div class="filter-group">
-        <div class="filter-group-label">Стан</div>
-        <select name="condition" class="filter-select">
-          <option value="">Будь-який стан</option>
-          {% for c in conditions %}
-          <option value="{{ c }}" {% if condition == c %}selected{% endif %}>{{ c }}</option>
-          {% endfor %}
-        </select>
-      </div>
-
-      <div class="filter-group">
-        <label class="filter-checkbox">
-          <input type="checkbox" name="available_only" value="true"
-                 {% if available_only %}checked{% endif %}
-                 onchange="this.form.submit()">
-          Тільки в наявності
-        </label>
-      </div>
-
-      <button type="submit" class="btn-apply">Застосувати</button>
-    </form>
-
-    <!-- GRID -->
-    <div class="catalog-grid">
-      {% if bikes %}
-        {% for bike in bikes %}
-        <div class="card bike-card {% if loop.index > 21 %}hidden-card{% endif %}" onclick="window.location='/catalog/{{ bike.category }}/{{ bike.slug }}'" style="cursor:pointer{% if loop.index > 21 %};display:none{% endif %}">
-          <div class="card-img">
-            {% if bike.photo %}
-            <img src="{{ bike.photo }}" alt="{{ bike.name }}">
-            {% else %}
-            <svg width="64" height="64" fill="none" stroke="#bbb" stroke-width="1.5" viewBox="0 0 24 24">
-              <circle cx="5" cy="17" r="3"/><circle cx="19" cy="17" r="3"/>
-              <path d="M5 17H3v-4l3-5h8l4 5v4H19"/><path d="M12 4l3 5"/>
-            </svg>
-            {% endif %}
-            {% set _s = bike.status or ('available' if bike.available else 'sold') %}
-            <div class="card-tag {% if _s == 'sold' %}card-tag-sold{% elif _s != 'available' %}card-tag-status{% endif %}">
-              {% if _s == 'available' %}В наявності{% elif _s == 'in_transit' %}В дорозі{% elif _s == 'reserved' %}Під завдатком{% else %}Продано{% endif %}
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="card-name">{{ bike.name }}</div>
-            <div class="card-year">{{ bike.year }} рік · {{ bike.color }}</div>
-            <div class="card-specs">
-              <span>{{ "{:,}".format(bike.mileage).replace(",", " ") }} км</span>
-              <span>{{ bike.engine }} см³</span>
-              <span>{{ bike.condition }}</span>
-            </div>
-            <div class="card-footer">
-              <div class="card-price">{% if uah_price(bike.price) %}<div class="card-price-uah"><div class="cp-main">{{ uah_price(bike.price) }}<em>грн</em></div><div class="cp-usd">{{ usd_amount(bike.price) }} $</div></div>{% else %}<div class="card-price-na">—</div>{% endif %}</div>
-              <a href="/catalog/{{ bike.category }}/{{ bike.slug }}" class="btn-detail">Детальніше</a>
-            </div>
-          </div>
-        </div>
-        {% endfor %}
-      {% else %}
-        <div class="empty-state">
-          <div style="font-size:56px;">🔍</div>
-          <p>Нічого не знайдено. Спробуйте змінити фільтри.</p>
-          <a href="/catalog/{{ category }}" style="color:#2d9e00;font-weight:700;">Скинути фільтри</a>
-        </div>
-      {% endif %}
     </div>
+  </div>
 
-    {% if bikes|length > 21 %}
-    <div id="show-more-wrap" style="text-align:center;margin-top:28px;grid-column:1/-1;">
-      <button id="show-more-btn" onclick="showMore()" style="background:#fff;border:2px solid #2d9e00;color:#2d9e00;padding:13px 36px;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;">
-        Показати ще 20
-      </button>
+  <div class="info-section">
+    <h2>Способи доставки замовлення</h2>
+    <div class="delivery-grid">
+      <div class="delivery-card">
+        <div class="dc-icon">🏪</div>
+        <div class="dc-body">
+          <div class="dc-title">Самовивіз</div>
+          <div class="dc-sub">Ви можете забрати замовлення самостійно або через довірену особу в офісі компанії.<br>Адреса: Аэропортовская, 51, Дніпро. Пн–Сб: 9:00–18:00</div>
+        </div>
+      </div>
+      <div class="delivery-card">
+        <div class="dc-icon">🚚</div>
+        <div class="dc-body">
+          <div class="dc-title">Кур'єр</div>
+          <div class="dc-sub">Доставка кур’єром здійснюється по місту Дніпро та Кам'янське. Доставка є безкоштовною. Термін доставки до 1-2 дні.</div>
+        </div>
+      </div>
+      <div class="delivery-card">
+        <div class="dc-icon">📦</div>
+        <div class="dc-body">
+          <div class="dc-title">Транспортна компанія</div>
+          <div class="dc-sub">Доставка здійснюється через транспортні компанії: «Нова Пошта», «Укрпошта», «Meest Express», «Delivery».<br>Вартість доставки визначається тарифами перевізника (від 100 грн).<br>Термін доставки:<br>— товари в наявності — 1–3 дні;<br>— товари під замовлення — 2–7 днів.</div>
+        </div>
+      </div>
+      <div class="delivery-card">
+        <div class="dc-icon">🚛</div>
+        <div class="dc-body">
+          <div class="dc-title">Кур'єрська доставка транспортними компаніями</div>
+          <div class="dc-sub">Доставка здійснюється через транспортні компанії: «Нова Пошта», «Укрпошта», «Meest Express», «Delivery».<br>Адресна доставка кур'єром по всій Україні.<br>Вартість доставки визначається тарифами перевізника (від 150 грн).<br>Термін доставки:<br> — товари в наявності — 1–3 дні;<br>— товари під замовлення — 2–8 днів.</div>
+        </div>
+      </div>
     </div>
-    {% endif %}
+  </div>
 
+  <div class="info-section">
+    <h2>Питання щодо оплати та доставки</h2>
+    <p>Якщо у вас виникли питання — зв'яжіться з нами:</p>
+    <ul>
+      <li>Телефон: <a href="tel:+380997558803" style="color:#2d9e00;font-weight:600;">+38 099 755 88 03</a></li>
+      <li>Email: <a href="mailto:volemoto@ukr.net" style="color:#2d9e00;font-weight:600;">volemoto@ukr.net</a></li>
+      <li>Telegram: <a href="https://t.me/+380634271592" target="_blank" style="color:#2d9e00;font-weight:600;">@volemoto</a></li>
+    </ul>
   </div>
 </div>
 
@@ -320,7 +241,6 @@
     <span>Дніпро, Україна</span>
   </div>
 </footer>
-<script src="/static/js/catalog.js"></script>
 <script src="/static/js/autocomplete.js"></script>
 <script src="/static/js/navbar.js"></script>
 </body>

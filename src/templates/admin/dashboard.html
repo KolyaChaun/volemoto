@@ -120,7 +120,7 @@
       <div class="panel-header">За категоріями</div>
       <div class="cat-list">
         {% set grand_total = total + gear_total + parts_total %}
-        {% set cats = [("Мотоцикли", motos), ("Мопеди / Скутери", mopeds), ("Квадроцикли", quads), ("Екіпіровка", gear_total), ("Запчастини", parts_total)] %}
+        {% set cats = [("Мотоцикли", motos), ("Мопеди / Скутери", mopeds), ("Екіпіровка", gear_total), ("Запчастини", parts_total)] %}
         {% for label, count in cats %}
         <div class="cat-item">
           <div class="cat-item-left">{{ label }}</div>
