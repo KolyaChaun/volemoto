@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     database_url: str
     secret_key: str
     cookie_secure: bool = True
+    site_url: str = "https://volemoto.com.ua"
 
     redis_url: str = "redis://localhost:6379/0"
 
@@ -20,3 +21,4 @@ class Settings(BaseSettings):
 
 settings = Settings()
 templates = Jinja2Templates(directory="src/templates")
+templates.env.globals["site_url"] = settings.site_url

@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% if cat %}{{ cats[cat] }}{% else %}Мотоекіпіровка{% endif %} — VOLE MOTO</title>
+  <meta name="description" content="{% if cat %}{{ cats[cat] }}{% else %}Мотоекіпіровка{% endif %} — купити в Дніпрі. Шоломи, рукавиці, екіпіровка у VOLE MOTO. Широкий вибір, доставка по Україні.">
+  <link rel="canonical" href="{{ site_url }}/equipment{% if cat %}?cat={{ cat }}{% endif %}">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{% if cat %}{{ cats[cat] }}{% else %}Мотоекіпіровка{% endif %} — VOLE MOTO">
+  <meta property="og:description" content="{% if cat %}{{ cats[cat] }}{% else %}Мотоекіпіровка{% endif %} — купити в Дніпрі. Широкий вибір у VOLE MOTO.">
+  <meta property="og:url" content="{{ site_url }}/equipment{% if cat %}?cat={{ cat }}{% endif %}">
+  <meta property="og:image" content="{{ site_url }}/static/images/logo.png">
   <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
   <link rel="stylesheet" href="/static/css/base.css">
   <link rel="stylesheet" href="/static/css/navbar.css">

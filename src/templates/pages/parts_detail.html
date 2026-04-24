@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ product.name }} — VOLE MOTO</title>
+  <meta name="description" content="{{ product.name }}{% if product.brand %} {{ product.brand }}{% endif %} — купити в VOLE MOTO, Дніпро.{% if product.description %} {{ product.description[:100] }}{% endif %}">
+  <link rel="canonical" href="{{ site_url }}/{{ 'equipment' if product.category in ['helmets', 'gloves', 'gear'] else 'parts' }}/{{ product.slug }}">
+  <meta property="og:type" content="product">
+  <meta property="og:title" content="{{ product.name }} — VOLE MOTO">
+  <meta property="og:description" content="{{ product.name }}{% if product.brand %} {{ product.brand }}{% endif %} — купити в VOLE MOTO, Дніпро.">
+  <meta property="og:url" content="{{ site_url }}/{{ 'equipment' if product.category in ['helmets', 'gloves', 'gear'] else 'parts' }}/{{ product.slug }}">
+  <meta property="og:image" content="{{ product.photo if product.photo else site_url + '/static/images/logo.png' }}">
   <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
   <link rel="stylesheet" href="/static/css/base.css">
   <link rel="stylesheet" href="/static/css/navbar.css">
@@ -13,6 +20,23 @@
   <link rel="stylesheet" href="/static/css/pages/bike-detail.css">
   <link rel="stylesheet" href="/static/css/responsive.css">
   <link rel="stylesheet" href="/static/css/dropdown.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "{{ product.name }}",
+    "description": "{{ product.description | replace('"', '\\"') | replace('\n', ' ') if product.description else product.name }}",
+    "image": "{{ product.photo if product.photo else site_url + '/static/images/logo.png' }}",
+    {% if product.brand %}"brand": { "@type": "Brand", "name": "{{ product.brand }}" },{% endif %}
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "UAH",
+      "price": "{{ product.price }}",
+      "availability": "{{ 'https://schema.org/InStock' if product.available else 'https://schema.org/OutOfStock' }}",
+      "seller": { "@type": "Organization", "name": "VOLE MOTO" }
+    }
+  }
+  </script>
 </head>
 <body>
 
@@ -193,7 +217,7 @@
       <div style="font-size:12px; color:#aaa; font-weight:600;">Артикул: {{ product.article }}</div>
       {% endif %}
     </div>
-    <div class="bike-title">{{ product.name }}</div>
+    <h1 class="bike-title">{{ product.name }}</h1>
 
     <div class="price-row">
       <div class="price-main">{{ "{:,}".format(product.price).replace(",", " ") }}</div>

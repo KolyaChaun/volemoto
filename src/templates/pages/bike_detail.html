@@ -4,6 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{ bike.name }} — VOLE MOTO</title>
+  <meta name="description" content="{{ bike.name }}{% if bike.year %}, {{ bike.year }} р.{% endif %}{% if bike.mileage %}, {{ bike.mileage }} км{% endif %}{% if bike.engine %}, {{ bike.engine }} куб{% endif %}. Купити в VOLE MOTO, Дніпро.">
+  <link rel="canonical" href="{{ site_url }}/catalog/{{ bike.category }}/{{ bike.slug }}">
+  <meta property="og:type" content="product">
+  <meta property="og:title" content="{{ bike.name }} — VOLE MOTO">
+  <meta property="og:description" content="{{ bike.name }}{% if bike.year %}, {{ bike.year }} р.{% endif %}{% if bike.mileage %}, {{ bike.mileage }} км{% endif %}. Купити в VOLE MOTO, Дніпро.">
+  <meta property="og:url" content="{{ site_url }}/catalog/{{ bike.category }}/{{ bike.slug }}">
+  <meta property="og:image" content="{{ bike.photo if bike.photo else site_url + '/static/images/logo.png' }}">
   <link rel="icon" type="image/x-icon" href="/static/images/favicon.ico">
   <link rel="stylesheet" href="/static/css/base.css">
   <link rel="stylesheet" href="/static/css/navbar.css">
@@ -13,6 +20,23 @@
   <link rel="stylesheet" href="/static/css/pages/bike-detail.css">
   <link rel="stylesheet" href="/static/css/responsive.css">
   <link rel="stylesheet" href="/static/css/dropdown.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": "{{ bike.name }}",
+    "description": "{{ bike.description | replace('"', '\\"') | replace('\n', ' ') if bike.description else bike.name }}",
+    "image": "{{ bike.photo if bike.photo else site_url + '/static/images/logo.png' }}",
+    "brand": { "@type": "Brand", "name": "{{ bike.brand }}" },
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "UAH",
+      "price": "{{ bike.price }}",
+      "availability": "{{ 'https://schema.org/InStock' if bike.available else 'https://schema.org/OutOfStock' }}",
+      "seller": { "@type": "Organization", "name": "VOLE MOTO" }
+    }
+  }
+  </script>
 </head>
 <body>
 
@@ -199,10 +223,10 @@
       <div style="font-size:12px; color:#aaa; font-weight:600;">Артикул: {{ bike.article }}</div>
       {% endif %}
     </div>
-    <div class="bike-title">
+    <h1 class="bike-title">
       {{ {"moto":"Мотоцикл","moped":"Мопед","quad":"Квадроцикл"}.get(bike.category,"") }}
       {{ bike.name }}
-    </div>
+    </h1>
 
     <div class="bike-price-row">
       {% if uah_price(bike.price) %}
