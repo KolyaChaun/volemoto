@@ -51,6 +51,9 @@ class Bike(Base):
         parsed = urlparse(url)
         if parsed.hostname in ("youtu.be",):
             return parsed.path.lstrip("/")
+        parts = parsed.path.strip("/").split("/")
+        if len(parts) >= 2 and parts[0] == "shorts":
+            return parts[1]
         return parse_qs(parsed.query).get("v", [""])[0]
 
     @property
