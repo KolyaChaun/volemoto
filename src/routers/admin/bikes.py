@@ -9,6 +9,7 @@ from src.core.security import require_admin
 from src.db.database import get_db
 from src.models.admin import Admin
 from src.models.brand import Brand
+from src.models.review import Review
 from src.repositories.review_repo import ReviewRepository
 from src.services.bike_service import BikeService
 
@@ -29,6 +30,7 @@ def dashboard(
     avail = sum(1 for b in bikes if b.available)
     products = db.query(Product).all()
     unread = ReviewRepository(db).unread_count()
+    reviews_total = db.query(Review).count()
     return templates.TemplateResponse(
         request,
         "admin/dashboard.html",
@@ -45,7 +47,7 @@ def dashboard(
             "parts_total": sum(
                 1 for p in products if p.category in ("parts_new", "parts_used")
             ),
-            "reviews": unread,
+            "reviews": reviews_total,
             "recent": bikes[:6],
             "unread": unread,
         },
