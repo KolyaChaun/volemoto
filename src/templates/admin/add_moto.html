@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/static/admin/css/admin.css">
   <link rel="stylesheet" href="/static/admin/css/add-moto.css">
   <link rel="stylesheet" href="/static/admin/css/admin_mobile.css">
+  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
 </head>
 <body>
 
@@ -21,7 +22,8 @@
   </div>
 
   <div class="form-card">
-    <form method="post" action="{{ action }}" enctype="multipart/form-data">
+    <form id="bike-form" method="post" action="{{ action }}" enctype="multipart/form-data"
+      onsubmit="document.getElementById('description-hidden').value = quill.root.innerHTML;">
     <input type="hidden" name="csrf_token" value="{{ request.state.csrf_token }}">
 
       <div class="form-section">Основна інформація</div>
@@ -126,10 +128,17 @@
           <input type="url" name="youtube_url" value="{{ bike.youtube_url if bike else '' }}">
         </div>
         <div class="form-group full">
-          <label>Опис</label>
-          <textarea name="description" placeholder="Детальний опис мотоцикла...">{{ bike.description if bike else '' }}</textarea>
-        </div>
-      </div>
+  <label>Опис</label>
+  <div style="position: relative;">
+    <div id="quill-editor">{% if bike and bike.description %}{{ bike.description | safe }}{% endif %}</div>
+    <div id="symbol-picker">
+      {% for sym in ['©','®','™','°','±','×','÷','≠','≤','≥','∞','→','←','↑','↓','↔','•','—','–','«','»','„','"','…','€','$','£','¥','№','§','¶','†','‡','★','☆','✓','✗','⚡','❗','❓'] %}
+      <button type="button" class="sym-btn" data-sym="{{ sym }}" title="{{ sym }}">{{ sym }}</button>
+      {% endfor %}
+    </div>
+  </div>
+  <textarea name="description" id="description-hidden" style="display:none;">{{ bike.description if bike else '' }}</textarea>
+</div>
 
       <div class="form-actions">
         <button type="submit" class="btn-save">
@@ -153,6 +162,78 @@
 {% endfor %}
 {% endif %}
 
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+
+<script>
+let quill;
+
+document.addEventListener('DOMContentLoaded', function () {
+
+  quill = new Quill('#quill-editor', {
+    theme: 'snow',
+    modules: {
+      toolbar: [
+        ['bold', 'italic', 'underline'],
+        [{ list: 'ordered' }, { list: 'bullet' }],
+        [{ color: [] }]
+      ]
+    }
+  });
+
+  setTimeout(() => {
+    const toolbar = document.querySelector('.ql-toolbar');
+
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'ql-symbols';
+    btn.innerHTML = 'Ω';
+    btn.title = 'Символи';
+
+    const span = document.createElement('span');
+    span.className = 'ql-formats';
+    span.appendChild(btn);
+    toolbar.appendChild(span);
+
+    btn.addEventListener('click', () => {
+      const picker = document.getElementById('symbol-picker');
+      picker.style.display =
+        picker.style.display === 'block' ? 'none' : 'block';
+    });
+
+  }, 0);
+
+  document.querySelectorAll('.sym-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+      const sym = this.dataset.sym;
+
+      const range = quill.getSelection(true);
+      const index = range ? range.index : quill.getLength();
+
+      quill.insertText(index, sym);
+      quill.setSelection(index + sym.length);
+
+      document.getElementById('symbol-picker').style.display = 'none';
+    });
+  });
+
+  document.addEventListener('click', function (e) {
+    const picker = document.getElementById('symbol-picker');
+
+    if (
+      picker &&
+      !e.target.closest('#symbol-picker') &&
+      !e.target.closest('.ql-symbols')
+    ) {
+      picker.style.display = 'none';
+    }
+  });
+
+  document.getElementById('bike-form').addEventListener('submit', function () {
+  document.getElementById('description-hidden').value = quill.root.innerHTML;
+});
+
+});
+</script>
 <script src="/static/admin/js/admin_mobile.js"></script>
 <script src="/static/js/file_input.js"></script>
 <script>

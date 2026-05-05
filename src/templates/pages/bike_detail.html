@@ -206,7 +206,7 @@
   {% if bike.description %}
   <div class="desc-block">
     <h3>Опис</h3>
-    <div class="desc-text">{{ bike.description }}</div>
+    <div class="desc-text">{{ bike.description | safe }}</div>
   </div>
   {% endif %}
   </div><!-- end detail-left -->
