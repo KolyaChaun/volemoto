@@ -117,9 +117,9 @@ class ProductRepository:
         if filters.cat:
             q = q.filter(Product.category == filters.cat)
         if filters.brands:
-            q = q.filter(Product.brand.in_(filters.brands))
+            q = q.filter(func.trim(Product.brand).in_(filters.brands))
         if filters.subcategory:
-            q = q.filter(Product.subcategory == filters.subcategory)
+            q = q.filter(Product.subcategory.like(f"{filters.subcategory}%"))
         if filters.min_price:
             q = q.filter(Product.price >= filters.min_price)
         if filters.max_price:
@@ -143,17 +143,15 @@ class ProductRepository:
         return sorted(counts), counts
 
     def parts_used_subcats(self, categories: set[str]) -> set[str]:
-        return {
-            p.subcategory
-            for p in self.db.query(Product)
-            .filter(
+        result = set()
+        for p in self.db.query(Product).filter(
                 Product.category.in_(list(categories)),
-                Product.subcategory != None,  # noqa: E711
+                Product.subcategory != None,
                 Product.subcategory != "",
-            )
-            .all()
-            if p.subcategory
-        }
+        ).all():
+            if p.subcategory:
+                result.add(p.subcategory.split("::")[0])
+        return result
 
     def save(self, product: Product, photo_paths: list[str] = ()) -> Product:
         self.db.add(product)

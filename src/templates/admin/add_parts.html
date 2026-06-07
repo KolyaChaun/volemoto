@@ -46,18 +46,26 @@
           </select>
         </div>
         <div class="form-group">
-          <label>Категорія запчастини</label>
-          <input type="hidden" name="subcategory" id="subcat-hidden" value="{{ product.subcategory if product else '' }}">
-          <select id="subcat-select" onchange="onSubcatChange(this)">
-            <option value="">— Оберіть категорію —</option>
-            {% for group in parts_subcats %}
-            <option value="{{ group.key }}"
-              {% if product and product.subcategory == group.key %}selected{% endif %}>
-              {{ group.label }}
-            </option>
-            {% endfor %}
-          </select>
-        </div>
+  <label>Категорія запчастини</label>
+  <input type="hidden" name="subcategory" id="subcat-hidden" value="{{ product.subcategory if product else '' }}">
+  <select id="subcat-select" onchange="onCatChange(this)">
+    <option value="">— Оберіть категорію —</option>
+    {% for group in parts_subcats %}
+    <option value="{{ group.key }}"
+      {% if product and product.subcategory and product.subcategory.split('::')[0] == group.key %}selected{% endif %}>
+      {{ group.label }}
+    </option>
+    {% endfor %}
+  </select>
+</div>
+
+
+<div class="form-group" id="subsub-group" style="visibility:hidden;">
+  <label>Підкатегорія</label>
+  <select id="subsub-select" onchange="onSubChange(this)">
+    <option value="">— Оберіть підкатегорію —</option>
+  </select>
+</div>
         <div class="form-group">
           <label>Колір</label>
           <input type="text" name="color" value="{{ product.color if product else '' }}">
@@ -139,15 +147,71 @@
 {% endfor %}
 {% endif %}
 
+<!--<script src="/static/admin/js/admin_mobile.js"></script>-->
+<!--<script src="/static/js/file_input.js"></script>-->
+<!--<script>-->
+<!--document.querySelectorAll('input[type=number]').forEach(function(el) {-->
+<!--  el.addEventListener('wheel', function(e) { e.preventDefault(); }, { passive: false });-->
+<!--});-->
+<!--function onSubcatChange(sel) {-->
+<!--  document.getElementById('subcat-hidden').value = sel.value;-->
+<!--}-->
+<!--</script>-->
 <script src="/static/admin/js/admin_mobile.js"></script>
 <script src="/static/js/file_input.js"></script>
 <script>
 document.querySelectorAll('input[type=number]').forEach(function(el) {
   el.addEventListener('wheel', function(e) { e.preventDefault(); }, { passive: false });
 });
-function onSubcatChange(sel) {
-  document.getElementById('subcat-hidden').value = sel.value;
+
+const PARTS_SUBCATS = {{ parts_subcats | tojson }};
+
+function onCatChange(sel) {
+  const key = sel.value;
+  const hidden = document.getElementById('subcat-hidden');
+  const subGroup = document.getElementById('subsub-group');
+  const subSel = document.getElementById('subsub-select');
+
+  hidden.value = key;
+  subSel.innerHTML = '<option value="">— Оберіть підкатегорію —</option>';
+
+  const group = PARTS_SUBCATS.find(g => g.key === key);
+  if (group && group.sub && group.sub.length > 0) {
+    group.sub.forEach(s => {
+      const opt = document.createElement('option');
+      opt.value = s;
+      opt.textContent = s;
+      subSel.appendChild(opt);
+    });
+    subGroup.style.visibility = 'visible';
+  } else {
+    subGroup.style.visibility = 'hidden';
+  }
 }
+
+function onSubChange(sel) {
+  const cat = document.getElementById('subcat-select').value;
+  const sub = sel.value;
+  document.getElementById('subcat-hidden').value = sub ? cat + '::' + sub : cat;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const hidden = document.getElementById('subcat-hidden');
+  const val = hidden.value;
+  if (!val) return;
+
+  const parts = val.split('::');
+  const catKey = parts[0];
+  const subVal = parts[1] || '';
+
+  const catSel = document.getElementById('subcat-select');
+  catSel.value = catKey;
+  onCatChange(catSel);
+
+  if (subVal) {
+    document.getElementById('subsub-select').value = subVal;
+  }
+});
 </script>
 </body>
 </html>

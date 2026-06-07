@@ -23,15 +23,28 @@ CATALOG_LABELS = {
     **PRODUCT_CATEGORIES,
 }
 
+# PARTS_SUBCATS = [
+#     {"key": "oils", "label": "Масла і Змазки"},
+#     {"key": "maintenance", "label": "Для ТО"},
+#     {"key": "intake", "label": "Впускна система"},
+#     {"key": "suspension", "label": "Підвіска"},
+#     {"key": "brakes", "label": "Гальмівна система"},
+#     {"key": "electronics", "label": "Електроніка"},
+#     {"key": "engine", "label": "Двигун та трансмісія"},
+#     {"key": "controls", "label": "Органи управління"},
+# ]
+
 PARTS_SUBCATS = [
-    {"key": "oils", "label": "Масла і Змазки"},
-    {"key": "maintenance", "label": "Для ТО"},
-    {"key": "intake", "label": "Впускна система"},
-    {"key": "suspension", "label": "Підвіска"},
-    {"key": "brakes", "label": "Гальмівна система"},
-    {"key": "electronics", "label": "Електроніка"},
-    {"key": "engine", "label": "Двигун та трансмісія"},
-    {"key": "controls", "label": "Органи управління"},
+    {"key": "wheels",     "label": "Колеса",             "sub": ["Шини", "Диски"]},
+    {"key": "fuel_tanks", "label": "Паливні баки",        "sub": []},
+    {"key": "lighting",   "label": "Освітлення",          "sub": ["Передні фари", "Задні ліхтарі", "Покажчики повороту", "Додаткове освітлення"]},
+    {"key": "plastic",    "label": "Пластик",             "sub": []},
+    {"key": "suspension", "label": "Підвіска",            "sub": ["Амортизатор задній", "Амортизатор передній", "Маятник", "Траверси", "Додаткове"]},
+    {"key": "brakes",     "label": "Гальмівна система",   "sub": ["Гальмівні диски", "Супорта", "Шланги/Бачки"]},
+    {"key": "controls",   "label": "Органи керування",    "sub": ["Курки", "Пульти", "Гріпси"]},
+    {"key": "cases",      "label": "Кофри",               "sub": ["Системи кріплення"]},
+    {"key": "seats",      "label": "Сидіння",             "sub": []},
+    {"key": "other",      "label": "Інше",                "sub": []},
 ]
 
 OPENAPI_TAGS = [

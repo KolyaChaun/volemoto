@@ -100,8 +100,10 @@ def parts_page(
 ):
     all_subcat_keys = {g["key"] for g in PARTS_SUBCATS}
     subcat_v = subcategory.strip() if subcategory and subcategory.strip() else None
-    if subcat_v not in all_subcat_keys:
-        subcat_v = None
+    if subcat_v:
+        base_key = subcat_v.split("::")[0]
+        if base_key not in all_subcat_keys:
+            subcat_v = None
 
     filters = PartsFilters(
         cat=cat if cat in PARTS_CATEGORIES else None,
@@ -116,7 +118,11 @@ def parts_page(
     repo = ProductRepository(db)
     items = repo.get_parts(PARTS_CATEGORIES, filters)
     all_brands, brand_counts = repo.parts_brands(PARTS_CATEGORIES)
-    used_subcats = repo.parts_used_subcats(PARTS_CATEGORIES)
+    # used_subcats = repo.parts_used_subcats(PARTS_CATEGORIES)
+
+    all_parts_flat = repo.get_parts(PARTS_CATEGORIES, PartsFilters())
+    all_subcats_in_db = {p.subcategory for p in all_parts_flat if p.subcategory}
+    used_subcats = {s.split("::")[0] for s in all_subcats_in_db}
 
     return templates.TemplateResponse(
         request,
@@ -137,7 +143,10 @@ def parts_page(
             "max_price": filters.max_price,
             "brands": all_brands,
             "brand_counts": brand_counts,
-            "parts_subcats": [g for g in PARTS_SUBCATS if g["key"] in used_subcats],
+            "parts_subcats": [
+                {**g, "sub": [s for s in g["sub"] if g["key"] + "::" + s in all_subcats_in_db]}
+                for g in PARTS_SUBCATS if g["key"] in used_subcats
+            ],
             "conditions": BIKE_CONDITIONS,
         },
     )

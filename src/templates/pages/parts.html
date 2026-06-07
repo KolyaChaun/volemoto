@@ -179,18 +179,40 @@
       </div>
 
       {% if parts_subcats %}
-      <div class="filter-group">
-        <div class="filter-group-label">Категорія</div>
-        <select name="subcategory" class="filter-select" onchange="this.form.submit()">
-          <option value="">Всі категорії</option>
-          {% for group in parts_subcats %}
-          <option value="{{ group.key }}" {% if subcategory == group.key %}selected{% endif %}>
-            {{ group.label }}
-          </option>
-          {% endfor %}
-        </select>
-      </div>
-      {% endif %}
+<div class="filter-group">
+  <div class="filter-group-label">Категорія</div>
+  <input type="hidden" name="subcategory" id="subcat-value" value="{{ subcategory or '' }}">
+
+  <div class="custom-select" id="custom-cat-select">
+    <div class="custom-select-trigger" onclick="toggleCatDropdown()">
+      <span id="custom-select-label">Всі категорії</span>
+      <span class="custom-select-arrow">▾</span>
+    </div>
+    <div class="custom-select-dropdown" id="cat-dropdown" style="display:none;">
+      <div class="custom-option" onclick="selectCat('', 'Всі категорії')">Всі категорії</div>
+      {% for group in parts_subcats %}
+        {% if group.sub %}
+          <div class="custom-option custom-option-group" onclick="toggleSubcats('{{ group.key }}', '{{ group.label }}', event)">
+            {{ group.label }} <span class="subcat-arrow" id="arrow-{{ group.key }}">›</span>
+          </div>
+          <div class="custom-subcats" id="subs-{{ group.key }}" style="display:none;">
+<!--            <div class="custom-option custom-option-sub" onclick="selectCat('{{ group.key }}', 'Всі: {{ group.label }}')">-->
+<!--              &nbsp;&nbsp;Всі: {{ group.label }}-->
+<!--            </div>-->
+            {% for s in group.sub %}
+            <div class="custom-option custom-option-sub" onclick="selectCat('{{ group.key }}::{{ s }}', '{{ group.label }}: {{ s }}')">
+              &nbsp;&nbsp; {{ s }}
+            </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="custom-option" onclick="selectCat('{{ group.key }}', '{{ group.label }}')">{{ group.label }}</div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endif %}
 
       {% if brands %}
       <div class="filter-group">
@@ -210,19 +232,6 @@
           Показати ще {{ brands|length - 8 }} ▾
         </button>
         {% endif %}
-      </div>
-      {% endif %}
-
-      {# Стан — тільки для б/у або «всі» #}
-      {% if cat != 'parts_new' %}
-      <div class="filter-group">
-        <div class="filter-group-label">Стан (б/у)</div>
-        <select name="condition" class="filter-select">
-          <option value="">Будь-який стан</option>
-          {% for c in conditions %}
-          <option value="{{ c }}" {% if condition == c %}selected{% endif %}>{{ c }}</option>
-          {% endfor %}
-        </select>
       </div>
       {% endif %}
 
@@ -363,6 +372,57 @@
       document.getElementById('show-more-wrap').style.display = 'none';
     }
   }
+
+  const PARTS_SUBCATS_PUB = {{ parts_subcats | tojson }};
+
+  document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const subcat = urlParams.get('subcategory') || '';
+    if (!subcat) return;
+
+    const parts = subcat.split('::');
+    const catKey = parts[0];
+    const subVal = parts[1] || '';
+
+    const group = PARTS_SUBCATS_PUB.find(g => g.key === catKey);
+    if (!group) return;
+
+    const label = subVal ? group.label + ': ' + subVal : 'Всі: ' + group.label;
+    document.getElementById('custom-select-label').textContent = label;
+
+    if (group.sub && group.sub.length > 0) {
+      document.getElementById('subs-' + catKey).style.display = 'block';
+      document.getElementById('arrow-' + catKey).textContent = '▾';
+    }
+  });
+
+  function toggleCatDropdown() {
+    const dd = document.getElementById('cat-dropdown');
+    dd.style.display = dd.style.display === 'none' ? 'block' : 'none';
+  }
+
+  function toggleSubcats(key, label, event) {
+    event.stopPropagation();
+    const subs = document.getElementById('subs-' + key);
+    const arrow = document.getElementById('arrow-' + key);
+    const open = subs.style.display === 'none';
+    subs.style.display = open ? 'block' : 'none';
+    arrow.textContent = open ? '▾' : '›';
+  }
+
+  function selectCat(val, label) {
+    document.getElementById('subcat-value').value = val;
+    document.getElementById('custom-select-label').textContent = label;
+    document.getElementById('cat-dropdown').style.display = 'none';
+    document.getElementById('filters-form').submit();
+  }
+
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('#custom-cat-select')) {
+      const dd = document.getElementById('cat-dropdown');
+      if (dd) dd.style.display = 'none';
+    }
+  });
 </script>
 </body>
 </html>
