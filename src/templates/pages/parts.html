@@ -196,9 +196,9 @@
             {{ group.label }} <span class="subcat-arrow" id="arrow-{{ group.key }}">›</span>
           </div>
           <div class="custom-subcats" id="subs-{{ group.key }}" style="display:none;">
-<!--            <div class="custom-option custom-option-sub" onclick="selectCat('{{ group.key }}', 'Всі: {{ group.label }}')">-->
-<!--              &nbsp;&nbsp;Всі: {{ group.label }}-->
-<!--            </div>-->
+            <div class="custom-option custom-option-sub" onclick="selectCat('{{ group.key }}', 'Всі: {{ group.label }}')">
+              &nbsp;&nbsp; Всі: {{ group.label }}
+            </div>
             {% for s in group.sub %}
             <div class="custom-option custom-option-sub" onclick="selectCat('{{ group.key }}::{{ s }}', '{{ group.label }}: {{ s }}')">
               &nbsp;&nbsp; {{ s }}
@@ -387,7 +387,8 @@
     const group = PARTS_SUBCATS_PUB.find(g => g.key === catKey);
     if (!group) return;
 
-    const label = subVal ? group.label + ': ' + subVal : 'Всі: ' + group.label;
+    // const label = subVal ? group.label + ': ' + subVal : 'Всі: ' + group.label;
+    const label = subVal ? group.label + ': ' + subVal : group.label;
     document.getElementById('custom-select-label').textContent = label;
 
     if (group.sub && group.sub.length > 0) {
