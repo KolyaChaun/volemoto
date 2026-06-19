@@ -105,3 +105,13 @@ textarea { resize: vertical; min-height: 220px; }
   margin-right: 8px;
 }
 .back-btn:hover { border-color: #2d9e00; color: #2d9e00; background: #f4fbee; }
+
+/* Fix: Edit/View buttons don't move when the name is long */
+table td:last-child {
+  white-space: nowrap;
+  width: 1%;
+}
+table td:nth-child(2) {
+  max-width: 300px;
+  word-break: break-word;
+}
